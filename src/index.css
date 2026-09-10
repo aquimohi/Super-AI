@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-orbitron: 'Orbitron', monospace;
+    --font-rajdhani: 'Rajdhani', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-tech: 'Chakra Petch', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-rajdhani);
+    background-color: #050505;
+    color: #F2A900;
+  }
+}
+
+.font-orbitron {
+  font-family: var(--font-orbitron);
+}
+
+.font-rajdhani {
+  font-family: var(--font-rajdhani);
+}
+
+.font-tech {
+  font-family: var(--font-tech);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Sleek Interface background grid overlay */
+.sleek-grid {
+  background-image: linear-gradient(#F2A900 1px, transparent 1px), linear-gradient(90deg, #F2A900 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Sleek Interface radial canvas */
+.sleek-canvas {
+  background-image: radial-gradient(circle at center, #1a1505 0%, #050505 100%);
+}
+
+/* Sleek HUD glassmorphism */
+.hud-panel {
+  background: rgba(5, 5, 5, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(242, 169, 0, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+}
+
+.hud-panel-active {
+  border-color: rgba(242, 169, 0, 0.5);
+  box-shadow: 0 0 25px rgba(242, 169, 0, 0.2);
+}
+
+/* Sleek accent container */
+.sleek-accent-card {
+  background: rgba(0, 0, 0, 0.5);
+  border-left: 2px solid #F2A900;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Subtle holographic scanline overlay */
+.scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(242, 169, 0, 0.02),
+    transparent,
+    rgba(242, 169, 0, 0.02)
+  );
+  background-size: 100% 3px, 6px 100%;
+  pointer-events: none;
+}
+
+/* Glow effects with #F2A900 */
+.amber-glow {
+  text-shadow: 0 0 12px rgba(242, 169, 0, 0.7), 0 0 24px rgba(242, 169, 0, 0.35);
+}
+
+.core-glow {
+  box-shadow: 0 0 60px rgba(242, 169, 0, 0.25);
+}
+
+/* Custom sleek scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(5, 5, 5, 0.8);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(242, 169, 0, 0.3);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(242, 169, 0, 0.6);
+}

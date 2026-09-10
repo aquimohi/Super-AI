@@ -1,0 +1,6 @@
+{
+  "name": "Super AI",
+  "description": "Futuristic personal AI assistant with a real-time animated 3D holographic core, cognitive multi-model orchestrator, and interactive command center interface.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
