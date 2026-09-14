@@ -11,15 +11,25 @@ import {
   Sparkles,
   Sliders,
   Key,
-  Database
+  Database,
+  AudioLines
 } from 'lucide-react';
 
 interface TopNavigationProps {
   currentState: AIState;
   onOpenControlPanel?: (section?: ControlPanelSection) => void;
+  isWakeWordMode?: boolean;
+  onStartWakeWord?: () => void;
+  onStopWakeWord?: () => void;
 }
 
-export const TopNavigation: React.FC<TopNavigationProps> = ({ currentState, onOpenControlPanel }) => {
+export const TopNavigation: React.FC<TopNavigationProps> = ({ 
+  currentState, 
+  onOpenControlPanel,
+  isWakeWordMode,
+  onStartWakeWord,
+  onStopWakeWord
+}) => {
   const [timeString, setTimeString] = useState<string>('');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
@@ -128,6 +138,24 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({ currentState, onOp
 
         {/* Action icons & Control Panel */}
         <div className="flex items-center gap-2">
+          {/* Wake Word Toggle */}
+          {(onStartWakeWord && onStopWakeWord) && (
+            <button
+              onClick={() => isWakeWordMode ? onStopWakeWord() : onStartWakeWord()}
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded border transition-all cursor-pointer ${
+                isWakeWordMode
+                  ? 'border-cyan-400/60 bg-cyan-900/40 text-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.3)]'
+                  : 'border-[#F2A900]/30 bg-black/60 hover:bg-[#F2A900]/15 text-[#F2A900]/70 hover:text-[#F2A900]'
+              }`}
+              title="Toggle Wake Word Mode (Always Listening for 'Jarvis')"
+            >
+              <AudioLines className={`w-3.5 h-3.5 ${isWakeWordMode ? 'animate-pulse' : ''}`} />
+              <span className="hidden sm:inline text-[11px] font-mono tracking-wider font-semibold uppercase">
+                Wake Word
+              </span>
+            </button>
+          )}
+
           {/* Direct Memory Matrix Access */}
           {onOpenControlPanel && (
             <button

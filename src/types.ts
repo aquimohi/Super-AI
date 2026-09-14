@@ -1,5 +1,25 @@
 export type AIState = 'IDLE' | 'LISTENING' | 'THINKING' | 'PROCESSING' | 'EXECUTING' | 'SPEAKING' | 'ERROR' | 'AUTHORIZATION' | 'RECOVERING';
 
+// ─── IoT / Radar Types ───────────────────────────────────────────────────────
+export interface RadarReading {
+  /** True when a person is present (stationary or moving) */
+  presence: boolean;
+  /** True when active movement is detected */
+  motion: boolean;
+  /** Breaths per minute — null if sensor doesn't support */
+  breathingRate: number | null;
+  /** Distance to nearest target in metres — null if unavailable */
+  distance: number | null;
+  /** Signal/detection strength 0-100 */
+  signalStrength: number;
+  /** ISO timestamp */
+  timestamp: string;
+  /** Hardware sensor identifier e.g. "esp32-01" */
+  sensorId: string;
+}
+
+export type RadarSocketState = 'connecting' | 'connected' | 'disconnected' | 'error';
+
 export type AIProvider = 'openrouter' | 'openai' | 'anthropic' | 'groq' | 'gemini';
 
 export type KeyValidationStatus = 'valid' | 'invalid' | 'untested' | 'rate_limited';
@@ -84,6 +104,8 @@ export interface SystemPermissions {
   browser: PermissionLevel;
   webSearch: PermissionLevel;
   executeTerminal: PermissionLevel;
+  // Autonomous Code Execution Sandbox
+  executeCode: PermissionLevel;
   runApplications: PermissionLevel;
   systemSettings: PermissionLevel;
   // Windows Computer Control V1 permissions
@@ -101,6 +123,8 @@ export interface SystemPermissions {
   browserGoBack: PermissionLevel;
   browserGoForward: PermissionLevel;
   browserRefreshPage: PermissionLevel;
+  // IoT Hardware Integration
+  smartGate: PermissionLevel;
 }
 
 export type VoiceQualityPreference = 'AUTO' | 'NATURAL_HINDI' | 'INDIAN_ENGLISH' | 'ENGLISH';

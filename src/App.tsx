@@ -6,6 +6,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AIState, ChatMessage, ControlPanelSection, PendingToolAuthorization } from './types';
 import { AICore3D } from './components/AICore3D';
+// ── Hologram Face (new) — swap back to AICore3D by reverting lines 662-664 ──
+import { HologramScene } from './components/hologram/HologramScene';
 import { TopNavigation } from './components/TopNavigation';
 import { StateController } from './components/StateController';
 import { SideTelemetryPanel } from './components/SideTelemetryPanel';
@@ -15,12 +17,14 @@ import { ControlPanelModal } from './components/control-panel/ControlPanelModal'
 import { PermissionPromptModal } from './components/PermissionPromptModal';
 import { ToolAuthorizationModal } from './components/ToolAuthorizationModal';
 import { apiClient, ChatApiResponse } from './services/apiClient';
+import { useVoiceInput } from './hooks/useVoiceInput';
 import {
-  startSpeechRecognition,
   speakText,
   stopSpeech,
-  SpeechRecognitionController,
+  subscribeSpeechState,
 } from './utils/speech';
+import { useRadarSocket } from './hooks/useRadarSocket';
+import { useVoiceStream } from './hooks/useVoiceStream';
 
 const INITIAL_MESSAGES: ChatMessage[] = [
   {
@@ -62,11 +66,56 @@ export default function App() {
   // System Configuration Cache (for synchronous checks without losing user gesture)
   const systemConfigRef = useRef<any>(null);
 
+  // IoT Hardware Integration
+  const { radarData, socketState: radarSocketState } = useRadarSocket();
+
+  // ── Real-time lip-sync flag: true while browser speechSynthesis is speaking ──
+  const [isSpeakingFlag, setIsSpeakingFlag] = useState(false);
+
   // Voice recognition & synthesis state
-  const [isListening, setIsListening] = useState(false);
-  const [voiceTranscript, setVoiceTranscript] = useState('');
-  const speechRecognizerRef = useRef<SpeechRecognitionController | null>(null);
-  const latestTranscriptRef = useRef<string>('');
+  const {
+    isListening,
+    transcript: voiceTranscript,
+    startWakeWordMode,
+    stopWakeWordMode,
+    startPushToTalk,
+    stopPushToTalk,
+    isWakeWordMode,
+    error: voiceError,
+    setLanguage
+  } = useVoiceInput({
+    onWakeWordDetected: (text) => {
+      handleSendMessage(text);
+    },
+    onFinalTranscript: (text) => {
+      handleSendMessage(text);
+    },
+    pauseRecognition: isSpeakingFlag,
+  });
+
+  // Phase 5: Real-time Voice Streaming Pipeline
+  const {
+    isStreaming: isLiveVoice,
+    volume: micVolume,
+    startStream: startLiveVoice,
+    stopStream: stopLiveVoice
+  } = useVoiceStream();
+
+  const handleToggleLiveVoice = useCallback(() => {
+    if (isLiveVoice) {
+      stopLiveVoice();
+    } else {
+      startLiveVoice();
+    }
+  }, [isLiveVoice, startLiveVoice, stopLiveVoice]);
+
+  // Subscribe to the speech synthesis event bus (fires on utterance start/end)
+  useEffect(() => {
+    const unsub = subscribeSpeechState((speaking) => {
+      setIsSpeakingFlag(speaking);
+    });
+    return unsub;
+  }, []);
 
   const refreshConfig = useCallback(async () => {
     try {
@@ -411,13 +460,7 @@ export default function App() {
 
     // Halt any active speech or recognition
     stopSpeech();
-    if (speechRecognizerRef.current) {
-      speechRecognizerRef.current.abort();
-      speechRecognizerRef.current = null;
-    }
-    setIsListening(false);
-    setVoiceTranscript('');
-    latestTranscriptRef.current = '';
+    stopPushToTalk();
 
     const userMsg: ChatMessage = {
       id: String(Date.now()),
@@ -464,82 +507,28 @@ export default function App() {
   // REAL VOICE INPUT (SPEECH RECOGNITION) WORKFLOW
   // -------------------------------------------------------------
 
-  const activateSpeechRecognition = () => {
-    stopSpeech();
+  useEffect(() => {
+    if (isListening && currentState !== 'LISTENING') {
+      setCurrentState('LISTENING');
+    } else if (!isListening && currentState === 'LISTENING') {
+      setCurrentState('IDLE');
+    }
+  }, [isListening, currentState]);
 
-    const config = systemConfigRef.current;
-    const language = config?.voice?.language || 'Hinglish';
-
-    setIsListening(true);
-    setCurrentState('LISTENING');
-    setVoiceTranscript('');
-    latestTranscriptRef.current = '';
-
-    const recognizer = startSpeechRecognition(language, {
-      onStart: () => {
-        setIsListening(true);
-        setCurrentState('LISTENING');
-      },
-      onSpeechStart: () => {
-        // Speech detected!
-      },
-      onInterimTranscript: (interim) => {
-        setVoiceTranscript(interim);
-        latestTranscriptRef.current = interim;
-      },
-      onFinalTranscript: (final) => {
-        setVoiceTranscript(final);
-        latestTranscriptRef.current = final;
-      },
-      onError: (errorMessage, isPermissionError) => {
-        setIsListening(false);
-        speechRecognizerRef.current = null;
-        setCurrentState('IDLE');
-
-        const displayMessage = isPermissionError
-          ? 'Microphone permission denied.'
-          : errorMessage === 'No speech detected.'
-          ? 'No speech detected.'
-          : errorMessage;
-
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: String(Date.now()),
-            sender: 'SYSTEM',
-            text: displayMessage,
-            timestamp: new Date().toLocaleTimeString(),
-            isError: isPermissionError,
-          },
-        ]);
-      },
-      onEnd: (finalTranscript) => {
-        setIsListening(false);
-        speechRecognizerRef.current = null;
-
-        const captured = (finalTranscript || latestTranscriptRef.current).trim();
-        if (captured) {
-          // Automatically put transcript into input & submit
-          setVoiceTranscript(captured);
-          handleSendMessage(captured);
-        } else {
-          // No speech detected
-          setCurrentState('IDLE');
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: String(Date.now()),
-              sender: 'SYSTEM',
-              text: 'No speech detected.',
-              timestamp: new Date().toLocaleTimeString(),
-            },
-          ]);
-        }
-      },
-    });
-
-    speechRecognizerRef.current = recognizer;
-  };
+  useEffect(() => {
+    if (voiceError) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: String(Date.now()),
+          sender: 'SYSTEM',
+          text: voiceError,
+          timestamp: new Date().toLocaleTimeString(),
+          isError: true,
+        },
+      ]);
+    }
+  }, [voiceError]);
 
   // Handles clicking the microphone button synchronously (preserving browser user activation)
   const handleStartVoiceInput = () => {
@@ -569,35 +558,24 @@ export default function App() {
     }
 
     // ALLOW mode or granted in session -> launch immediately
-    activateSpeechRecognition();
+    startPushToTalk();
   };
 
   const handleStopVoiceInput = () => {
-    if (speechRecognizerRef.current) {
-      speechRecognizerRef.current.stop();
-      speechRecognizerRef.current = null;
-    }
-    setIsListening(false);
-
-    const capturedText = latestTranscriptRef.current.trim();
-    if (capturedText) {
-      handleSendMessage(capturedText);
-    } else {
-      setCurrentState('IDLE');
-    }
+    stopPushToTalk();
   };
 
   // Permission Prompt Handlers
   const handleAllowSession = () => {
     setSessionMicGranted(true);
     setIsPermissionModalOpen(false);
-    activateSpeechRecognition();
+    startPushToTalk();
   };
 
   const handleAlwaysAllow = async () => {
     setSessionMicGranted(true);
     setIsPermissionModalOpen(false);
-    activateSpeechRecognition();
+    startPushToTalk();
 
     try {
       const cfg = systemConfigRef.current || (await apiClient.getConfig());
@@ -660,7 +638,13 @@ export default function App() {
 
       {/* 3. Center Stage: Real-Time 3D Holographic AI Core */}
       <div className="relative flex-1 w-full h-full flex items-center justify-center overflow-hidden">
-        <AICore3D state={currentState} onGlitchEnd={handleGlitchEnd} />
+        {/* ── HOLOGRAM FACE (active) ── comment this out and restore AICore3D below to switch back */}
+        <div style={{ width: '100%', height: '500px' }}>
+          {/* isSpeakingFlag: true only while browser speechSynthesis is actively speaking (real-time event bus) */}
+          <HologramScene state={currentState} isSpeaking={isSpeakingFlag} radarData={radarData} micVolume={micVolume} />
+        </div>
+        {/* ── AICore3D (original — commented out) ── */}
+        {/* <AICore3D state={currentState} onGlitchEnd={handleGlitchEnd} /> */}
       </div>
 
       {/* 4. Left Side: Core Telemetry & Status HUD Panel */}
@@ -698,9 +682,11 @@ export default function App() {
             isStreaming={isProcessingSequence}
             onStartVoiceInput={handleStartVoiceInput}
             onStopVoiceInput={handleStopVoiceInput}
-            onStopSpeaking={handleStopSpeaking}
+            onStopSpeaking={stopSpeech}
             voiceTranscript={voiceTranscript}
             isListening={isListening}
+            isLiveVoice={isLiveVoice}
+            onToggleLiveVoice={handleToggleLiveVoice}
           />
         </div>
       </div>

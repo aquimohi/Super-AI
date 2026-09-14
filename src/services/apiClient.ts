@@ -87,6 +87,16 @@ export interface ChatApiResponse {
 }
 
 
+export interface SandboxResult {
+  success: boolean;
+  output: string;
+  error: string;
+  exitCode: number | null;
+  timedOut: boolean;
+  executionMs: number;
+  language: 'python' | 'javascript';
+}
+
 export const apiClient = {
   // --- Keys ---
   async getKeys(): Promise<StoredApiKey[]> {
@@ -586,5 +596,22 @@ export const apiClient = {
       throw new Error(data.error || 'Failed to submit authorization');
     }
     return data.result;
+  },
+
+  // --- Sandbox Code Execution ---
+  async executeSandboxCode(
+    code: string,
+    language: 'python' | 'javascript'
+  ): Promise<SandboxResult> {
+    const res = await fetch('/api/sandbox/execute', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, language }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || `Sandbox request failed: ${res.statusText}`);
+    }
+    return data as SandboxResult;
   },
 };

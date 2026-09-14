@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChatMessage, AIState } from '../types';
-import { Terminal, Shield, Sparkles, ChevronRight, ChevronLeft, Bot, User, Wrench, Database, Brain } from 'lucide-react';
+import { Terminal, Shield, Sparkles, ChevronRight, ChevronLeft, Bot, User, Wrench, Database, Brain, Code2 } from 'lucide-react';
 
 interface ActivityFeedProps {
   messages: ChatMessage[];
@@ -164,30 +164,137 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
                       <Wrench className="w-2.5 h-2.5 text-[#F2A900]" />
                       <span>Executed Tools ({msg.toolActivities.length})</span>
                     </div>
-                    {msg.toolActivities.map((act, i) => (
-                      <div
-                        key={i}
-                        className="p-1.5 rounded bg-black/50 border border-stone-800 text-[9px] font-mono space-y-0.5"
-                      >
-                        <div className="flex items-center justify-between text-[#F2A900]">
-                          <span className="font-bold">{act.tool}</span>
-                          <span
-                            className={`px-1 py-0.2 rounded text-[8px] uppercase ${
-                              act.permission === 'ALLOWED'
-                                ? 'text-emerald-400 bg-emerald-950/40'
-                                : act.permission === 'ASKED'
-                                ? 'text-amber-400 bg-amber-950/40'
-                                : 'text-red-400 bg-red-950/40'
-                            }`}
-                          >
-                            {act.permission}
-                          </span>
+                    {msg.toolActivities.map((act, i) => {
+                      const isSandbox = act.tool === 'execute_code';
+
+                      // Parse sandbox result from the execution/result strings
+                      let sandboxData: {
+                        language?: string;
+                        output?: string;
+                        error?: string;
+                        exitCode?: number | null;
+                        timedOut?: boolean;
+                        executionMs?: number;
+                      } | null = null;
+
+                      if (isSandbox) {
+                        try {
+                          // result field may contain JSON from displaySummary
+                          // Try to extract from result string
+                          const langMatch = act.result?.match(/\b(python|javascript)\b/i);
+                          const timeMatch = act.result?.match(/(\d+)ms/);
+                          const timedOut = act.result?.toLowerCase().includes('timeout');
+                          const exitMatch = act.result?.match(/exit\s+(\d+)/i);
+                          sandboxData = {
+                            language: langMatch?.[1]?.toLowerCase(),
+                            executionMs: timeMatch ? parseInt(timeMatch[1]) : undefined,
+                            timedOut,
+                            exitCode: exitMatch ? parseInt(exitMatch[1]) : timedOut ? null : 0,
+                            output: act.permission === 'ALLOWED' && !timedOut
+                              ? act.result?.split('\nStderr:')[0]?.replace(/^.*?Output:\s*/s, '').trim()
+                              : undefined,
+                            error: act.result?.includes('Stderr:')
+                              ? act.result.split('Stderr:')[1]?.trim()
+                              : undefined,
+                          };
+                        } catch { /* fallback to generic display */ }
+                      }
+
+                      return isSandbox ? (
+                        // === SANDBOX EXECUTION OUTPUT BLOCK ===
+                        <div
+                          key={i}
+                          className="p-2 rounded bg-black/80 border border-cyan-900/60 text-[9px] font-mono space-y-1.5"
+                        >
+                          {/* Header */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-1.5">
+                              <Code2 className="w-3 h-3 text-cyan-400" />
+                              <span className="text-cyan-300 font-bold text-[10px]">
+                                {sandboxData?.language === 'python' ? 'Python 🐍' : sandboxData?.language === 'javascript' ? 'JavaScript ⚡' : 'Code'} Sandbox
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              {sandboxData?.executionMs != null && (
+                                <span className="text-[8px] text-stone-500">{sandboxData.executionMs}ms</span>
+                              )}
+                              <span className={`px-1 py-0.5 rounded text-[8px] font-bold uppercase ${
+                                sandboxData?.timedOut
+                                  ? 'text-amber-300 bg-amber-950/60 border border-amber-700/50'
+                                  : act.permission === 'DENIED'
+                                  ? 'text-red-400 bg-red-950/60 border border-red-700/50'
+                                  : sandboxData?.exitCode === 0
+                                  ? 'text-emerald-300 bg-emerald-950/60 border border-emerald-700/50'
+                                  : 'text-rose-300 bg-rose-950/60 border border-rose-700/50'
+                              }`}>
+                                {sandboxData?.timedOut ? '⏱ TIMEOUT' : act.permission === 'DENIED' ? '🔒 DENIED' : sandboxData?.exitCode === 0 ? '✅ EXIT 0' : `❌ EXIT ${sandboxData?.exitCode ?? '?'}`}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Execution summary */}
+                          <div className="text-stone-500 text-[8px] truncate" title={act.execution}>
+                            {act.execution}
+                          </div>
+
+                          {/* stdout output */}
+                          {act.permission === 'ALLOWED' && (
+                            <div className="rounded bg-black/60 border border-emerald-900/50 p-1.5">
+                              <div className="text-[8px] text-emerald-500 uppercase tracking-widest mb-0.5 flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                stdout
+                              </div>
+                              <pre className="text-emerald-300 text-[9px] whitespace-pre-wrap break-words max-h-24 overflow-y-auto leading-relaxed">
+                                {/* Extract output from displaySummary */}
+                                {act.result
+                                  ?.split('\n')
+                                  .filter((l) => !l.startsWith('EXIT') && !l.startsWith('TIMEOUT') && !l.toLowerCase().includes('stderr'))
+                                  .join('\n')
+                                  .trim() || '(no output)'}
+                              </pre>
+                            </div>
+                          )}
+
+                          {/* DENIED notice */}
+                          {act.permission === 'DENIED' && (
+                            <div className="rounded bg-rose-950/30 border border-rose-800/50 p-1.5 text-[9px] text-rose-300">
+                              🔒 Execution blocked — user denied sandbox permission.
+                            </div>
+                          )}
+
+                          {/* Timeout notice */}
+                          {sandboxData?.timedOut && (
+                            <div className="rounded bg-amber-950/30 border border-amber-800/50 p-1.5 text-[9px] text-amber-300">
+                              ⏱ Process terminated — exceeded 5s timeout limit.
+                            </div>
+                          )}
                         </div>
-                        <div className="text-stone-400 truncate max-w-full font-sans" title={act.execution}>
-                          {act.execution}
+                      ) : (
+                        // === GENERIC TOOL ACTIVITY BLOCK ===
+                        <div
+                          key={i}
+                          className="p-1.5 rounded bg-black/50 border border-stone-800 text-[9px] font-mono space-y-0.5"
+                        >
+                          <div className="flex items-center justify-between text-[#F2A900]">
+                            <span className="font-bold">{act.tool}</span>
+                            <span
+                              className={`px-1 py-0.2 rounded text-[8px] uppercase ${
+                                act.permission === 'ALLOWED'
+                                  ? 'text-emerald-400 bg-emerald-950/40'
+                                  : act.permission === 'ASKED'
+                                  ? 'text-amber-400 bg-amber-950/40'
+                                  : 'text-red-400 bg-red-950/40'
+                              }`}
+                            >
+                              {act.permission}
+                            </span>
+                          </div>
+                          <div className="text-stone-400 truncate max-w-full font-sans" title={act.execution}>
+                            {act.execution}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
 

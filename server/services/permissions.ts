@@ -27,6 +27,8 @@ function mapRequiredPermissionToSystemKey(
       return 'writeFiles';
     case 'EXECUTE_TERMINAL':
       return 'executeTerminal';
+    case 'EXECUTE_CODE':
+      return 'executeCode';
     case 'SYSTEM_SETTINGS':
       return 'systemSettings';
     case 'OPEN_APPLICATION':
@@ -55,6 +57,10 @@ function mapRequiredPermissionToSystemKey(
       return 'browserGoForward';
     case 'BROWSER_REFRESH_PAGE':
       return 'browserRefreshPage';
+    case 'SMART_GATE':
+      return 'smartGate';
+    case 'MODIFY_CODE':
+      return 'modifyCode';
     case 'NONE':
     default:
       return null;

@@ -8,6 +8,7 @@ export type RequiredPermission =
   | 'READ_FILES'
   | 'WRITE_FILES'
   | 'EXECUTE_TERMINAL'
+  | 'EXECUTE_CODE'
   | 'SYSTEM_SETTINGS'
   | 'OPEN_APPLICATION'
   | 'OPEN_URL'
@@ -21,12 +22,15 @@ export type RequiredPermission =
   | 'BROWSER_CLICK_LINK'
   | 'BROWSER_GO_BACK'
   | 'BROWSER_GO_FORWARD'
-  | 'BROWSER_REFRESH_PAGE';
+  | 'BROWSER_REFRESH_PAGE'
+  | 'SMART_GATE'
+  | 'MODIFY_CODE';
 
 export interface ToolParameterProperty {
   type: string;
   description: string;
   enum?: string[];
+  items?: any;
 }
 
 export interface ToolParameterSchema {

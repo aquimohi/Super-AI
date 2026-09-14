@@ -17,14 +17,11 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import {
-  isSpeechRecognitionSupported,
   isSpeechSynthesisSupported,
   getAvailableVoices,
   findBestVoice,
   speakText,
   stopSpeech,
-  startSpeechRecognition,
-  SpeechRecognitionController,
 } from '../../utils/speech';
 
 interface VoiceSectionProps {
@@ -53,7 +50,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
   const [testMicTranscript, setTestMicTranscript] = useState('');
   const [testMicStatus, setTestMicStatus] = useState<string>('Ready');
   const [isTestSpeaking, setIsTestSpeaking] = useState(false);
-  const testRecognizerRef = useRef<SpeechRecognitionController | null>(null);
+  const testRecognizerRef = useRef<any>(null);
 
   useEffect(() => {
     // Load voices
@@ -115,7 +112,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
   const handleToggleTestMic = () => {
     if (isTestMicActive) {
       if (testRecognizerRef.current) {
-        testRecognizerRef.current.stop();
+        testRecognizerRef.current.abort();
         testRecognizerRef.current = null;
       }
       setIsTestMicActive(false);
@@ -124,40 +121,50 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
     }
 
     setTestMicTranscript('');
-    setTestMicStatus('Listening for speech... Say "Hello Super AI" or "Super AI, tum kya kar sakte ho?"');
+    setTestMicStatus('Listening for speech...');
     setIsTestMicActive(true);
 
-    const recognizer = startSpeechRecognition(voice.language, {
-      onStart: () => {
-        setTestMicStatus('Microphone active. Speak now...');
-      },
-      onSpeechStart: () => {
-        setTestMicStatus('Speech detected! Capturing audio stream...');
-      },
-      onInterimTranscript: (interim) => {
-        setTestMicTranscript(interim);
-      },
-      onFinalTranscript: (final) => {
-        setTestMicTranscript(final);
-      },
-      onError: (errMsg) => {
-        setTestMicStatus(`Recognition Error: ${errMsg}`);
-        setIsTestMicActive(false);
-        testRecognizerRef.current = null;
-      },
-      onEnd: (final) => {
-        setIsTestMicActive(false);
-        testRecognizerRef.current = null;
-        if (final) {
-          setTestMicTranscript(final);
-          setTestMicStatus(`Speech captured successfully (${final.length} chars). No external API called.`);
-        } else {
-          setTestMicStatus('Recognition ended. No speech detected.');
-        }
-      },
-    });
+    const SpeechRecognitionConstructor = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognitionConstructor) {
+      setTestMicStatus('Speech Recognition not supported in this browser.');
+      setIsTestMicActive(false);
+      return;
+    }
 
-    testRecognizerRef.current = recognizer;
+    try {
+      const recognizer = new SpeechRecognitionConstructor();
+      recognizer.continuous = false;
+      recognizer.interimResults = true;
+      recognizer.lang = voice.language === 'English' ? 'en-IN' : 'hi-IN';
+
+      recognizer.onstart = () => setTestMicStatus('Microphone active. Speak now...');
+      recognizer.onspeechstart = () => setTestMicStatus('Speech detected! Capturing audio stream...');
+      recognizer.onresult = (event: any) => {
+        let final = '';
+        let interim = '';
+        for (let i = 0; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) final += event.results[i][0].transcript;
+          else interim += event.results[i][0].transcript;
+        }
+        setTestMicTranscript(final || interim);
+      };
+      recognizer.onerror = (event: any) => {
+        setTestMicStatus(`Recognition Error: ${event.error}`);
+        setIsTestMicActive(false);
+        testRecognizerRef.current = null;
+      };
+      recognizer.onend = () => {
+        setIsTestMicActive(false);
+        testRecognizerRef.current = null;
+        setTestMicStatus('Listening finished.');
+      };
+
+      recognizer.start();
+      testRecognizerRef.current = recognizer;
+    } catch (err: any) {
+      setTestMicStatus(`Failed to start: ${err.message}`);
+      setIsTestMicActive(false);
+    }
   };
 
   // Test Speech Synthesis
@@ -649,8 +656,8 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-mono">
             <div className="p-2.5 rounded bg-black/60 border border-stone-800 space-y-1">
               <div className="text-stone-400 text-[10px] uppercase">Speech Recognition</div>
-              <div className={isSpeechRecognitionSupported() ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
-                {isSpeechRecognitionSupported() ? 'SUPPORTED' : 'UNSUPPORTED'}
+              <div className={('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}>
+                {('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) ? 'SUPPORTED' : 'UNSUPPORTED'}
               </div>
             </div>
 

@@ -372,7 +372,48 @@ export async function orchestrateChatRequest(
   // Append user message to conversation memory
   memoryService.appendMessage(conversationId, { role: 'user', content: rawMessage });
 
-  // 0. AUTONOMOUS TASK ENGINE V1: Handle multi-step tasks or active autonomous task authorizations
+  // 0. SWARM INTELLIGENCE ORCHESTRATION V1: Handle massive multi-agent parallel tasks
+  // For demonstration, we trigger the swarm if the prompt explicitly mentions 'swarm', 'website', or 'agents'.
+  // In a full production setup, this would use a fast local classifier.
+  const lowerMsg = rawMessage.toLowerCase();
+  if (lowerMsg.includes('swarm') || lowerMsg.includes('website') || lowerMsg.includes('agents')) {
+    try {
+      const { orchestrateSwarm } = await import('./swarm/swarmRouter.js');
+      const swarmResult = await orchestrateSwarm(rawMessage);
+      
+      memoryService.appendMessage(conversationId, { role: 'assistant', content: swarmResult });
+
+      return {
+        success: true,
+        text: swarmResult,
+        conversationId,
+        memoryEvents: [],
+        metadata: {
+          taskType: 'GENERAL',
+          selectedModel: 'Super AI Swarm Orchestrator',
+          requestedModel: 'internal/swarm',
+          fallbackOccurred: false,
+          provider: 'openrouter',
+          keyLabel: 'Swarm Intelligence Engine',
+          latencyMs: Date.now() - startTime,
+          confidence: 0.99,
+          reasoning: 'Massive parallel task routed to Swarm Specialists.',
+        },
+        model: 'Super AI Swarm Orchestrator',
+        provider: 'local-swarm' as any,
+        keyUsedName: 'Swarm Intelligence Engine',
+        rotated: false,
+        taskType: 'GENERAL',
+        latencyMs: Date.now() - startTime,
+        toolActivities: [],
+      };
+    } catch (err: any) {
+      console.error('[SwarmEngine] Execution error:', err);
+      // Fall through to standard task engine if error
+    }
+  }
+
+  // 1. AUTONOMOUS TASK ENGINE V1: Handle multi-step tasks or active autonomous task authorizations
   const taskConfig = storage.getAutonomousTaskConfig();
   const activeTask = autonomousTaskEngine.getCurrentTask(conversationId) || autonomousTaskEngine.getCurrentTask();
   const isCancellation = Boolean(activeTask && recoveryObservabilityEngine.isCancellationIntent(rawMessage));

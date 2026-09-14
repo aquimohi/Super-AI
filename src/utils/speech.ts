@@ -1,4 +1,5 @@
 import { VoiceSettings, VoiceQualityPreference } from '../types';
+import { speakWithElevenLabs, stopElevenLabsSpeech, isElevenLabsSpeaking } from './elevenlabsSpeech';
 
 /**
  * TTS Preprocessing layer:
@@ -284,12 +285,12 @@ export function findBestVoice(settings?: VoiceSettings): SpeechSynthesisVoice | 
 /**
  * Speaks text using the browser's native SpeechSynthesis API.
  */
-export function speakText(
+export async function speakText(
   text: string,
   settings?: VoiceSettings,
   onStart?: () => void,
   onEnd?: () => void
-): boolean {
+): Promise<boolean> {
   if (!isSpeechSynthesisSupported()) {
     return false;
   }
@@ -299,10 +300,29 @@ export function speakText(
   }
 
   try {
-    window.speechSynthesis.cancel();
-
     const cleanText = sanitizeForSpeech(text);
     if (!cleanText) return false;
+
+    // Try ElevenLabs first if the key is configured
+    const elevenLabsSuccess = await speakWithElevenLabs(
+      cleanText,
+      settings,
+      () => {
+        notifySpeechState(true, cleanText);
+        if (onStart) onStart();
+      },
+      () => {
+        notifySpeechState(false);
+        if (onEnd) onEnd();
+      }
+    );
+
+    if (elevenLabsSuccess) {
+      return true;
+    }
+
+    // Fallback to Browser Speech Synthesis
+    window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(cleanText);
     const voice = findBestVoice(settings);
@@ -362,6 +382,7 @@ export function speakText(
  * Stops any active speech synthesis output.
  */
 export function stopSpeech(): void {
+  stopElevenLabsSpeech();
   if (isSpeechSynthesisSupported()) {
     try {
       window.speechSynthesis.cancel();
@@ -373,186 +394,7 @@ export function stopSpeech(): void {
 }
 
 export function isSpeaking(): boolean {
+  if (isElevenLabsSpeaking()) return true;
   if (!isSpeechSynthesisSupported()) return false;
   return window.speechSynthesis.speaking;
-}
-
-// -------------------------------------------------------------
-// SPEECH RECOGNITION (VOICE INPUT / STT)
-// -------------------------------------------------------------
-
-export function isSpeechRecognitionSupported(): boolean {
-  if (typeof window === 'undefined') return false;
-  return 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
-}
-
-export interface SpeechRecognitionHandlers {
-  onStart?: () => void;
-  onAudioStart?: () => void;
-  onSpeechStart?: () => void;
-  onInterimTranscript?: (interim: string) => void;
-  onFinalTranscript?: (final: string) => void;
-  onSpeechEnd?: () => void;
-  onAudioEnd?: () => void;
-  onError?: (errorMessage: string, isPermissionError?: boolean) => void;
-  onEnd?: (finalTranscript: string) => void;
-}
-
-export interface SpeechRecognitionController {
-  stop: () => void;
-  abort: () => void;
-}
-
-/**
- * Initializes and starts Web Speech Recognition for command capture.
- * Follows continuous=false, interimResults=true, maxAlternatives=1.
- * Handled events: onstart, onaudiostart, onspeechstart, onresult, onspeechend, onaudioend, onerror, onend.
- */
-export function startSpeechRecognition(
-  language: 'Hindi' | 'Hinglish' | 'English' = 'Hinglish',
-  handlers: SpeechRecognitionHandlers = {}
-): SpeechRecognitionController | null {
-  if (!isSpeechRecognitionSupported()) {
-    handlers.onError?.('Speech Recognition is not supported in this browser. Please use Chrome or Edge.', false);
-    return null;
-  }
-
-  const SpeechRecognitionConstructor =
-    (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-
-  try {
-    const recognizer = new SpeechRecognitionConstructor();
-    recognizer.continuous = false; // Normal command mode single-turn
-    recognizer.interimResults = true;
-    recognizer.maxAlternatives = 1;
-
-    // Language configuration:
-    // Hindi: hi-IN
-    // Hinglish: hi-IN (users pronounce Hindi and English words together)
-    // English: en-IN (Indian English acoustic model)
-    if (language === 'Hindi' || language === 'Hinglish') {
-      recognizer.lang = 'hi-IN';
-    } else {
-      recognizer.lang = 'en-IN';
-    }
-
-    let capturedFinal = '';
-    let capturedInterim = '';
-    let latestText = '';
-    let stoppedManually = false;
-    let hasSpeechStarted = false;
-    let errorReported = false;
-
-    recognizer.onstart = () => {
-      handlers.onStart?.();
-    };
-
-    recognizer.onaudiostart = () => {
-      handlers.onAudioStart?.();
-    };
-
-    recognizer.onspeechstart = () => {
-      hasSpeechStarted = true;
-      handlers.onSpeechStart?.();
-    };
-
-    recognizer.onresult = (event: any) => {
-      let currentFinal = '';
-      let currentInterim = '';
-
-      for (let i = 0; i < event.results.length; ++i) {
-        const item = event.results[i];
-        const text = item[0]?.transcript || '';
-        if (item.isFinal) {
-          currentFinal += (currentFinal ? ' ' : '') + text;
-        } else {
-          currentInterim += (currentInterim ? ' ' : '') + text;
-        }
-      }
-
-      if (currentFinal) {
-        capturedFinal = currentFinal;
-        latestText = currentFinal;
-        handlers.onFinalTranscript?.(currentFinal);
-      }
-
-      if (currentInterim) {
-        capturedInterim = currentInterim;
-        latestText = capturedFinal ? `${capturedFinal} ${currentInterim}` : currentInterim;
-        handlers.onInterimTranscript?.(latestText);
-      }
-    };
-
-    recognizer.onspeechend = () => {
-      handlers.onSpeechEnd?.();
-    };
-
-    recognizer.onaudioend = () => {
-      handlers.onAudioEnd?.();
-    };
-
-    recognizer.onerror = (event: any) => {
-      const err = event.error;
-      if (stoppedManually || err === 'aborted') {
-        return;
-      }
-
-      errorReported = true;
-      let errorMsg = 'Speech recognition error.';
-      let isPermission = false;
-
-      switch (err) {
-        case 'not-allowed':
-          errorMsg = 'Microphone permission denied.';
-          isPermission = true;
-          break;
-        case 'no-speech':
-          errorMsg = 'No speech detected.';
-          break;
-        case 'audio-capture':
-          errorMsg = 'Microphone hardware unavailable or disconnected.';
-          break;
-        case 'network':
-          errorMsg = 'Speech recognition network error.';
-          break;
-        case 'service-not-allowed':
-          errorMsg = 'Speech recognition service not allowed by browser.';
-          break;
-        default:
-          errorMsg = `Speech recognition error: ${err}`;
-          break;
-      }
-
-      handlers.onError?.(errorMsg, isPermission);
-    };
-
-    recognizer.onend = () => {
-      const finalResult = (capturedFinal || capturedInterim || latestText).trim();
-      handlers.onEnd?.(finalResult);
-    };
-
-    recognizer.start();
-
-    return {
-      stop: () => {
-        stoppedManually = true;
-        try {
-          recognizer.stop();
-        } catch {
-          // ignore
-        }
-      },
-      abort: () => {
-        stoppedManually = true;
-        try {
-          recognizer.abort();
-        } catch {
-          // ignore
-        }
-      },
-    };
-  } catch (err: any) {
-    handlers.onError?.(`Failed to initiate microphone: ${err?.message || err}`, false);
-    return null;
-  }
 }

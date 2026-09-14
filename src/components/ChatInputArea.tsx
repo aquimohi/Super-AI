@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AIState } from '../types';
-import { Send, Mic, MicOff, Square, Volume2, AudioLines } from 'lucide-react';
+import { Send, Mic, MicOff, Square, Volume2, AudioLines, Radio } from 'lucide-react';
 
 interface ChatInputAreaProps {
   currentState: AIState;
@@ -12,6 +12,8 @@ interface ChatInputAreaProps {
   onStopSpeaking?: () => void;
   voiceTranscript?: string;
   isListening?: boolean;
+  isLiveVoice?: boolean;
+  onToggleLiveVoice?: () => void;
 }
 
 const PRESET_COMMANDS = [
@@ -31,27 +33,16 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
   onStopSpeaking,
   voiceTranscript = '',
   isListening = false,
+  isLiveVoice = false,
+  onToggleLiveVoice,
 }) => {
   const [inputValue, setInputValue] = useState('');
 
   const activeListening = isListening || currentState === 'LISTENING';
   const isSpeakingState = currentState === 'SPEAKING';
 
-  // Live synchronizer: When listening, show "Listening..." until speech is detected, then show live transcript
-  useEffect(() => {
-    if (activeListening) {
-      if (voiceTranscript) {
-        setInputValue(voiceTranscript);
-      } else {
-        setInputValue('Listening...');
-      }
-    } else {
-      // If was showing "Listening..." and returned to IDLE with no speech, clear it
-      if (inputValue === 'Listening...') {
-        setInputValue('');
-      }
-    }
-  }, [activeListening, voiceTranscript]);
+  // We no longer sync the voice transcript to the input value.
+  // It will be displayed in the floating overlay instead.
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -86,6 +77,15 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
       id="chat-input-area"
       className="relative z-20 w-full max-w-4xl mx-auto px-4 pb-3 sm:pb-5"
     >
+      {/* Live Transcript Overlay */}
+      {(activeListening && voiceTranscript) && (
+        <div className="absolute -top-12 left-0 right-0 flex justify-center pointer-events-none animate-in fade-in slide-in-from-bottom-2 z-30">
+          <div className="bg-cyan-950/80 border border-cyan-500/50 text-cyan-300 font-mono text-sm px-4 py-2 rounded-lg shadow-[0_0_15px_rgba(34,211,238,0.3)] backdrop-blur-md max-w-[80%] text-center line-clamp-2">
+            {voiceTranscript}
+          </div>
+        </div>
+      )}
+
       {/* Quick Tactical Preset Chips */}
       <div className="flex items-center justify-center gap-2 mb-2.5 overflow-x-auto py-1 scrollbar-none">
         <span className="text-[10px] font-mono text-[#F2A900]/50 uppercase tracking-[0.2em] hidden md:inline">
@@ -148,7 +148,7 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
           onChange={(e) => setInputValue(e.target.value)}
           placeholder={
             activeListening
-              ? 'Listening...'
+              ? 'Listening for command...'
               : isSpeakingState
               ? 'Super AI vocal synthesis active...'
               : 'Ready for command... Click mic or type message'
@@ -220,6 +220,23 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
             ) : (
               <Mic className="w-3.5 h-3.5" />
             )}
+          </button>
+
+          {/* Live Voice Streaming Toggle */}
+          <button
+            type="button"
+            onClick={onToggleLiveVoice}
+            className={`p-2 sm:p-2.5 rounded border transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
+              isLiveVoice
+                ? 'bg-cyan-950/90 border-cyan-500 text-cyan-300 shadow-[0_0_15px_rgba(34,211,238,0.6)] animate-pulse'
+                : 'bg-black/40 border-cyan-500/20 text-cyan-500/70 hover:text-cyan-400 hover:border-cyan-500/50 hover:bg-cyan-500/10'
+            }`}
+            title={isLiveVoice ? 'Stop Live Voice Stream' : 'Start Live Voice Stream (Real-Time)'}
+          >
+            <Radio className="w-3.5 h-3.5" />
+            <span className="text-[10px] font-mono hidden sm:inline font-bold">
+              LIVE
+            </span>
           </button>
 
           {/* Transmit / Send Button */}

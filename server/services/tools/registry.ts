@@ -4,6 +4,7 @@ import { currentTimeTool } from './currentTime.js';
 import { currentDateTool } from './currentDate.js';
 import { webSearchTool } from './webSearch.js';
 import { readFileTool } from './readFile.js';
+import { executeCodeTool } from './executeCode.js';
 import {
   openApplicationTool,
   openUrlTool,
@@ -22,6 +23,8 @@ import {
   browserGoForwardTool,
   browserRefreshPageTool,
 } from '../browser/browserTools.js';
+import { smartGateTool } from './smartGateTool.js';
+import { repoModifierTool } from './repoModifierTool.js';
 
 class ToolRegistry {
   private tools: Map<string, ToolDefinition> = new Map();
@@ -69,6 +72,8 @@ class ToolRegistry {
     this.register(currentDateTool);
     this.register(webSearchTool);
     this.register(readFileTool);
+    // Autonomous Code Execution Sandbox
+    this.register(executeCodeTool);
     this.register(openApplicationTool);
     this.register(openUrlTool);
     this.register(openFolderTool);
@@ -84,6 +89,10 @@ class ToolRegistry {
     this.register(browserGoBackTool);
     this.register(browserGoForwardTool);
     this.register(browserRefreshPageTool);
+    // IoT Hardware Integration
+    this.register(smartGateTool);
+    // Code Evolution
+    this.register(repoModifierTool);
   }
 
   public register(tool: ToolDefinition): void {
@@ -165,6 +174,20 @@ class ToolRegistry {
       `11. screenshot: Capture a screenshot of the current window or desktop ONLY when explicitly requested.\n` +
       `    Parameters: { "reason": string }\n` +
       `    Example user prompts: "Current window ka screenshot lo", "Take a screenshot"\n\n` +
+      `12. execute_code: Write and execute Python or JavaScript code in a secure sandbox.\n` +
+      `   Parameters: { "code": string, "language": "python" | "javascript" }\n` +
+      `   RULE: You MUST use execute_code whenever the user asks you to write AND run/test a script or program.\n` +
+      `   RULE: Always write complete, self-contained code (no shell commands, no subprocess calls).\n` +
+      `   RULE: The sandbox enforces a strict 5-second timeout — avoid infinite loops.\n` +
+      `   Example: User asks "Write a Python script to calculate primes" → generate code, then call execute_code to run it and show results.\n\n` +
+      `13. trigger_smart_gate: Control the physical smart gate/door lock via ESP32 relay hardware.\n` +
+      `   Parameters: { "command": "UNLOCK" | "LOCK" | "PULSE_UNLOCK", "reason"?: string }\n` +
+      `   RULE: Use PULSE_UNLOCK for safe timed entry (auto-relocks after 5s). Always confirm before triggering.\n` +
+      `   Example: User says "Gate kholo" → { command: "PULSE_UNLOCK", reason: "User requested entry" }\n\n` +
+      `14. modify_backend_code: Modify backend source files, validate with TypeScript, and push to Git.\n` +
+      `   Parameters: { "files": [{ "path": string, "content": string }], "commitMessage": string }\n` +
+      `   RULE: Use this to autonomously evolve the codebase based on instructions. Modifying core configs (.env, package.json) is blocked.\n` +
+      `   Example: User says "Add timestamps to chat controller" → Generate new code, then call modify_backend_code to save and push.\n\n` +
       `HOW TO CALL TOOLS:\n` +
       `- If your interface supports native function calling, invoke the function directly.\n` +
       `- Otherwise, output a single JSON block:\n` +
@@ -175,7 +198,7 @@ class ToolRegistry {
       `}\n` +
       `\`\`\`\n` +
       `When requesting a tool, do not add introductory small talk. Once the tool executes, the server will return the structured tool result to you (e.g. { "success": true, "action": "open_application", "target": "chrome" }), and then you generate the final natural conversational answer for the user (e.g. "Chrome khol diya.") without exposing raw JSON.\n` +
-      `CRITICAL SECURITY POLICY: Terminal execution, bash commands, PowerShell, CMD scripts, registry modifications, and credential access are strictly prohibited and permanently blocked.`
+      `CRITICAL SECURITY POLICY: Terminal execution, bash commands, PowerShell, CMD scripts, registry modifications, and credential access are strictly prohibited and permanently blocked. Use execute_code (sandboxed) for any code execution needs.`
     );
   }
 

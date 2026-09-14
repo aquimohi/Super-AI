@@ -62,6 +62,8 @@ export interface SystemPermissions {
   browser: PermissionLevel;
   webSearch: PermissionLevel;
   executeTerminal: PermissionLevel;
+  // Autonomous Code Execution Sandbox
+  executeCode: PermissionLevel;
   runApplications: PermissionLevel;
   systemSettings: PermissionLevel;
   // Windows Computer Control V1 permissions
@@ -79,6 +81,9 @@ export interface SystemPermissions {
   browserGoBack: PermissionLevel;
   browserGoForward: PermissionLevel;
   browserRefreshPage: PermissionLevel;
+  smartGate: PermissionLevel;
+  // Code Evolution
+  modifyCode: PermissionLevel;
 }
 
 export interface BrowserControlSettings {
@@ -285,6 +290,7 @@ const DEFAULT_STORE: AppStoreData = {
     browser: 'ASK',
     webSearch: 'ALLOW',
     executeTerminal: 'DENY',
+    executeCode: 'ASK',
     runApplications: 'DENY',
     systemSettings: 'DENY',
     openApplication: 'ASK',
@@ -300,6 +306,10 @@ const DEFAULT_STORE: AppStoreData = {
     browserGoBack: 'ASK',
     browserGoForward: 'ASK',
     browserRefreshPage: 'ASK',
+    // IoT Hardware Integration
+    smartGate: 'ASK',
+    // Code Evolution
+    modifyCode: 'ASK',
   },
   tools: {
     calculator: { enabled: true, permission: 'ALLOW' },
@@ -307,6 +317,7 @@ const DEFAULT_STORE: AppStoreData = {
     current_date: { enabled: true, permission: 'ALLOW' },
     web_search: { enabled: true, permission: 'ASK' },
     read_file: { enabled: true, permission: 'ASK' },
+    execute_code: { enabled: true, permission: 'ASK' },
     open_application: { enabled: true, permission: 'ASK' },
     open_url: { enabled: true, permission: 'ASK' },
     open_folder: { enabled: true, permission: 'ASK' },
