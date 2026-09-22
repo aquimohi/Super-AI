@@ -32,31 +32,31 @@ const PERMISSION_ROWS: Array<{
     key: 'openApplication',
     label: 'Open Allowlisted Applications',
     desc: 'Launch approved executables (Chrome, Edge, Notepad, Calculator, Explorer). Arbitrary paths are strictly blocked.',
-    icon: <Monitor className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Monitor className="w-4 h-4 text-[#FFFFFF]" />,
   },
   {
     key: 'openUrl',
     label: 'Open Web URLs',
     desc: 'Launch validated URLs in default browser (HTTP/HTTPS only). Script schemes and dangerous protocols are blocked.',
-    icon: <Globe className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Globe className="w-4 h-4 text-[#FFFFFF]" />,
   },
   {
     key: 'openFolder',
     label: 'Open Permitted Safe Folders',
     desc: 'Open permitted directories (Downloads, Documents, Desktop, Workspace). System and credential folders are blocked.',
-    icon: <Folder className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Folder className="w-4 h-4 text-[#FFFFFF]" />,
   },
   {
     key: 'openFile',
     label: 'Open Workspace Files',
     desc: 'Open safe files within designated project workspace. Secrets and credential files (.env, keys) are blocked.',
-    icon: <FileText className="w-4 h-4 text-[#F2A900]" />,
+    icon: <FileText className="w-4 h-4 text-[#FFFFFF]" />,
   },
   {
     key: 'screenshot',
     label: 'Capture Screenshot',
     desc: 'Capture a snapshot of the current desktop or window only when explicitly prompted by user.',
-    icon: <Camera className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Camera className="w-4 h-4 text-[#FFFFFF]" />,
   },
 ];
 
@@ -169,7 +169,7 @@ export const ComputerControlSection: React.FC<ComputerControlSectionProps> = ({ 
   if (loading || !settings) {
     return (
       <div className="h-64 flex items-center justify-center font-mono text-xs text-stone-500 space-x-2">
-        <RefreshCw className="w-4 h-4 animate-spin text-[#F2A900]" />
+        <RefreshCw className="w-4 h-4 animate-spin text-[#FFFFFF]" />
         <span>Loading Computer Control security matrix...</span>
       </div>
     );
@@ -178,14 +178,14 @@ export const ComputerControlSection: React.FC<ComputerControlSectionProps> = ({ 
   return (
     <div className="space-y-6 max-w-4xl text-stone-200">
       {/* Header Banner */}
-      <div className="border border-[#F2A900]/30 bg-[#0d0d0d] p-4 rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="border border-[#FFFFFF]/30 bg-[#0d0d0d] p-4 rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
-            <Monitor className="w-5 h-5 text-[#F2A900]" />
-            <h2 className="text-base font-bold font-mono tracking-wider text-[#F2A900] uppercase">
+            <Monitor className="w-5 h-5 text-[#FFFFFF]" />
+            <h2 className="text-base font-bold font-mono tracking-wider text-[#FFFFFF] uppercase">
               Windows Computer Control
             </h2>
-            <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#F2A900]/20 text-[#F2A900] border border-[#F2A900]/40 rounded">
+            <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#FFFFFF]/20 text-[#FFFFFF] border border-[#FFFFFF]/40 rounded">
               SAFE V1
             </span>
           </div>
@@ -202,7 +202,7 @@ export const ComputerControlSection: React.FC<ComputerControlSectionProps> = ({ 
             disabled={saving}
             className={`px-3 py-1 text-xs font-mono font-bold rounded flex items-center space-x-1.5 cursor-pointer transition-all ${
               settings.enabled
-                ? 'bg-[#F2A900] text-black shadow-[0_0_12px_rgba(242,169,0,0.35)]'
+                ? 'bg-[#FFFFFF] text-black shadow-[0_0_12px_rgba(255,255,255,0.35)]'
                 : 'bg-stone-800 text-stone-400 border border-stone-700'
             }`}
           >
@@ -213,7 +213,7 @@ export const ComputerControlSection: React.FC<ComputerControlSectionProps> = ({ 
       </div>
 
       {statusMessage && (
-        <div className="p-3 bg-[#F2A900]/10 border border-[#F2A900]/30 text-[#F2A900] text-xs font-mono rounded flex items-center justify-between">
+        <div className="p-3 bg-[#FFFFFF]/10 border border-[#FFFFFF]/30 text-[#FFFFFF] text-xs font-mono rounded flex items-center justify-between">
           <span>{statusMessage}</span>
           <button onClick={() => setStatusMessage(null)} className="text-stone-400 hover:text-white cursor-pointer ml-2">
             ✕
@@ -268,7 +268,7 @@ export const ComputerControlSection: React.FC<ComputerControlSectionProps> = ({ 
           </div>
 
           <div className="p-2.5 rounded bg-black/40 border border-stone-800/80">
-            <div className="flex items-center space-x-1.5 text-[#F2A900] mb-1">
+            <div className="flex items-center space-x-1.5 text-[#FFFFFF] mb-1">
               <ShieldAlert className="w-3.5 h-3.5" />
               <span className="font-bold">Path & Credential Guard</span>
             </div>
@@ -283,7 +283,7 @@ export const ComputerControlSection: React.FC<ComputerControlSectionProps> = ({ 
       <div className="border border-stone-800 bg-[#080808] p-4 rounded-lg space-y-3">
         <div className="flex items-center justify-between border-b border-stone-800 pb-2">
           <div className="flex items-center space-x-2">
-            <ShieldAlert className="w-4 h-4 text-[#F2A900]" />
+            <ShieldAlert className="w-4 h-4 text-[#FFFFFF]" />
             <h3 className="text-xs font-bold font-mono tracking-wider text-stone-200 uppercase">
               Action Permission Policy Matrix
             </h3>
@@ -393,7 +393,7 @@ export const ComputerControlSection: React.FC<ComputerControlSectionProps> = ({ 
       <div className="border border-stone-800 bg-[#080808] p-4 rounded-lg space-y-3">
         <div className="flex items-center justify-between border-b border-stone-800 pb-2">
           <div className="flex items-center space-x-2">
-            <Folder className="w-4 h-4 text-[#F2A900]" />
+            <Folder className="w-4 h-4 text-[#FFFFFF]" />
             <h3 className="text-xs font-bold font-mono tracking-wider text-stone-200 uppercase">
               Safe Folder Allowlist
             </h3>

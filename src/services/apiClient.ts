@@ -58,6 +58,8 @@ export interface ChatApiResponse {
   taskId?: string;
   taskState?: AutonomousTaskState;
   taskSteps?: TaskStep[];
+  // Phase 6: Custom Cinematic TTS
+  audioBase64?: string;
   toolActivities?: Array<{
     id?: string;
     tool: string;

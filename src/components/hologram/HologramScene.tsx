@@ -141,7 +141,7 @@ function HologramFallback() {
       <icosahedronGeometry args={[0.6, 1]} />
       <meshBasicMaterial
         wireframe
-        color="#F2A900"
+        color="#FFFFFF"
         transparent
         opacity={0.45}
         depthWrite={false}

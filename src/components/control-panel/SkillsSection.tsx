@@ -164,19 +164,19 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
   return (
     <div className="space-y-6 text-white font-mono">
       {/* SECTION HEADER */}
-      <div className="p-4 rounded-xl border border-[#F2A900]/30 bg-black/60 backdrop-blur-md relative overflow-hidden">
-        <div className="absolute -right-8 -top-8 w-32 h-32 bg-[#F2A900]/10 rounded-full blur-2xl pointer-events-none" />
+      <div className="p-4 rounded-xl border border-[#FFFFFF]/30 bg-black/60 backdrop-blur-md relative overflow-hidden">
+        <div className="absolute -right-8 -top-8 w-32 h-32 bg-[#FFFFFF]/10 rounded-full blur-2xl pointer-events-none" />
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-[#F2A900]/10 border border-[#F2A900]/40 flex items-center justify-center text-[#F2A900] shadow-[0_0_15px_rgba(242,169,0,0.2)]">
+            <div className="w-12 h-12 rounded-lg bg-[#FFFFFF]/10 border border-[#FFFFFF]/40 flex items-center justify-center text-[#FFFFFF] shadow-[0_0_15px_rgba(255,255,255,0.2)]">
               <Sparkles className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold tracking-wider text-[#F2A900]">
+                <h2 className="text-xl font-bold tracking-wider text-[#FFFFFF]">
                   SUPER AI SKILLS SYSTEM
                 </h2>
-                <span className="px-2 py-0.5 text-[10px] uppercase font-bold rounded border border-[#F2A900]/40 text-[#F2A900] bg-[#F2A900]/10">
+                <span className="px-2 py-0.5 text-[10px] uppercase font-bold rounded border border-[#FFFFFF]/40 text-[#FFFFFF] bg-[#FFFFFF]/10">
                   V1 ARCHITECTURE
                 </span>
               </div>
@@ -202,7 +202,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
             <button
               onClick={handleSaveAll}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-bold rounded-lg bg-[#F2A900] text-black hover:bg-[#F2A900]/90 transition-all shadow-[0_0_15px_rgba(242,169,0,0.3)] disabled:opacity-50"
+              className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-bold rounded-lg bg-[#FFFFFF] text-black hover:bg-[#FFFFFF]/90 transition-all shadow-[0_0_15px_rgba(255,255,255,0.3)] disabled:opacity-50"
             >
               <Save className="w-3.5 h-3.5" />
               {saving ? 'SAVING...' : 'SAVE CONFIG'}
@@ -228,7 +228,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
           </div>
           <div className="p-2.5 rounded-lg bg-neutral-900/60 border border-neutral-800">
             <div className="text-[10px] text-neutral-400 uppercase">Security Isolation</div>
-            <div className="text-lg font-bold text-[#F2A900] mt-0.5">ZERO-SHELL SECURE</div>
+            <div className="text-lg font-bold text-[#FFFFFF] mt-0.5">ZERO-SHELL SECURE</div>
           </div>
         </div>
       </div>
@@ -263,7 +263,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
               key={skill.skillId}
               className={`p-4 rounded-xl border transition-all duration-200 ${
                 isEnabled
-                  ? 'border-neutral-700 bg-neutral-900/60 hover:border-[#F2A900]/40'
+                  ? 'border-neutral-700 bg-neutral-900/60 hover:border-[#FFFFFF]/40'
                   : 'border-neutral-800/80 bg-neutral-950/40 opacity-75'
               }`}
             >
@@ -272,7 +272,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
                   <div
                     className={`w-10 h-10 rounded-lg flex items-center justify-center border ${
                       isEnabled
-                        ? 'border-[#F2A900]/30 bg-[#F2A900]/10'
+                        ? 'border-[#FFFFFF]/30 bg-[#FFFFFF]/10'
                         : 'border-neutral-800 bg-neutral-900 text-neutral-600'
                     }`}
                   >

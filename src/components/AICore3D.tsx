@@ -19,7 +19,7 @@ function createParticleTexture(): THREE.CanvasTexture {
     const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
     gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
     gradient.addColorStop(0.2, 'rgba(255, 215, 0, 0.95)');
-    gradient.addColorStop(0.5, 'rgba(242, 169, 0, 0.45)');
+    gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.45)');
     gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 64, 64);
@@ -51,9 +51,9 @@ const STATE_THEMES: Record<
   IDLE: {
     coreColor: 0xffaa00,
     wireColor: 0xffb700,
-    ringColor: 0xf2a900,
+    ringColor: 0xffffff,
     glowColor: 0xff8c00,
-    particleColor: 0xf2a900,
+    particleColor: 0xffffff,
     lightIntensity: 2.2,
     rotationSpeed: 0.65,
     pulseFrequency: 1.2,
@@ -103,7 +103,7 @@ const STATE_THEMES: Record<
   EXECUTING: {
     coreColor: 0x00f0ff,
     wireColor: 0x22d3ee,
-    ringColor: 0xf2a900,
+    ringColor: 0xffffff,
     glowColor: 0x0284c7,
     particleColor: 0x00e5ff,
     lightIntensity: 4.0,
@@ -227,7 +227,7 @@ export const AICore3D: React.FC<AICore3DProps> = ({ state, onGlitchEnd }) => {
     // C. Outer Wireframe Energy Cage
     const outerCageGeo = new THREE.IcosahedronGeometry(2.9, 1);
     const outerCageMat = new THREE.MeshBasicMaterial({
-      color: 0xf2a900,
+      color: 0xffffff,
       wireframe: true,
       transparent: true,
       opacity: 0.35,
@@ -255,7 +255,7 @@ export const AICore3D: React.FC<AICore3DProps> = ({ state, onGlitchEnd }) => {
     // Ring 1: Primary Equator Ring with calibrated ticks
     const ring1Geo = new THREE.RingGeometry(4.2, 4.4, 80);
     const ring1Mat = new THREE.MeshBasicMaterial({
-      color: 0xf2a900,
+      color: 0xffffff,
       side: THREE.DoubleSide,
       transparent: true,
       opacity: 0.75,
@@ -282,7 +282,7 @@ export const AICore3D: React.FC<AICore3DProps> = ({ state, onGlitchEnd }) => {
     // Ring 3: Polar Longitudinal Ring
     const ring3Geo = new THREE.RingGeometry(5.6, 5.76, 64);
     const ring3Mat = new THREE.MeshBasicMaterial({
-      color: 0xf2a900,
+      color: 0xffffff,
       side: THREE.DoubleSide,
       transparent: true,
       opacity: 0.45,
@@ -310,7 +310,7 @@ export const AICore3D: React.FC<AICore3DProps> = ({ state, onGlitchEnd }) => {
     // Ring 5: Large Perimeter Tactical Data Ring
     const ring5Geo = new THREE.RingGeometry(7.8, 7.92, 96);
     const ring5Mat = new THREE.MeshBasicMaterial({
-      color: 0xf2a900,
+      color: 0xffffff,
       side: THREE.DoubleSide,
       transparent: true,
       opacity: 0.25,
@@ -379,7 +379,7 @@ export const AICore3D: React.FC<AICore3DProps> = ({ state, onGlitchEnd }) => {
       opacity: 0.75,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
-      color: 0xf2a900,
+      color: 0xffffff,
     });
     const particleSystem = new THREE.Points(particleGeo, particleMat);
     scene.add(particleSystem);
@@ -411,7 +411,7 @@ export const AICore3D: React.FC<AICore3DProps> = ({ state, onGlitchEnd }) => {
     coreMasterGroup.add(shieldMesh);
 
     // --- 9. Dynamic Holographic Lighting ---
-    const centralPointLight = new THREE.PointLight(0xf2a900, 3.0, 35);
+    const centralPointLight = new THREE.PointLight(0xffffff, 3.0, 35);
     centralPointLight.position.set(0, 0, 0);
     scene.add(centralPointLight);
 
@@ -457,7 +457,7 @@ export const AICore3D: React.FC<AICore3DProps> = ({ state, onGlitchEnd }) => {
     let animationFrameId: number;
     let clock = new THREE.Clock();
     let glitchDuration = 0;
-    let currentThemeColor = new THREE.Color(0xf2a900);
+    let currentThemeColor = new THREE.Color(0xffffff);
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
@@ -482,7 +482,7 @@ export const AICore3D: React.FC<AICore3DProps> = ({ state, onGlitchEnd }) => {
       currentThemeColor.lerp(targetColor, delta * 4);
 
       // Apply theme colors
-      innerCoreMat.color.copy(currentThemeColor);
+      innerCoreMat.color.setHex(0x000000); // Forced black core as requested
       latticeMat.color.copy(new THREE.Color(theme.wireColor));
       outerCageMat.color.copy(new THREE.Color(theme.wireColor));
       glowMat.color.copy(new THREE.Color(theme.glowColor));
@@ -643,7 +643,7 @@ export const AICore3D: React.FC<AICore3DProps> = ({ state, onGlitchEnd }) => {
       className="relative w-full h-full flex items-center justify-center overflow-hidden pointer-events-auto"
       style={{
         background:
-          'radial-gradient(ellipse at center, rgba(242, 169, 0, 0.08) 0%, rgba(5, 5, 5, 0.95) 100%)',
+          'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.08) 0%, rgba(5, 5, 5, 0.95) 100%)',
       }}
     />
   );

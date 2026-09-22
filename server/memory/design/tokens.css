@@ -1,0 +1,48 @@
+/* tokens.css — Design Memory Placeholder
+ * This file is a memory-system integration point.
+ * The canonical source is: server/design_genius/tokens.css
+ *
+ * To update design tokens, edit: server/design_genius/tokens.css
+ * This file is loaded by the design memory module and injected into DESIGNER agent contexts.
+ *
+ * ── Quick Reference Token Map ──
+ *
+ * COLOR:
+ *   --color-gold:              #FFFFFF
+ *   --color-gold-glow:         rgba(255, 255, 255, 0.40)
+ *   --color-gold-border:       rgba(255, 255, 255, 0.25)
+ *   --color-bg-base:           #050505
+ *   --color-bg-panel:          rgba(5, 5, 5, 0.85)
+ *   --color-bg-glass:          rgba(255, 255, 255, 0.04)
+ *   --color-text-primary:      #FFFFFF
+ *   --color-text-muted:        rgba(255, 255, 255, 0.40)
+ *   --color-success:           #22C55E
+ *   --color-error:             #EF4444
+ *   --color-info:              #22D3EE
+ *
+ * TYPOGRAPHY:
+ *   --font-sans:    'Outfit', 'Inter', system-ui
+ *   --font-mono:    'JetBrains Mono', 'Fira Code'
+ *   --text-xs:      0.625rem    --text-sm:   0.75rem
+ *   --text-base:    0.875rem    --text-md:   1rem
+ *   --text-lg:      1.125rem    --text-xl:   1.25rem
+ *   --text-2xl:     1.5rem      --text-3xl:  1.875rem
+ *
+ * SPACING (8px grid):
+ *   --space-1: 4px   --space-2: 8px   --space-3: 12px  --space-4: 16px
+ *   --space-5: 20px  --space-6: 24px  --space-8: 32px  --space-10: 40px
+ *
+ * SHADOWS/GLOWS:
+ *   --glow-sm:    0 0 8px  rgba(255, 255, 255, 0.25)
+ *   --glow-md:    0 0 16px rgba(255, 255, 255, 0.35)
+ *   --glow-lg:    0 0 32px rgba(255, 255, 255, 0.45)
+ *   --glow-error: 0 0 12px rgba(239, 68, 68, 0.35)
+ *   --glow-cyan:  0 0 12px rgba(34, 211, 238, 0.35)
+ *
+ * ANIMATION:
+ *   --duration-fast:   100ms   --duration-normal: 200ms
+ *   --duration-slow:   350ms
+ *   --ease-default:    cubic-bezier(0.4, 0, 0.2, 1)
+ *
+ * See full definitions → server/design_genius/tokens.css
+ */

@@ -21,6 +21,8 @@ interface TopNavigationProps {
   isWakeWordMode?: boolean;
   onStartWakeWord?: () => void;
   onStopWakeWord?: () => void;
+  audioEnabled?: boolean;
+  onToggleAudio?: () => void;
 }
 
 export const TopNavigation: React.FC<TopNavigationProps> = ({ 
@@ -28,11 +30,12 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   onOpenControlPanel,
   isWakeWordMode,
   onStartWakeWord,
-  onStopWakeWord
+  onStopWakeWord,
+  audioEnabled = true,
+  onToggleAudio
 }) => {
   const [timeString, setTimeString] = useState<string>('');
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [audioEnabled, setAudioEnabled] = useState(true);
 
   useEffect(() => {
     const updateClock = () => {
@@ -63,31 +66,31 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       case 'ERROR':
         return 'text-red-400 border-red-500/50 bg-red-950/40 shadow-[0_0_12px_rgba(239,68,68,0.3)]';
       case 'SPEAKING':
-        return 'text-[#F2A900] border-[#F2A900]/60 bg-[#F2A900]/20 shadow-[0_0_12px_rgba(242,169,0,0.4)]';
+        return 'text-[#FFFFFF] border-[#FFFFFF]/60 bg-[#FFFFFF]/20 shadow-[0_0_12px_rgba(255,255,255,0.4)]';
       case 'THINKING':
-        return 'text-[#F2A900] border-[#F2A900]/40 bg-[#F2A900]/15';
+        return 'text-[#FFFFFF] border-[#FFFFFF]/40 bg-[#FFFFFF]/15';
       case 'PROCESSING':
-        return 'text-[#F2A900] border-[#F2A900]/40 bg-[#F2A900]/15';
+        return 'text-[#FFFFFF] border-[#FFFFFF]/40 bg-[#FFFFFF]/15';
       case 'LISTENING':
-        return 'text-[#F2A900] border-[#F2A900]/50 bg-[#F2A900]/20';
+        return 'text-[#FFFFFF] border-[#FFFFFF]/50 bg-[#FFFFFF]/20';
       case 'IDLE':
       default:
-        return 'text-[#F2A900]/90 border-[#F2A900]/30 bg-[#F2A900]/10';
+        return 'text-[#FFFFFF]/90 border-[#FFFFFF]/30 bg-[#FFFFFF]/10';
     }
   };
 
   return (
     <header
       id="top-hud-bar"
-      className="relative z-20 w-full px-4 sm:px-8 py-3.5 flex justify-between items-end border-b border-[#F2A900]/30 pb-4 bg-[#050505]/80 backdrop-blur-md"
+      className="relative z-20 w-full px-4 sm:px-8 py-3.5 flex justify-between items-end border-b border-[#FFFFFF]/30 pb-4 bg-[#050505]/80 backdrop-blur-md"
     >
       {/* Left: Brand / Title - Sleek Interface Typography */}
       <div>
-        <div className="text-[10px] tracking-[0.3em] uppercase opacity-60 mb-1 text-[#F2A900]">
+        <div className="text-[10px] tracking-[0.3em] uppercase opacity-60 mb-1 text-[#FFFFFF]">
           Neural Link Established
         </div>
         <div className="flex items-baseline">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter italic text-[#F2A900] leading-none">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter italic text-[#FFFFFF] leading-none">
             SUPER AI
             <span className="text-xs sm:text-sm font-normal not-italic tracking-widest opacity-40 ml-2.5">
               VER 4.0.2
@@ -99,19 +102,19 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       {/* Middle/Right: Sleek Telemetry Readouts */}
       <div className="flex items-center gap-6 sm:gap-10 text-right">
         <div className="hidden md:flex flex-col">
-          <span className="text-[10px] uppercase tracking-widest opacity-50 text-[#F2A900]">
+          <span className="text-[10px] uppercase tracking-widest opacity-50 text-[#FFFFFF]">
             System Integrity
           </span>
-          <span className="text-sm sm:text-base font-mono text-[#F2A900] font-semibold">
+          <span className="text-sm sm:text-base font-mono text-[#FFFFFF] font-semibold">
             NOMINAL
           </span>
         </div>
 
         <div className="hidden sm:flex flex-col">
-          <span className="text-[10px] uppercase tracking-widest opacity-50 text-[#F2A900]">
+          <span className="text-[10px] uppercase tracking-widest opacity-50 text-[#FFFFFF]">
             Quantum Flux
           </span>
-          <span className="text-sm sm:text-base font-mono text-[#F2A900] font-semibold">
+          <span className="text-sm sm:text-base font-mono text-[#FFFFFF] font-semibold">
             1.42 THz
           </span>
         </div>
@@ -122,16 +125,16 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             currentState
           )}`}
         >
-          <div className="w-2 h-2 rounded-full bg-[#F2A900] shadow-[0_0_8px_#F2A900] animate-pulse" />
+          <div className="w-2 h-2 rounded-full bg-[#FFFFFF] shadow-[0_0_8px_#FFFFFF] animate-pulse" />
           <span>{currentState}</span>
         </div>
 
         {/* Tactical Clock */}
         <div className="hidden lg:flex flex-col text-right font-mono">
-          <span className="text-[10px] uppercase tracking-widest opacity-50 text-[#F2A900]">
+          <span className="text-[10px] uppercase tracking-widest opacity-50 text-[#FFFFFF]">
             Sync Time
           </span>
-          <span className="text-xs sm:text-sm text-[#F2A900]/90">
+          <span className="text-xs sm:text-sm text-[#FFFFFF]/90">
             {timeString || '00:00:00'}
           </span>
         </div>
@@ -142,12 +145,12 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
           {(onStartWakeWord && onStopWakeWord) && (
             <button
               onClick={() => isWakeWordMode ? onStopWakeWord() : onStartWakeWord()}
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded border transition-all cursor-pointer ${
-                isWakeWordMode
-                  ? 'border-cyan-400/60 bg-cyan-900/40 text-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.3)]'
-                  : 'border-[#F2A900]/30 bg-black/60 hover:bg-[#F2A900]/15 text-[#F2A900]/70 hover:text-[#F2A900]'
+              className={`p-1.5 sm:p-2 rounded border transition-colors cursor-pointer flex items-center gap-1.5 ${
+                isWakeWordMode 
+                  ? 'border-[#FFFFFF] bg-[#FFFFFF]/20 text-[#FFFFFF] shadow-[0_0_15px_rgba(255,255,255,0.4)]' 
+                  : 'border-[#FFFFFF]/20 bg-black/40 text-[#FFFFFF]/60 hover:text-[#FFFFFF] hover:border-[#FFFFFF]/50'
               }`}
-              title="Toggle Wake Word Mode (Always Listening for 'Jarvis')"
+              title="Toggle Wake Word Mode (Always Listening for 'Super AI')"
             >
               <AudioLines className={`w-3.5 h-3.5 ${isWakeWordMode ? 'animate-pulse' : ''}`} />
               <span className="hidden sm:inline text-[11px] font-mono tracking-wider font-semibold uppercase">
@@ -161,10 +164,10 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             <button
               id="btn-open-memory-matrix"
               onClick={() => onOpenControlPanel('memory')}
-              className="hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded border border-[#F2A900]/30 bg-black/60 hover:bg-[#F2A900]/15 text-[#F2A900] transition-all cursor-pointer"
+              className="hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded border border-[#FFFFFF]/30 bg-black/60 hover:bg-[#FFFFFF]/15 text-[#FFFFFF] transition-all cursor-pointer"
               title="Inspect AI Memory Matrix (Long-Term, Working, and Session)"
             >
-              <Database className="w-3.5 h-3.5 text-[#F2A900]" />
+              <Database className="w-3.5 h-3.5 text-[#FFFFFF]" />
               <span className="text-[11px] font-mono tracking-wider font-semibold uppercase">
                 MEMORY
               </span>
@@ -176,10 +179,10 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             <button
               id="btn-open-control-panel"
               onClick={() => onOpenControlPanel('api-keys')}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded border border-[#F2A900]/50 bg-[#F2A900]/10 hover:bg-[#F2A900]/25 text-[#F2A900] transition-all cursor-pointer shadow-[0_0_12px_rgba(242,169,0,0.2)]"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded border border-[#FFFFFF]/50 bg-[#FFFFFF]/10 hover:bg-[#FFFFFF]/25 text-[#FFFFFF] transition-all cursor-pointer shadow-[0_0_12px_rgba(255,255,255,0.2)]"
               title="Open Admin Control Panel (API Keys, Models, Permissions)"
             >
-              <Sliders className="w-3.5 h-3.5 text-[#F2A900]" />
+              <Sliders className="w-3.5 h-3.5 text-[#FFFFFF]" />
               <span className="text-[11px] font-mono tracking-wider font-semibold uppercase">
                 CONTROL PANEL
               </span>
@@ -188,17 +191,17 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
 
           <button
             id="audio-toggle-btn"
-            onClick={() => setAudioEnabled(!audioEnabled)}
-            className="p-1.5 sm:p-2 rounded border border-[#F2A900]/20 bg-black/40 text-[#F2A900] hover:text-[#F2A900] hover:border-[#F2A900]/50 transition-colors cursor-pointer"
+            onClick={onToggleAudio}
+            className="p-1.5 sm:p-2 rounded border border-[#FFFFFF]/20 bg-black/40 text-[#FFFFFF] hover:text-[#FFFFFF] hover:border-[#FFFFFF]/50 transition-colors cursor-pointer"
             title={audioEnabled ? 'Holographic Audio Enabled' : 'Audio Muted'}
           >
-            {audioEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5 text-[#F2A900]/40" />}
+            {audioEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5 text-[#FFFFFF]/40" />}
           </button>
 
           <button
             id="fullscreen-toggle-btn"
             onClick={toggleFullscreen}
-            className="p-1.5 sm:p-2 rounded border border-[#F2A900]/20 bg-black/40 text-[#F2A900] hover:text-[#F2A900] hover:border-[#F2A900]/50 transition-colors cursor-pointer hidden sm:block"
+            className="p-1.5 sm:p-2 rounded border border-[#FFFFFF]/20 bg-black/40 text-[#FFFFFF] hover:text-[#FFFFFF] hover:border-[#FFFFFF]/50 transition-colors cursor-pointer hidden sm:block"
             title="Toggle Fullscreen Interface"
           >
             {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}

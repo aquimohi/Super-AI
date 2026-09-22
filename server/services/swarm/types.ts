@@ -1,4 +1,4 @@
-export type AgentRole = 'HEAD' | 'CODER' | 'SCRAPER' | 'TESTER';
+export type AgentRole = 'HEAD' | 'CODER' | 'SCRAPER' | 'TESTER' | 'DESIGNER' | 'COPY_EDITOR';
 
 export interface SwarmTask {
   id: string;
@@ -21,4 +21,9 @@ export interface SwarmAgentResult {
   role: AgentRole;
   success: boolean;
   output: string;
+}
+
+export interface SwarmPlan {
+  isDesignTask: boolean;
+  subTasks: Array<{ agent: AgentRole; instructions: string }>;
 }

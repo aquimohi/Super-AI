@@ -139,16 +139,16 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="hud-panel rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col overflow-hidden border border-[#F2A900]/30 bg-[#080808] text-white shadow-2xl">
+      <div className="hud-panel rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col overflow-hidden border border-[#FFFFFF]/30 bg-[#080808] text-white shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#F2A900]/20 bg-black/60">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#FFFFFF]/20 bg-black/60">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-[#F2A900]/10 border border-[#F2A900]/30 text-[#F2A900]">
+            <div className="p-2 rounded-lg bg-[#FFFFFF]/10 border border-[#FFFFFF]/30 text-[#FFFFFF]">
               <Database className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-mono font-bold uppercase tracking-wider text-[#F2A900]">
+                <h2 className="text-base font-mono font-bold uppercase tracking-wider text-[#FFFFFF]">
                   Super AI Memory Matrix
                 </h2>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-800 text-emerald-400">
@@ -164,10 +164,10 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
             <button
               onClick={fetchData}
               disabled={loading}
-              className="p-1.5 rounded border border-stone-800 hover:border-[#F2A900]/50 text-stone-400 hover:text-[#F2A900] transition-colors cursor-pointer"
+              className="p-1.5 rounded border border-stone-800 hover:border-[#FFFFFF]/50 text-stone-400 hover:text-[#FFFFFF] transition-colors cursor-pointer"
               title="Refresh Memory Matrix"
             >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-[#F2A900]' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-[#FFFFFF]' : ''}`} />
             </button>
             <button
               onClick={onClose}
@@ -184,7 +184,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
             onClick={() => setActiveTab('longterm')}
             className={`py-3 px-4 text-xs font-mono font-bold tracking-wider uppercase border-b-2 transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'longterm'
-                ? 'border-[#F2A900] text-[#F2A900]'
+                ? 'border-[#FFFFFF] text-[#FFFFFF]'
                 : 'border-transparent text-stone-400 hover:text-stone-200'
             }`}
           >
@@ -196,7 +196,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
             onClick={() => setActiveTab('working')}
             className={`py-3 px-4 text-xs font-mono font-bold tracking-wider uppercase border-b-2 transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'working'
-                ? 'border-[#F2A900] text-[#F2A900]'
+                ? 'border-[#FFFFFF] text-[#FFFFFF]'
                 : 'border-transparent text-stone-400 hover:text-stone-200'
             }`}
           >
@@ -208,7 +208,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
             onClick={() => setActiveTab('conversation')}
             className={`py-3 px-4 text-xs font-mono font-bold tracking-wider uppercase border-b-2 transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'conversation'
-                ? 'border-[#F2A900] text-[#F2A900]'
+                ? 'border-[#FFFFFF] text-[#FFFFFF]'
                 : 'border-transparent text-stone-400 hover:text-stone-200'
             }`}
           >
@@ -242,13 +242,13 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
                       placeholder="Search memory keys or content..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-9 pr-3 py-1.5 text-xs font-mono bg-black border border-stone-800 rounded text-stone-200 placeholder-stone-600 focus:border-[#F2A900] focus:outline-none"
+                      className="w-full pl-9 pr-3 py-1.5 text-xs font-mono bg-black border border-stone-800 rounded text-stone-200 placeholder-stone-600 focus:border-[#FFFFFF] focus:outline-none"
                     />
                   </div>
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="py-1.5 px-3 text-xs font-mono bg-black border border-stone-800 rounded text-stone-300 focus:border-[#F2A900] focus:outline-none cursor-pointer"
+                    className="py-1.5 px-3 text-xs font-mono bg-black border border-stone-800 rounded text-stone-300 focus:border-[#FFFFFF] focus:outline-none cursor-pointer"
                   >
                     <option value="all">All Categories</option>
                     <option value="user_preference">User Preferences</option>
@@ -262,7 +262,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setShowAddForm(!showAddForm)}
-                    className="px-3 py-1.5 text-xs font-mono font-bold rounded bg-[#F2A900]/10 border border-[#F2A900]/40 text-[#F2A900] hover:bg-[#F2A900]/20 transition-all flex items-center gap-1.5 cursor-pointer"
+                    className="px-3 py-1.5 text-xs font-mono font-bold rounded bg-[#FFFFFF]/10 border border-[#FFFFFF]/40 text-[#FFFFFF] hover:bg-[#FFFFFF]/20 transition-all flex items-center gap-1.5 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Store Fact</span>
@@ -285,10 +285,10 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
               {showAddForm && (
                 <form
                   onSubmit={handleCreateMemory}
-                  className="p-4 rounded-xl border border-[#F2A900]/30 bg-[#0d0d0d] space-y-3"
+                  className="p-4 rounded-xl border border-[#FFFFFF]/30 bg-[#0d0d0d] space-y-3"
                 >
                   <div className="flex items-center justify-between pb-2 border-b border-stone-800">
-                    <span className="text-xs font-mono font-bold text-[#F2A900] uppercase">
+                    <span className="text-xs font-mono font-bold text-[#FFFFFF] uppercase">
                       Record Explicit Fact into Long-Term Vault
                     </span>
                     <button
@@ -308,7 +308,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
                         value={newKey}
                         onChange={(e) => setNewKey(e.target.value)}
                         required
-                        className="w-full px-3 py-1.5 text-xs font-mono bg-black border border-stone-800 rounded text-stone-200 focus:border-[#F2A900] focus:outline-none"
+                        className="w-full px-3 py-1.5 text-xs font-mono bg-black border border-stone-800 rounded text-stone-200 focus:border-[#FFFFFF] focus:outline-none"
                       />
                     </div>
                     <div>
@@ -316,7 +316,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
                       <select
                         value={newCategory}
                         onChange={(e) => setNewCategory(e.target.value as any)}
-                        className="w-full px-3 py-1.5 text-xs font-mono bg-black border border-stone-800 rounded text-stone-200 focus:border-[#F2A900] focus:outline-none cursor-pointer"
+                        className="w-full px-3 py-1.5 text-xs font-mono bg-black border border-stone-800 rounded text-stone-200 focus:border-[#FFFFFF] focus:outline-none cursor-pointer"
                       >
                         <option value="user_preference">User Preference</option>
                         <option value="project_fact">Project Fact</option>
@@ -333,7 +333,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
                       value={newContent}
                       onChange={(e) => setNewContent(e.target.value)}
                       required
-                      className="w-full px-3 py-2 text-xs font-mono bg-black border border-stone-800 rounded text-stone-200 focus:border-[#F2A900] focus:outline-none"
+                      className="w-full px-3 py-2 text-xs font-mono bg-black border border-stone-800 rounded text-stone-200 focus:border-[#FFFFFF] focus:outline-none"
                     />
                   </div>
                   <div className="flex justify-end gap-2">
@@ -346,7 +346,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-1.5 text-xs font-mono font-bold rounded bg-[#F2A900] text-black hover:bg-[#ffbe26] cursor-pointer"
+                      className="px-4 py-1.5 text-xs font-mono font-bold rounded bg-[#FFFFFF] text-black hover:bg-[#ffbe26] cursor-pointer"
                     >
                       Save to Vault
                     </button>
@@ -362,7 +362,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
                     No long-term memories stored yet.
                   </p>
                   <p className="text-[11px] font-mono text-stone-600 mt-1">
-                    Say <span className="text-[#F2A900]">"Remember that my project is called Super AI"</span> or click "Store Fact" above.
+                    Say <span className="text-[#FFFFFF]">"Remember that my project is called Super AI"</span> or click "Store Fact" above.
                   </p>
                 </div>
               ) : (
@@ -370,11 +370,11 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
                   {longTermItems.map((item) => (
                     <div
                       key={item.id}
-                      className="p-3.5 rounded-xl border border-stone-800 bg-black/50 hover:border-[#F2A900]/40 transition-colors flex items-start justify-between gap-4"
+                      className="p-3.5 rounded-xl border border-stone-800 bg-black/50 hover:border-[#FFFFFF]/40 transition-colors flex items-start justify-between gap-4"
                     >
                       <div className="space-y-1.5 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-xs font-mono font-bold text-[#F2A900] tracking-wide">
+                          <span className="text-xs font-mono font-bold text-[#FFFFFF] tracking-wide">
                             {item.key}
                           </span>
                           <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-stone-900 border border-stone-800 text-stone-300 uppercase">
@@ -410,7 +410,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
           {activeTab === 'working' && (
             <div className="space-y-4">
               <div className="p-4 rounded-xl border border-stone-800 bg-black/50 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#F2A900] uppercase">
+                <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#FFFFFF] uppercase">
                   <Cpu className="w-4 h-4" />
                   <span>Current Objective & Task State</span>
                 </div>
@@ -424,13 +424,13 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
               </div>
 
               <div className="p-4 rounded-xl border border-stone-800 bg-black/50 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#F2A900] uppercase">
+                <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#FFFFFF] uppercase">
                   <Brain className="w-4 h-4" />
                   <span>Active Tool Execution State</span>
                 </div>
                 {workingMemoryData?.currentToolExecution ? (
                   <div className="p-3 rounded bg-[#0a0a0a] border border-stone-900 text-xs font-mono space-y-1.5 text-stone-300">
-                    <div className="flex items-center justify-between text-[#F2A900]">
+                    <div className="flex items-center justify-between text-[#FFFFFF]">
                       <span className="font-bold">Tool: {workingMemoryData.currentToolExecution.tool}</span>
                       <span className="text-[10px] opacity-70">
                         {workingMemoryData.currentToolExecution.startedAt}
@@ -448,7 +448,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
               </div>
 
               <div className="p-4 rounded-xl border border-stone-800 bg-black/50 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#F2A900] uppercase">
+                <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#FFFFFF] uppercase">
                   <Database className="w-4 h-4" />
                   <span>Temporary Variables</span>
                 </div>
@@ -456,7 +456,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {Object.entries(workingMemoryData.temporaryVariables).map(([k, v]) => (
                       <div key={k} className="p-2.5 rounded bg-[#0a0a0a] border border-stone-900 font-mono text-xs">
-                        <div className="text-[#F2A900] font-semibold text-[11px]">{k}</div>
+                        <div className="text-[#FFFFFF] font-semibold text-[11px]">{k}</div>
                         <div className="text-stone-300 text-xs truncate" title={String(v)}>
                           {typeof v === 'object' ? JSON.stringify(v) : String(v)}
                         </div>
@@ -482,7 +482,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
                 </div>
                 <div className="p-3.5 rounded-xl border border-stone-800 bg-black/50 space-y-1">
                   <div className="text-[10px] font-mono text-stone-400 uppercase">Message Count</div>
-                  <div className="text-sm font-mono font-bold text-[#F2A900]">
+                  <div className="text-sm font-mono font-bold text-[#FFFFFF]">
                     {conversationData?.messages?.length || 0}
                   </div>
                 </div>
@@ -495,7 +495,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
               </div>
 
               <div className="flex items-center justify-between pt-2">
-                <span className="text-xs font-mono font-bold text-[#F2A900] uppercase">
+                <span className="text-xs font-mono font-bold text-[#FFFFFF] uppercase">
                   Recent Session Transcript
                 </span>
                 {conversationData && (
@@ -525,7 +525,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
                         m.role === 'user'
                           ? 'bg-black/60 border-stone-800 text-stone-200'
                           : m.role === 'assistant'
-                          ? 'bg-[#F2A900]/10 border-[#F2A900]/30 text-[#F2A900]'
+                          ? 'bg-[#FFFFFF]/10 border-[#FFFFFF]/30 text-[#FFFFFF]'
                           : 'bg-stone-950 border-stone-900 text-stone-400'
                       }`}
                     >
@@ -543,7 +543,7 @@ export const ViewMemoryModal: React.FC<ViewMemoryModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 border-t border-[#F2A900]/20 bg-black/60 flex items-center justify-between">
+        <div className="px-6 py-3 border-t border-[#FFFFFF]/20 bg-black/60 flex items-center justify-between">
           <div className="flex items-center gap-2 text-[10px] font-mono text-stone-500">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
             <span>Zero Unsolicited Memory Creation Policy Enforced</span>

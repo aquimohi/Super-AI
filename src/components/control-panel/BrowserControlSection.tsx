@@ -33,49 +33,49 @@ const BROWSER_PERMISSION_ROWS: Array<{
     key: 'browserOpenPage',
     label: 'Open Safe Web Page',
     desc: 'Navigate to validated HTTP/HTTPS URLs in the dedicated Super AI browser. Dangerous schemes (javascript:, file:, data:) are rejected.',
-    icon: <Globe className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Globe className="w-4 h-4 text-[#FFFFFF]" />,
   },
   {
     key: 'browserReadPage',
     label: 'Read Page Content',
     desc: 'Extract and clean text from the active page with scripts, styles, forms, and tracking tags automatically stripped.',
-    icon: <FileText className="w-4 h-4 text-[#F2A900]" />,
+    icon: <FileText className="w-4 h-4 text-[#FFFFFF]" />,
   },
   {
     key: 'browserFindText',
     label: 'Find Text on Page',
     desc: 'Search for specific keywords and sentences within sanitized page text without modifying or manipulating the DOM.',
-    icon: <Search className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Search className="w-4 h-4 text-[#FFFFFF]" />,
   },
   {
     key: 'browserFindLinks',
     label: 'Extract Links',
     desc: 'Read anchor elements and extract relevant documentation or navigation links matching user query.',
-    icon: <Link className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Link className="w-4 h-4 text-[#FFFFFF]" />,
   },
   {
     key: 'browserClickLink',
     label: 'Click Safe Link',
     desc: 'Navigate to target links found on the current page after validating destination URL security.',
-    icon: <MousePointer className="w-4 h-4 text-[#F2A900]" />,
+    icon: <MousePointer className="w-4 h-4 text-[#FFFFFF]" />,
   },
   {
     key: 'browserGoBack',
     label: 'Navigate Back',
     desc: 'Go back to the previous page in the current conversation browser history stack.',
-    icon: <ArrowLeft className="w-4 h-4 text-[#F2A900]" />,
+    icon: <ArrowLeft className="w-4 h-4 text-[#FFFFFF]" />,
   },
   {
     key: 'browserGoForward',
     label: 'Navigate Forward',
     desc: 'Go forward in the session browser navigation history stack.',
-    icon: <ArrowRight className="w-4 h-4 text-[#F2A900]" />,
+    icon: <ArrowRight className="w-4 h-4 text-[#FFFFFF]" />,
   },
   {
     key: 'browserRefreshPage',
     label: 'Refresh Page',
     desc: 'Reload the current page while maintaining security sanitization and session state.',
-    icon: <RotateCw className="w-4 h-4 text-[#F2A900]" />,
+    icon: <RotateCw className="w-4 h-4 text-[#FFFFFF]" />,
   },
 ];
 
@@ -170,7 +170,7 @@ export const BrowserControlSection: React.FC<BrowserControlSectionProps> = ({ on
   if (loading && !settings) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-[#A0AEC0]">
-        <RefreshCw className="w-8 h-8 animate-spin text-[#F2A900] mb-3" />
+        <RefreshCw className="w-8 h-8 animate-spin text-[#FFFFFF] mb-3" />
         <p className="text-sm font-mono tracking-wider">INITIALIZING CONTROLLED BROWSER SUBSYSTEM...</p>
       </div>
     );
@@ -179,13 +179,13 @@ export const BrowserControlSection: React.FC<BrowserControlSectionProps> = ({ on
   return (
     <div className="space-y-6">
       {/* Top Banner / Master Switch */}
-      <div className="p-4 rounded-lg bg-black/40 border border-[#F2A900]/30 relative overflow-hidden backdrop-blur-sm">
+      <div className="p-4 rounded-lg bg-black/40 border border-[#FFFFFF]/30 relative overflow-hidden backdrop-blur-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div
               className={`p-2.5 rounded-lg border ${
                 settings?.enabled
-                  ? 'bg-[#F2A900]/10 border-[#F2A900]/40 text-[#F2A900]'
+                  ? 'bg-[#FFFFFF]/10 border-[#FFFFFF]/40 text-[#FFFFFF]'
                   : 'bg-zinc-800/40 border-zinc-700 text-zinc-500'
               }`}
             >
@@ -196,7 +196,7 @@ export const BrowserControlSection: React.FC<BrowserControlSectionProps> = ({ on
                 <h3 className="text-base font-semibold text-white tracking-wide">
                   Controlled Browser Automation
                 </h3>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#F2A900]/20 text-[#F2A900] border border-[#F2A900]/40">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#FFFFFF]/20 text-[#FFFFFF] border border-[#FFFFFF]/40">
                   SAFE V1
                 </span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
@@ -216,7 +216,7 @@ export const BrowserControlSection: React.FC<BrowserControlSectionProps> = ({ on
               disabled={saving}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-xs font-semibold tracking-wider transition-all border ${
                 settings?.enabled
-                  ? 'bg-[#F2A900] text-black border-[#F2A900] hover:bg-[#F2A900]/90 shadow-[0_0_15px_rgba(242,169,0,0.3)]'
+                  ? 'bg-[#FFFFFF] text-black border-[#FFFFFF] hover:bg-[#FFFFFF]/90 shadow-[0_0_15px_rgba(255,255,255,0.3)]'
                   : 'bg-zinc-900 text-zinc-400 border-zinc-700 hover:border-zinc-500'
               }`}
             >
@@ -227,7 +227,7 @@ export const BrowserControlSection: React.FC<BrowserControlSectionProps> = ({ on
         </div>
 
         {statusMessage && (
-          <div className="mt-3 text-xs font-mono text-[#F2A900] bg-[#F2A900]/10 px-3 py-1.5 rounded border border-[#F2A900]/20 flex items-center justify-between">
+          <div className="mt-3 text-xs font-mono text-[#FFFFFF] bg-[#FFFFFF]/10 px-3 py-1.5 rounded border border-[#FFFFFF]/20 flex items-center justify-between">
             <span>{statusMessage}</span>
             <button onClick={() => setStatusMessage(null)} className="text-xs opacity-70 hover:opacity-100">
               ×
@@ -282,7 +282,7 @@ export const BrowserControlSection: React.FC<BrowserControlSectionProps> = ({ on
               Configure access levels for each browser action (ALLOW / ASK / DENY). Defaults to ASK for safety.
             </p>
           </div>
-          <span className="text-[11px] font-mono text-[#F2A900] bg-[#F2A900]/10 px-2 py-0.5 rounded border border-[#F2A900]/20">
+          <span className="text-[11px] font-mono text-[#FFFFFF] bg-[#FFFFFF]/10 px-2 py-0.5 rounded border border-[#FFFFFF]/20">
             8 ACTIONS
           </span>
         </div>
@@ -316,7 +316,7 @@ export const BrowserControlSection: React.FC<BrowserControlSectionProps> = ({ on
                       if (level === 'ALLOW') {
                         style = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/60 font-bold';
                       } else if (level === 'ASK') {
-                        style = 'bg-[#F2A900]/20 text-[#F2A900] border-[#F2A900]/60 font-bold shadow-[0_0_8px_rgba(242,169,0,0.2)]';
+                        style = 'bg-[#FFFFFF]/20 text-[#FFFFFF] border-[#FFFFFF]/60 font-bold shadow-[0_0_8px_rgba(255,255,255,0.2)]';
                       } else {
                         style = 'bg-rose-500/20 text-rose-300 border-rose-500/60 font-bold';
                       }
@@ -344,7 +344,7 @@ export const BrowserControlSection: React.FC<BrowserControlSectionProps> = ({ on
       <div className="rounded-lg bg-black/40 border border-zinc-800 p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <Lock className="w-4 h-4 text-[#F2A900]" />
+            <Lock className="w-4 h-4 text-[#FFFFFF]" />
             <h4 className="text-xs font-bold font-mono tracking-wider text-white uppercase">
               Permanent Security Enforcements
             </h4>

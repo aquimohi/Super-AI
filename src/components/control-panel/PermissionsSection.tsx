@@ -33,126 +33,126 @@ const PERMISSION_CONFIG: Array<{
     key: 'microphone',
     label: 'Microphone Access',
     category: 'hardware',
-    icon: <Mic className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Mic className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Real-time audio capture and speech recognition matrix',
   },
   {
     key: 'camera',
     label: 'Camera / Optical Feed',
     category: 'hardware',
-    icon: <Camera className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Camera className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Visual frame acquisition and computer vision input',
   },
   {
     key: 'readFiles',
     label: 'Read Local Files',
     category: 'filesystem',
-    icon: <FileText className="w-4 h-4 text-[#F2A900]" />,
+    icon: <FileText className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Inspect documents, workspace files, code, and transcripts',
   },
   {
     key: 'writeFiles',
     label: 'Write / Modify Files',
     category: 'filesystem',
-    icon: <FileEdit className="w-4 h-4 text-[#F2A900]" />,
+    icon: <FileEdit className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Create and update local files in designated workspace folders',
   },
   {
     key: 'deleteFiles',
     label: 'Delete Files',
     category: 'filesystem',
-    icon: <Trash2 className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Trash2 className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Permanent deletion of files and directory trees',
   },
   {
     key: 'browser',
     label: 'Automated Browser Control',
     category: 'network',
-    icon: <Globe className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Globe className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Headless / interactive browser navigation and form filling',
   },
   {
     key: 'webSearch',
     label: 'Live Web Search',
     category: 'network',
-    icon: <Search className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Search className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Query external search engines and retrieve ground truth data',
   },
   {
     key: 'executeTerminal',
     label: 'Execute Terminal Commands',
     category: 'system',
-    icon: <Terminal className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Terminal className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Run shell commands, CLI utilities, and background processes',
   },
   {
     key: 'runApplications',
     label: 'Launch Local Applications',
     category: 'system',
-    icon: <PlaySquare className="w-4 h-4 text-[#F2A900]" />,
+    icon: <PlaySquare className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Execute desktop applications on user operating system',
   },
   {
     key: 'systemSettings',
     label: 'System & Hardware Settings',
     category: 'system',
-    icon: <Sliders className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Sliders className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Modify OS volume, display brightness, networking, and power states',
   },
   {
     key: 'browserOpenPage',
     label: 'Browser: Open Safe Web Page',
     category: 'network',
-    icon: <Globe className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Globe className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Navigate to validated HTTP/HTTPS URLs in the dedicated Super AI browser sandbox',
   },
   {
     key: 'browserReadPage',
     label: 'Browser: Read Page Content',
     category: 'network',
-    icon: <FileText className="w-4 h-4 text-[#F2A900]" />,
+    icon: <FileText className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Extract clean text from active web page with scripts and styles stripped',
   },
   {
     key: 'browserFindText',
     label: 'Browser: Find Text on Page',
     category: 'network',
-    icon: <Search className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Search className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Search for keywords and phrases in sanitized web page content',
   },
   {
     key: 'browserFindLinks',
     label: 'Browser: Extract Links',
     category: 'network',
-    icon: <Globe className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Globe className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Extract anchor links matching search queries from the active web page',
   },
   {
     key: 'browserClickLink',
     label: 'Browser: Click Safe Link',
     category: 'network',
-    icon: <PlaySquare className="w-4 h-4 text-[#F2A900]" />,
+    icon: <PlaySquare className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Navigate to target link destination after validating URL safety',
   },
   {
     key: 'browserGoBack',
     label: 'Browser: Navigate Back',
     category: 'network',
-    icon: <Sliders className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Sliders className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Return to previous page in session browser navigation history',
   },
   {
     key: 'browserGoForward',
     label: 'Browser: Navigate Forward',
     category: 'network',
-    icon: <Sliders className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Sliders className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Advance to forward page in session browser navigation history',
   },
   {
     key: 'browserRefreshPage',
     label: 'Browser: Refresh Page',
     category: 'network',
-    icon: <Globe className="w-4 h-4 text-[#F2A900]" />,
+    icon: <Globe className="w-4 h-4 text-[#FFFFFF]" />,
     desc: 'Reload the active page in isolated browser session',
   },
 ];
@@ -205,10 +205,10 @@ export const PermissionsSection: React.FC<PermissionsSectionProps> = ({
 
   return (
     <div className="space-y-6">
-      <div className="p-4 rounded border border-[#F2A900]/20 bg-[#0a0a0a]">
+      <div className="p-4 rounded border border-[#FFFFFF]/20 bg-[#0a0a0a]">
         <div className="flex items-center gap-2">
-          <Shield className="w-5 h-5 text-[#F2A900]" />
-          <h3 className="text-sm font-mono tracking-widest text-[#F2A900] uppercase">
+          <Shield className="w-5 h-5 text-[#FFFFFF]" />
+          <h3 className="text-sm font-mono tracking-widest text-[#FFFFFF] uppercase">
             System & Hardware Permission Architecture
           </h3>
         </div>
@@ -298,7 +298,7 @@ export const PermissionsSection: React.FC<PermissionsSectionProps> = ({
           <button
             type="submit"
             disabled={saving}
-            className="px-5 py-2 text-xs font-mono font-semibold text-black bg-[#F2A900] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50"
+            className="px-5 py-2 text-xs font-mono font-semibold text-black bg-[#FFFFFF] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50"
           >
             {saving ? 'SAVING...' : 'COMMIT PERMISSION POLICIES'}
           </button>
@@ -308,7 +308,7 @@ export const PermissionsSection: React.FC<PermissionsSectionProps> = ({
       {/* Interactive Permission Policy Tester */}
       <div className="p-4 rounded border border-stone-800 bg-[#080808] space-y-3">
         <div className="flex items-center gap-2">
-          <Zap className="w-4 h-4 text-[#F2A900]" />
+          <Zap className="w-4 h-4 text-[#FFFFFF]" />
           <h4 className="font-mono text-xs font-semibold text-white uppercase tracking-wider">
             Live Permission Evaluation Simulator
           </h4>

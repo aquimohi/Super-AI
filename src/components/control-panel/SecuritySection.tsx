@@ -43,10 +43,10 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
 
   return (
     <div className="space-y-6">
-      <div className="p-4 rounded border border-[#F2A900]/20 bg-[#0a0a0a]">
+      <div className="p-4 rounded border border-[#FFFFFF]/20 bg-[#0a0a0a]">
         <div className="flex items-center gap-2">
-          <Lock className="w-5 h-5 text-[#F2A900]" />
-          <h3 className="text-sm font-mono tracking-widest text-[#F2A900] uppercase">
+          <Lock className="w-5 h-5 text-[#FFFFFF]" />
+          <h3 className="text-sm font-mono tracking-widest text-[#FFFFFF] uppercase">
             Local Security & Cryptographic Auditing
           </h3>
         </div>
@@ -76,7 +76,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
         </div>
 
         <div className="p-3.5 rounded border border-stone-800 bg-[#080808] space-y-1">
-          <div className="flex items-center gap-2 text-[#F2A900] text-xs font-mono font-bold">
+          <div className="flex items-center gap-2 text-[#FFFFFF] text-xs font-mono font-bold">
             <AlertTriangle className="w-4 h-4" />
             <span>RATE LIMIT FAILOVER</span>
           </div>
@@ -126,7 +126,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
         <div className="p-4 rounded border border-stone-800 bg-[#080808] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono text-white font-semibold uppercase">API Key Rotation Reminder</span>
-            <span className="text-xs font-mono text-[#F2A900]">{security.keyRotationAlertDays} days</span>
+            <span className="text-xs font-mono text-[#FFFFFF]">{security.keyRotationAlertDays} days</span>
           </div>
           <input
             type="range"
@@ -135,7 +135,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
             step="15"
             value={security.keyRotationAlertDays}
             onChange={(e) => setSecurity({ ...security, keyRotationAlertDays: parseInt(e.target.value, 10) })}
-            className="w-full accent-[#F2A900] cursor-pointer"
+            className="w-full accent-[#FFFFFF] cursor-pointer"
           />
         </div>
 
@@ -156,7 +156,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
           <button
             type="submit"
             disabled={saving}
-            className="px-5 py-2 text-xs font-mono font-semibold text-black bg-[#F2A900] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50"
+            className="px-5 py-2 text-xs font-mono font-semibold text-black bg-[#FFFFFF] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50"
           >
             {saving ? 'SAVING...' : 'SAVE SECURITY SETTINGS'}
           </button>
@@ -167,7 +167,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
       <div className="border border-stone-800 rounded bg-[#080808] overflow-hidden space-y-0">
         <div className="px-4 py-3 border-b border-stone-800 bg-[#0c0c0c] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <FileText className="w-4 h-4 text-[#F2A900]" />
+            <FileText className="w-4 h-4 text-[#FFFFFF]" />
             <span className="font-mono text-xs text-white font-semibold tracking-wider uppercase">
               Chronological Security Audit Log ({filteredLogs.length})
             </span>
@@ -181,7 +181,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
                 onClick={() => setFilterSeverity(s)}
                 className={`px-2 py-0.5 rounded uppercase text-[10px] transition-all cursor-pointer ${
                   filterSeverity === s
-                    ? 'bg-[#F2A900] text-black font-bold'
+                    ? 'bg-[#FFFFFF] text-black font-bold'
                     : 'bg-stone-900 text-stone-400 hover:text-white'
                 }`}
               >

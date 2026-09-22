@@ -12,15 +12,15 @@ import { AIState } from '../../types';
 
 // ─── State → color map ────────────────────────────────────────────────────────
 const STATE_COLORS: Record<string, string> = {
-  IDLE:          '#F2A900',
+  IDLE:          '#FFFFFF',
   LISTENING:     '#00e5ff',
   THINKING:      '#0066ff',
   PROCESSING:    '#0066ff',
   EXECUTING:     '#0066ff',
   SPEAKING:      '#00bfff',
   ERROR:         '#ff2244',
-  AUTHORIZATION: '#F2A900',
-  RECOVERING:    '#F2A900',
+  AUTHORIZATION: '#FFFFFF',
+  RECOVERING:    '#FFFFFF',
 };
 
 // ─── State → pulse frequency (Hz) ────────────────────────────────────────────
@@ -59,8 +59,8 @@ interface HologramMaterialProps {
  */
 export function useHologramMaterial(state: AIState) {
   const matRef       = useRef<THREE.MeshBasicMaterial>(null!);
-  const currentColor = useRef(new THREE.Color(STATE_COLORS[state] ?? '#F2A900'));
-  const targetColor  = useRef(new THREE.Color(STATE_COLORS[state] ?? '#F2A900'));
+  const currentColor = useRef(new THREE.Color(STATE_COLORS[state] ?? '#FFFFFF'));
+  const targetColor  = useRef(new THREE.Color(STATE_COLORS[state] ?? '#FFFFFF'));
 
   // Create material imperatively once so all flags (depthTest, side, blending) stick
   useEffect(() => {
@@ -71,7 +71,7 @@ export function useHologramMaterial(state: AIState) {
       depthTest:   true,          // true so it respects depth
       side:        THREE.FrontSide, // FrontSide prevents backface wireframe noise
       blending:    THREE.AdditiveBlending,
-      color:       new THREE.Color(STATE_COLORS[state] ?? '#F2A900'),
+      color:       new THREE.Color(STATE_COLORS[state] ?? '#FFFFFF'),
       opacity:     STATE_BASE_OPACITY[state] ?? 0.62,
     });
     matRef.current = mat;
@@ -84,7 +84,7 @@ export function useHologramMaterial(state: AIState) {
     if (!mat) return;
 
     const stateKey  = state ?? 'IDLE';
-    const targetHex = STATE_COLORS[stateKey] ?? '#F2A900';
+    const targetHex = STATE_COLORS[stateKey] ?? '#FFFFFF';
     targetColor.current.set(targetHex);
 
     // Smooth lerp toward target color
@@ -116,7 +116,7 @@ export function HologramMaterialImpl({ state }: HologramMaterialProps) {
       depthTest={true}
       side={THREE.FrontSide}
       blending={THREE.AdditiveBlending}
-      color={STATE_COLORS[state] ?? '#F2A900'}
+      color={STATE_COLORS[state] ?? '#FFFFFF'}
       opacity={STATE_BASE_OPACITY[state] ?? 0.62}
     />
   );

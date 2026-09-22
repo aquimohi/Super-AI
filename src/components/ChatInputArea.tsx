@@ -88,7 +88,7 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
 
       {/* Quick Tactical Preset Chips */}
       <div className="flex items-center justify-center gap-2 mb-2.5 overflow-x-auto py-1 scrollbar-none">
-        <span className="text-[10px] font-mono text-[#F2A900]/50 uppercase tracking-[0.2em] hidden md:inline">
+        <span className="text-[10px] font-mono text-[#FFFFFF]/50 uppercase tracking-[0.2em] hidden md:inline">
           PROTOCOLS:
         </span>
         {PRESET_COMMANDS.map((cmd, idx) => (
@@ -97,7 +97,7 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
             id={`preset-cmd-${idx}`}
             onClick={() => handlePresetClick(cmd)}
             disabled={isStreaming || activeListening}
-            className="text-[10px] font-mono px-3 py-1 rounded-full border border-[#F2A900]/20 bg-black/40 text-[#F2A900]/70 hover:text-[#F2A900] hover:border-[#F2A900]/50 hover:bg-[#F2A900]/10 transition-all duration-200 whitespace-nowrap cursor-pointer disabled:opacity-50"
+            className="text-[10px] font-mono px-3 py-1 rounded-full border border-[#FFFFFF]/20 bg-black/40 text-[#FFFFFF]/70 hover:text-[#FFFFFF] hover:border-[#FFFFFF]/50 hover:bg-[#FFFFFF]/10 transition-all duration-200 whitespace-nowrap cursor-pointer disabled:opacity-50"
           >
             {cmd}
           </button>
@@ -107,36 +107,36 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
       {/* Futuristic Command Input Bar */}
       <form
         onSubmit={handleSubmit}
-        className={`flex items-center gap-3 sm:gap-4 bg-white/5 border border-[#F2A900]/20 p-2.5 sm:p-3.5 backdrop-blur-xl rounded-xl transition-all duration-300 ${
+        className={`flex items-center gap-3 sm:gap-4 bg-white/5 border border-[#FFFFFF]/20 p-2.5 sm:p-3.5 backdrop-blur-xl rounded-xl transition-all duration-300 ${
           currentState === 'ERROR'
             ? 'border-red-500/60 shadow-[0_0_20px_rgba(239,68,68,0.25)]'
             : activeListening
-            ? 'border-[#F2A900] shadow-[0_0_25px_rgba(242,169,0,0.35)] bg-[#F2A900]/10'
+            ? 'border-[#FFFFFF] shadow-[0_0_25px_rgba(255,255,255,0.35)] bg-[#FFFFFF]/10'
             : isSpeakingState
             ? 'border-amber-400/60 shadow-[0_0_20px_rgba(251,191,36,0.25)]'
-            : 'hover:border-[#F2A900]/40 focus-within:border-[#F2A900]/60 focus-within:shadow-[0_0_25px_rgba(242,169,0,0.2)]'
+            : 'hover:border-[#FFFFFF]/40 focus-within:border-[#FFFFFF]/60 focus-within:shadow-[0_0_25px_rgba(255,255,255,0.2)]'
         }`}
       >
         {/* Sleek Pulse / Status Indicator Box */}
         <div
           className={`w-8 h-8 sm:w-10 sm:h-10 border rounded flex items-center justify-center shrink-0 transition-all ${
             activeListening
-              ? 'border-[#F2A900] bg-[#F2A900]/30 shadow-[0_0_12px_#F2A900]'
+              ? 'border-[#FFFFFF] bg-[#FFFFFF]/30 shadow-[0_0_12px_#FFFFFF]'
               : isSpeakingState
               ? 'border-amber-400/80 bg-amber-400/20'
-              : 'border-[#F2A900]/40 bg-black/40'
+              : 'border-[#FFFFFF]/40 bg-black/40'
           }`}
         >
           {activeListening ? (
             <div className="flex items-center gap-0.5 h-4">
-              <span className="w-1 bg-[#F2A900] h-3 animate-pulse rounded-full" />
-              <span className="w-1 bg-[#F2A900] h-4 animate-ping rounded-full" />
-              <span className="w-1 bg-[#F2A900] h-2 animate-pulse rounded-full" />
+              <span className="w-1 bg-[#FFFFFF] h-3 animate-pulse rounded-full" />
+              <span className="w-1 bg-[#FFFFFF] h-4 animate-ping rounded-full" />
+              <span className="w-1 bg-[#FFFFFF] h-2 animate-pulse rounded-full" />
             </div>
           ) : isSpeakingState ? (
-            <Volume2 className="w-4 h-4 text-[#F2A900] animate-bounce" />
+            <Volume2 className="w-4 h-4 text-[#FFFFFF] animate-bounce" />
           ) : (
-            <div className="w-2 h-2 bg-[#F2A900] rounded-full animate-pulse shadow-[0_0_6px_#F2A900]" />
+            <div className="w-2 h-2 bg-[#FFFFFF] rounded-full animate-pulse shadow-[0_0_6px_#FFFFFF]" />
           )}
         </div>
 
@@ -155,18 +155,18 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
           }
           className={`flex-1 bg-transparent text-sm sm:text-base font-rajdhani tracking-wide focus:outline-none ${
             activeListening
-              ? 'text-[#F2A900] font-semibold italic'
-              : 'text-[#F2A900] placeholder:text-[#F2A900]/50 placeholder:italic'
+              ? 'text-[#FFFFFF] font-semibold italic'
+              : 'text-[#FFFFFF] placeholder:text-[#FFFFFF]/50 placeholder:italic'
           }`}
         />
 
         {/* Sleek Vertical Divider */}
-        <div className="w-[1px] h-7 bg-[#F2A900]/20 hidden sm:block" />
+        <div className="w-[1px] h-7 bg-[#FFFFFF]/20 hidden sm:block" />
 
         {/* Module Status Badge / Live Voice Indicator */}
         <div className="px-2 text-[10px] uppercase tracking-widest font-mono hidden md:flex items-center gap-1.5 whitespace-nowrap">
           {activeListening ? (
-            <span className="text-[#F2A900] font-bold flex items-center gap-1.5 animate-pulse">
+            <span className="text-[#FFFFFF] font-bold flex items-center gap-1.5 animate-pulse">
               <AudioLines className="w-3.5 h-3.5" />
               {voiceTranscript ? 'SPEECH DETECTED' : 'LISTENING...'}
             </span>
@@ -176,7 +176,7 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
               VOCAL SYNTHESIS ACTIVE
             </span>
           ) : (
-            <span className="opacity-50 text-[#F2A900]">RECEPTOR READY</span>
+            <span className="opacity-50 text-[#FFFFFF]">RECEPTOR READY</span>
           )}
         </div>
 
@@ -204,7 +204,7 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
             className={`p-2 sm:p-2.5 rounded border transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
               activeListening
                 ? 'bg-red-950/90 border-red-500 text-red-300 shadow-[0_0_15px_rgba(239,68,68,0.6)] animate-pulse'
-                : 'bg-black/40 border-[#F2A900]/20 text-[#F2A900]/70 hover:text-[#F2A900] hover:border-[#F2A900]/50 hover:bg-[#F2A900]/10'
+                : 'bg-black/40 border-[#FFFFFF]/20 text-[#FFFFFF]/70 hover:text-[#FFFFFF] hover:border-[#FFFFFF]/50 hover:bg-[#FFFFFF]/10'
             }`}
             title={
               activeListening
@@ -246,8 +246,8 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
             disabled={!inputValue.trim() || inputValue === 'Listening...' || isStreaming}
             className={`flex items-center gap-1.5 px-3.5 py-2 sm:py-2.5 rounded border font-mono font-bold text-xs tracking-widest uppercase transition-all duration-200 cursor-pointer ${
               inputValue.trim() && inputValue !== 'Listening...' && !isStreaming
-                ? 'bg-[#F2A900] text-black border-[#F2A900] shadow-[0_0_15px_rgba(242,169,0,0.4)] hover:bg-[#F2A900]/90'
-                : 'bg-black/30 border-[#F2A900]/20 text-[#F2A900]/40 cursor-not-allowed'
+                ? 'bg-[#FFFFFF] text-black border-[#FFFFFF] shadow-[0_0_15px_rgba(255,255,255,0.4)] hover:bg-[#FFFFFF]/90'
+                : 'bg-black/30 border-[#FFFFFF]/20 text-[#FFFFFF]/40 cursor-not-allowed'
             }`}
           >
             <Send className="w-3.5 h-3.5" />

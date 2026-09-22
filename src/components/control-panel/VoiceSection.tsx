@@ -198,10 +198,10 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="p-4 rounded border border-[#F2A900]/20 bg-[#0a0a0a]">
+      <div className="p-4 rounded border border-[#FFFFFF]/20 bg-[#0a0a0a]">
         <div className="flex items-center gap-2">
-          <Mic className="w-5 h-5 text-[#F2A900]" />
-          <h3 className="text-sm font-mono tracking-widest text-[#F2A900] uppercase">
+          <Mic className="w-5 h-5 text-[#FFFFFF]" />
+          <h3 className="text-sm font-mono tracking-widest text-[#FFFFFF] uppercase">
             Acoustic & Voice Synthesis Architecture
           </h3>
         </div>
@@ -211,11 +211,11 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
       </div>
 
       {/* VOICE ENGINE DASHBOARD HUD */}
-      <div className="p-4 rounded border border-[#F2A900]/30 bg-stone-950/90 space-y-3">
+      <div className="p-4 rounded border border-[#FFFFFF]/30 bg-stone-950/90 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Radio className="w-4 h-4 text-[#F2A900]" />
-            <h4 className="text-xs font-mono font-bold tracking-widest text-[#F2A900] uppercase">
+            <Radio className="w-4 h-4 text-[#FFFFFF]" />
+            <h4 className="text-xs font-mono font-bold tracking-widest text-[#FFFFFF] uppercase">
               VOICE ENGINE
             </h4>
           </div>
@@ -226,7 +226,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
               className={`px-3 py-1.5 text-xs font-mono font-bold rounded border transition-all cursor-pointer flex items-center gap-1.5 ${
                 isTestSpeaking
                   ? 'bg-rose-950/80 border-rose-600 text-rose-300 animate-pulse'
-                  : 'bg-[#F2A900]/15 border-[#F2A900] text-[#F2A900] hover:bg-[#F2A900]/25'
+                  : 'bg-[#FFFFFF]/15 border-[#FFFFFF] text-[#FFFFFF] hover:bg-[#FFFFFF]/25'
               }`}
             >
               <Volume2 className="w-3.5 h-3.5" />
@@ -259,7 +259,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
           </div>
           <div className="p-2.5 rounded bg-black/60 border border-stone-800 space-y-0.5">
             <div className="text-[10px] text-stone-500 uppercase">Language</div>
-            <div className="text-[#F2A900] font-bold">{voice.language}</div>
+            <div className="text-[#FFFFFF] font-bold">{voice.language}</div>
           </div>
           <div className="p-2.5 rounded bg-black/60 border border-stone-800 space-y-0.5">
             <div className="text-[10px] text-stone-500 uppercase">Gender</div>
@@ -346,7 +346,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
         <div className="p-4 rounded border border-stone-800 bg-[#080808] space-y-3">
           <div className="flex items-center justify-between">
             <label className="text-xs font-mono font-semibold text-white uppercase flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-[#F2A900]" />
+              <Cpu className="w-4 h-4 text-[#FFFFFF]" />
               <span>Voice Synthesis Engine Provider</span>
             </label>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded border border-emerald-500/30 bg-emerald-950/40 text-emerald-400">
@@ -360,11 +360,11 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
               onClick={() => setVoice({ ...voice, voiceProvider: 'AUTO' })}
               className={`p-3 rounded border text-left transition-all cursor-pointer ${
                 (voice.voiceProvider || 'AUTO') === 'AUTO'
-                  ? 'border-[#F2A900] bg-[#F2A900]/10 text-white'
+                  ? 'border-[#FFFFFF] bg-[#FFFFFF]/10 text-white'
                   : 'border-stone-800 bg-stone-950 text-stone-400 hover:border-stone-700'
               }`}
             >
-              <div className="flex items-center gap-2 font-mono text-xs font-bold text-[#F2A900]">
+              <div className="flex items-center gap-2 font-mono text-xs font-bold text-[#FFFFFF]">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>AUTO</span>
               </div>
@@ -378,11 +378,11 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
               onClick={() => setVoice({ ...voice, voiceProvider: 'LOCAL_BROWSER' })}
               className={`p-3 rounded border text-left transition-all cursor-pointer ${
                 voice.voiceProvider === 'LOCAL_BROWSER'
-                  ? 'border-[#F2A900] bg-[#F2A900]/10 text-white'
+                  ? 'border-[#FFFFFF] bg-[#FFFFFF]/10 text-white'
                   : 'border-stone-800 bg-stone-950 text-stone-400 hover:border-stone-700'
               }`}
             >
-              <div className="flex items-center gap-2 font-mono text-xs font-bold text-[#F2A900]">
+              <div className="flex items-center gap-2 font-mono text-xs font-bold text-[#FFFFFF]">
                 <Radio className="w-3.5 h-3.5" />
                 <span>LOCAL_BROWSER</span>
               </div>
@@ -396,11 +396,11 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
               onClick={() => setVoice({ ...voice, voiceProvider: 'CLOUD_TTS' })}
               className={`p-3 rounded border text-left transition-all cursor-pointer ${
                 voice.voiceProvider === 'CLOUD_TTS'
-                  ? 'border-[#F2A900] bg-[#F2A900]/10 text-white'
+                  ? 'border-[#FFFFFF] bg-[#FFFFFF]/10 text-white'
                   : 'border-stone-800 bg-stone-950 text-stone-400 hover:border-stone-700'
               }`}
             >
-              <div className="flex items-center justify-between font-mono text-xs font-bold text-[#F2A900]">
+              <div className="flex items-center justify-between font-mono text-xs font-bold text-[#FFFFFF]">
                 <span className="flex items-center gap-2">
                   <Cloud className="w-3.5 h-3.5" />
                   <span>CLOUD_TTS</span>
@@ -422,7 +422,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
             <div className="mt-3 p-3.5 rounded border border-stone-800 bg-stone-950 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-semibold text-stone-300 uppercase flex items-center gap-1.5">
-                  <Cloud className="w-3.5 h-3.5 text-[#F2A900]" />
+                  <Cloud className="w-3.5 h-3.5 text-[#FFFFFF]" />
                   <span>Cloud TTS Credentials & Endpoint</span>
                 </span>
                 <span className="text-[10px] font-mono text-stone-500">
@@ -437,7 +437,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
                     placeholder={voice.cloudTtsApiKey ? '•••••••• (Stored Securely)' : 'Enter Cloud TTS API Key'}
                     value={voice.cloudTtsApiKey || ''}
                     onChange={(e) => setVoice({ ...voice, cloudTtsApiKey: e.target.value })}
-                    className="w-full px-3 py-2 text-xs font-mono rounded bg-black border border-stone-800 text-white focus:outline-none focus:border-[#F2A900]"
+                    className="w-full px-3 py-2 text-xs font-mono rounded bg-black border border-stone-800 text-white focus:outline-none focus:border-[#FFFFFF]"
                   />
                 </div>
                 <div className="space-y-1">
@@ -447,7 +447,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
                     placeholder="https://api.cloudtts.provider/v1"
                     value={voice.cloudTtsEndpoint || ''}
                     onChange={(e) => setVoice({ ...voice, cloudTtsEndpoint: e.target.value })}
-                    className="w-full px-3 py-2 text-xs font-mono rounded bg-black border border-stone-800 text-white focus:outline-none focus:border-[#F2A900]"
+                    className="w-full px-3 py-2 text-xs font-mono rounded bg-black border border-stone-800 text-white focus:outline-none focus:border-[#FFFFFF]"
                   />
                 </div>
               </div>
@@ -472,7 +472,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
                   onClick={() => setVoice({ ...voice, language: lang })}
                   className={`py-2 text-xs font-mono rounded border text-center transition-all cursor-pointer ${
                     voice.language === lang
-                      ? 'bg-[#F2A900]/20 border-[#F2A900] text-[#F2A900] font-bold shadow-[0_0_10px_rgba(242,169,0,0.2)]'
+                      ? 'bg-[#FFFFFF]/20 border-[#FFFFFF] text-[#FFFFFF] font-bold shadow-[0_0_10px_rgba(255,255,255,0.2)]'
                       : 'bg-stone-950 border-stone-800 text-stone-400 hover:text-stone-200'
                   }`}
                 >
@@ -509,7 +509,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
         <div className="p-4 rounded border border-stone-800 bg-[#080808] space-y-2">
           <div className="flex items-center justify-between">
             <label className="text-xs font-mono font-semibold text-white uppercase flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#F2A900]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#FFFFFF]" />
               <span>Voice Quality Preference</span>
             </label>
           </div>
@@ -528,7 +528,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
                 onClick={() => setVoice({ ...voice, voiceQuality: opt.id })}
                 className={`py-2 px-1 text-[11px] font-mono rounded border text-center transition-all cursor-pointer ${
                   voice.voiceQuality === opt.id
-                    ? 'bg-[#F2A900]/20 border-[#F2A900] text-[#F2A900] font-bold'
+                    ? 'bg-[#FFFFFF]/20 border-[#FFFFFF] text-[#FFFFFF] font-bold'
                     : 'bg-stone-950 border-stone-800 text-stone-400 hover:text-stone-200'
                 }`}
               >
@@ -560,7 +560,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
           <select
             value={voice.preferredVoiceName || ''}
             onChange={(e) => setVoice({ ...voice, preferredVoiceName: e.target.value })}
-            className="w-full px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#F2A900]"
+            className="w-full px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#FFFFFF]"
           >
             <option value="">Auto (Use Ranked Best Matching Voice)</option>
             {availableVoices.map((v, i) => (
@@ -570,7 +570,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
             ))}
           </select>
           {selectedVoice && (
-            <p className="text-[11px] font-mono text-[#F2A900]/80">
+            <p className="text-[11px] font-mono text-[#FFFFFF]/80">
               Active Voice:{' '}
               <span className="font-semibold text-white">{selectedVoice.name}</span>{' '}
               [{selectedVoice.lang}]
@@ -583,7 +583,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
           <div className="p-4 rounded border border-stone-800 bg-[#080808] space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-semibold text-white uppercase">Speaking Rate</span>
-              <span className="text-xs font-mono text-[#F2A900]">{voice.voiceSpeed.toFixed(1)}x</span>
+              <span className="text-xs font-mono text-[#FFFFFF]">{voice.voiceSpeed.toFixed(1)}x</span>
             </div>
             <input
               type="range"
@@ -592,7 +592,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
               step="0.1"
               value={voice.voiceSpeed}
               onChange={(e) => setVoice({ ...voice, voiceSpeed: parseFloat(e.target.value) })}
-              className="w-full accent-[#F2A900] cursor-pointer"
+              className="w-full accent-[#FFFFFF] cursor-pointer"
             />
             <div className="flex justify-between text-[10px] font-mono text-stone-500">
               <span>0.5x Slow</span>
@@ -604,7 +604,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
           <div className="p-4 rounded border border-stone-800 bg-[#080808] space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-semibold text-white uppercase">Vocal Pitch</span>
-              <span className="text-xs font-mono text-[#F2A900]">{(voice.pitch ?? 1.05).toFixed(2)}</span>
+              <span className="text-xs font-mono text-[#FFFFFF]">{(voice.pitch ?? 1.05).toFixed(2)}</span>
             </div>
             <input
               type="range"
@@ -613,7 +613,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
               step="0.05"
               value={voice.pitch ?? 1.05}
               onChange={(e) => setVoice({ ...voice, pitch: parseFloat(e.target.value) })}
-              className="w-full accent-[#F2A900] cursor-pointer"
+              className="w-full accent-[#FFFFFF] cursor-pointer"
             />
             <div className="flex justify-between text-[10px] font-mono text-stone-500">
               <span>0.5 Low</span>
@@ -625,7 +625,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
           <div className="p-4 rounded border border-stone-800 bg-[#080808] space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-semibold text-white uppercase">Acoustic Volume</span>
-              <span className="text-xs font-mono text-[#F2A900]">{voice.voiceVolume}%</span>
+              <span className="text-xs font-mono text-[#FFFFFF]">{voice.voiceVolume}%</span>
             </div>
             <input
               type="range"
@@ -634,7 +634,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
               step="5"
               value={voice.voiceVolume}
               onChange={(e) => setVoice({ ...voice, voiceVolume: parseInt(e.target.value, 10) })}
-              className="w-full accent-[#F2A900] cursor-pointer"
+              className="w-full accent-[#FFFFFF] cursor-pointer"
             />
             <div className="flex justify-between text-[10px] font-mono text-stone-500">
               <span>Mute</span>
@@ -645,10 +645,10 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
         </div>
 
         {/* Diagnostics & Live Test Card */}
-        <div className="p-4 rounded border border-[#F2A900]/30 bg-[#060606] space-y-4">
+        <div className="p-4 rounded border border-[#FFFFFF]/30 bg-[#060606] space-y-4">
           <div className="flex items-center gap-2 border-b border-stone-800 pb-2">
-            <Activity className="w-4 h-4 text-[#F2A900]" />
-            <h4 className="text-xs font-mono font-bold text-[#F2A900] uppercase tracking-wider">
+            <Activity className="w-4 h-4 text-[#FFFFFF]" />
+            <h4 className="text-xs font-mono font-bold text-[#FFFFFF] uppercase tracking-wider">
               Acoustic Hardware & Recognition Diagnostics
             </h4>
           </div>
@@ -685,7 +685,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
 
             <div className="p-2.5 rounded bg-black/60 border border-stone-800 space-y-1">
               <div className="text-stone-400 text-[10px] uppercase">Recognition Language</div>
-              <div className="text-[#F2A900] font-bold">{recognitionLang}</div>
+              <div className="text-[#FFFFFF] font-bold">{recognitionLang}</div>
             </div>
 
             <div className="p-2.5 rounded bg-black/60 border border-stone-800 space-y-1 col-span-2">
@@ -706,10 +706,10 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
                 className={`px-3 py-1.5 rounded text-xs font-mono font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                   isTestMicActive
                     ? 'bg-red-950/80 border border-red-600 text-red-300 animate-pulse'
-                    : 'bg-[#F2A900]/10 border border-[#F2A900]/40 text-[#F2A900] hover:bg-[#F2A900]/20'
+                    : 'bg-[#FFFFFF]/10 border border-[#FFFFFF]/40 text-[#FFFFFF] hover:bg-[#FFFFFF]/20'
                 }`}
               >
-                {isTestMicActive ? <Square className="w-3 h-3 fill-red-300" /> : <Play className="w-3 h-3 fill-[#F2A900]" />}
+                {isTestMicActive ? <Square className="w-3 h-3 fill-red-300" /> : <Play className="w-3 h-3 fill-[#FFFFFF]" />}
                 <span>{isTestMicActive ? 'STOP TEST' : 'TEST MICROPHONE'}</span>
               </button>
 
@@ -720,7 +720,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
                 className={`px-3 py-1.5 rounded text-xs font-mono font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                   isTestSpeaking
                     ? 'bg-rose-950/80 border border-rose-600 text-rose-300 animate-pulse'
-                    : 'bg-[#F2A900]/10 border border-[#F2A900]/40 text-[#F2A900] hover:bg-[#F2A900]/20'
+                    : 'bg-[#FFFFFF]/10 border border-[#FFFFFF]/40 text-[#FFFFFF] hover:bg-[#FFFFFF]/20'
                 }`}
               >
                 {isTestSpeaking ? <Square className="w-3 h-3 fill-rose-300" /> : <Volume2 className="w-3 h-3" />}
@@ -750,7 +750,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
                   {testMicStatus}
                 </span>
               </div>
-              <div className="min-h-[38px] p-2 rounded bg-stone-950 border border-stone-900 text-[#F2A900] select-text">
+              <div className="min-h-[38px] p-2 rounded bg-stone-950 border border-stone-900 text-[#FFFFFF] select-text">
                 {testMicTranscript ? (
                   <span>"{testMicTranscript}"</span>
                 ) : (
@@ -782,7 +782,7 @@ export const VoiceSection: React.FC<VoiceSectionProps> = ({ initialVoice, onRefr
           <button
             type="submit"
             disabled={saving}
-            className="px-6 py-2.5 text-xs font-mono font-semibold text-black bg-[#F2A900] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50 shadow-[0_0_15px_rgba(242,169,0,0.3)]"
+            className="px-6 py-2.5 text-xs font-mono font-semibold text-black bg-[#FFFFFF] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.3)]"
           >
             {saving ? 'SAVING...' : 'SAVE VOICE PARAMETERS'}
           </button>

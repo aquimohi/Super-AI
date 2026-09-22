@@ -32,10 +32,10 @@ export const RoutingSection: React.FC<RoutingSectionProps> = ({ initialRouting, 
 
   return (
     <div className="space-y-6">
-      <div className="p-4 rounded border border-[#F2A900]/20 bg-[#0a0a0a]">
+      <div className="p-4 rounded border border-[#FFFFFF]/20 bg-[#0a0a0a]">
         <div className="flex items-center gap-2">
-          <Shuffle className="w-5 h-5 text-[#F2A900]" />
-          <h3 className="text-sm font-mono tracking-widest text-[#F2A900] uppercase">
+          <Shuffle className="w-5 h-5 text-[#FFFFFF]" />
+          <h3 className="text-sm font-mono tracking-widest text-[#FFFFFF] uppercase">
             AI Routing & Failover Orchestrator
           </h3>
         </div>
@@ -54,7 +54,7 @@ export const RoutingSection: React.FC<RoutingSectionProps> = ({ initialRouting, 
           <select
             value={routing.defaultProvider}
             onChange={(e) => setRouting({ ...routing, defaultProvider: e.target.value as any })}
-            className="px-3 py-1.5 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-[#F2A900]"
+            className="px-3 py-1.5 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-[#FFFFFF]"
           >
             <option value="openrouter">OpenRouter (Active)</option>
             <option value="openai">OpenAI (Direct)</option>
@@ -109,7 +109,7 @@ export const RoutingSection: React.FC<RoutingSectionProps> = ({ initialRouting, 
         <div className="p-4 rounded border border-stone-800 bg-[#080808] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono text-white font-semibold uppercase">Sampling Temperature</span>
-            <span className="text-xs font-mono text-[#F2A900]">{routing.temperature}</span>
+            <span className="text-xs font-mono text-[#FFFFFF]">{routing.temperature}</span>
           </div>
           <input
             type="range"
@@ -118,7 +118,7 @@ export const RoutingSection: React.FC<RoutingSectionProps> = ({ initialRouting, 
             step="0.05"
             value={routing.temperature}
             onChange={(e) => setRouting({ ...routing, temperature: parseFloat(e.target.value) })}
-            className="w-full accent-[#F2A900] cursor-pointer"
+            className="w-full accent-[#FFFFFF] cursor-pointer"
           />
           <div className="flex justify-between text-[10px] font-mono text-stone-500">
             <span>0.0 (Strict & Deterministic)</span>
@@ -131,7 +131,7 @@ export const RoutingSection: React.FC<RoutingSectionProps> = ({ initialRouting, 
         <div className="p-4 rounded border border-stone-800 bg-[#080808] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono text-white font-semibold uppercase">Max Response Tokens</span>
-            <span className="text-xs font-mono text-[#F2A900]">{routing.maxTokens}</span>
+            <span className="text-xs font-mono text-[#FFFFFF]">{routing.maxTokens}</span>
           </div>
           <input
             type="range"
@@ -140,7 +140,7 @@ export const RoutingSection: React.FC<RoutingSectionProps> = ({ initialRouting, 
             step="256"
             value={routing.maxTokens}
             onChange={(e) => setRouting({ ...routing, maxTokens: parseInt(e.target.value, 10) })}
-            className="w-full accent-[#F2A900] cursor-pointer"
+            className="w-full accent-[#FFFFFF] cursor-pointer"
           />
           <div className="flex justify-between text-[10px] font-mono text-stone-500">
             <span>512</span>
@@ -166,7 +166,7 @@ export const RoutingSection: React.FC<RoutingSectionProps> = ({ initialRouting, 
           <button
             type="submit"
             disabled={saving}
-            className="px-5 py-2 text-xs font-mono font-semibold text-black bg-[#F2A900] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50"
+            className="px-5 py-2 text-xs font-mono font-semibold text-black bg-[#FFFFFF] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50"
           >
             {saving ? 'SAVING...' : 'SAVE ROUTING POLICIES'}
           </button>

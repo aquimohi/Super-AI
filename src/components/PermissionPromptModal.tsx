@@ -25,24 +25,24 @@ export const PermissionPromptModal: React.FC<PermissionPromptModalProps> = ({
     >
       <div
         id="permission-prompt-dialog"
-        className="relative w-full max-w-md bg-[#0c0c0c] border border-[#F2A900]/40 rounded-xl p-5 shadow-[0_0_40px_rgba(242,169,0,0.25)] text-[#F2A900] font-mono"
+        className="relative w-full max-w-md bg-[#0c0c0c] border border-[#FFFFFF]/40 rounded-xl p-5 shadow-[0_0_40px_rgba(255,255,255,0.25)] text-[#FFFFFF] font-mono"
       >
         {/* Header decoration */}
-        <div className="flex items-center justify-between border-b border-[#F2A900]/20 pb-3 mb-4">
+        <div className="flex items-center justify-between border-b border-[#FFFFFF]/20 pb-3 mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#F2A900]/15 border border-[#F2A900]/40 flex items-center justify-center text-[#F2A900]">
+            <div className="w-8 h-8 rounded-lg bg-[#FFFFFF]/15 border border-[#FFFFFF]/40 flex items-center justify-center text-[#FFFFFF]">
               <ShieldAlert className="w-4 h-4 animate-pulse" />
             </div>
             <div>
-              <h2 className="text-xs tracking-widest font-bold uppercase text-[#F2A900]">
+              <h2 className="text-xs tracking-widest font-bold uppercase text-[#FFFFFF]">
                 Security Policy Clearance
               </h2>
-              <p className="text-[10px] text-[#F2A900]/60">PROTOCOL: ACOUSTIC_RECEPTOR_ACCESS</p>
+              <p className="text-[10px] text-[#FFFFFF]/60">PROTOCOL: ACOUSTIC_RECEPTOR_ACCESS</p>
             </div>
           </div>
           <button
             onClick={onCancel}
-            className="text-[#F2A900]/40 hover:text-[#F2A900] p-1 rounded hover:bg-[#F2A900]/10 transition-colors"
+            className="text-[#FFFFFF]/40 hover:text-[#FFFFFF] p-1 rounded hover:bg-[#FFFFFF]/10 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -50,19 +50,19 @@ export const PermissionPromptModal: React.FC<PermissionPromptModalProps> = ({
 
         {/* Content body */}
         <div className="space-y-3 mb-5 text-xs">
-          <div className="flex items-start gap-3 p-3 bg-black/60 border border-[#F2A900]/20 rounded-lg">
-            <Mic className="w-5 h-5 text-[#F2A900] shrink-0 mt-0.5" />
+          <div className="flex items-start gap-3 p-3 bg-black/60 border border-[#FFFFFF]/20 rounded-lg">
+            <Mic className="w-5 h-5 text-[#FFFFFF] shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold text-[#F2A900] mb-1">
+              <p className="font-semibold text-[#FFFFFF] mb-1">
                 Microphone Permission Requested (ASK Mode)
               </p>
-              <p className="text-[11px] text-[#F2A900]/70 leading-relaxed">
+              <p className="text-[11px] text-[#FFFFFF]/70 leading-relaxed">
                 Super AI is requesting permission to activate your acoustic receptor (microphone) to transcribe live voice input into commands.
               </p>
             </div>
           </div>
 
-          <p className="text-[10px] text-[#F2A900]/50 italic">
+          <p className="text-[10px] text-[#FFFFFF]/50 italic">
             Note: System permission policies protect your hardware. Operating-system & browser permissions will also be requested upon activation.
           </p>
         </div>
@@ -72,7 +72,7 @@ export const PermissionPromptModal: React.FC<PermissionPromptModalProps> = ({
           <button
             id="perm-allow-session-btn"
             onClick={onAllowSession}
-            className="w-full py-2.5 px-3 bg-[#F2A900]/20 hover:bg-[#F2A900]/30 border border-[#F2A900]/60 hover:border-[#F2A900] text-[#F2A900] rounded font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(242,169,0,0.15)]"
+            className="w-full py-2.5 px-3 bg-[#FFFFFF]/20 hover:bg-[#FFFFFF]/30 border border-[#FFFFFF]/60 hover:border-[#FFFFFF] text-[#FFFFFF] rounded font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.15)]"
           >
             <Check className="w-3.5 h-3.5" />
             <span>ALLOW FOR THIS SESSION</span>
@@ -81,7 +81,7 @@ export const PermissionPromptModal: React.FC<PermissionPromptModalProps> = ({
           <button
             id="perm-always-allow-btn"
             onClick={onAlwaysAllow}
-            className="w-full py-2 px-3 bg-black/60 hover:bg-[#F2A900]/10 border border-[#F2A900]/30 hover:border-[#F2A900]/60 text-[#F2A900]/90 rounded text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-2 px-3 bg-black/60 hover:bg-[#FFFFFF]/10 border border-[#FFFFFF]/30 hover:border-[#FFFFFF]/60 text-[#FFFFFF]/90 rounded text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <Lock className="w-3.5 h-3.5" />
             <span>ALWAYS ALLOW (PERSIST POLICY)</span>
@@ -100,7 +100,7 @@ export const PermissionPromptModal: React.FC<PermissionPromptModalProps> = ({
             <button
               id="perm-cancel-btn"
               onClick={onCancel}
-              className="py-1.5 px-4 bg-transparent hover:bg-white/5 border border-[#F2A900]/20 text-[#F2A900]/60 hover:text-[#F2A900] rounded text-[11px] tracking-wider uppercase transition-all cursor-pointer"
+              className="py-1.5 px-4 bg-transparent hover:bg-white/5 border border-[#FFFFFF]/20 text-[#FFFFFF]/60 hover:text-[#FFFFFF] rounded text-[11px] tracking-wider uppercase transition-all cursor-pointer"
             >
               CANCEL
             </button>

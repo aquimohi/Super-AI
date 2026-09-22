@@ -131,11 +131,11 @@ export const ToolsSection: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="p-4 rounded border border-[#F2A900]/20 bg-[#0a0a0a] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="p-4 rounded border border-[#FFFFFF]/20 bg-[#0a0a0a] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <Wrench className="w-5 h-5 text-[#F2A900]" />
-            <h3 className="text-sm font-mono tracking-widest text-[#F2A900] uppercase font-bold">
+            <Wrench className="w-5 h-5 text-[#FFFFFF]" />
+            <h3 className="text-sm font-mono tracking-widest text-[#FFFFFF] uppercase font-bold">
               Secure Tool Execution Layer
             </h3>
           </div>
@@ -146,9 +146,9 @@ export const ToolsSection: React.FC = () => {
         <button
           type="button"
           onClick={fetchTools}
-          className="self-start sm:self-auto px-3 py-1.5 text-xs font-mono rounded border border-stone-800 bg-black/60 text-stone-300 hover:border-[#F2A900]/50 hover:text-[#F2A900] transition-colors flex items-center gap-1.5 cursor-pointer"
+          className="self-start sm:self-auto px-3 py-1.5 text-xs font-mono rounded border border-stone-800 bg-black/60 text-stone-300 hover:border-[#FFFFFF]/50 hover:text-[#FFFFFF] transition-colors flex items-center gap-1.5 cursor-pointer"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-[#F2A900]' : ''}`} />
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-[#FFFFFF]' : ''}`} />
           <span>Refresh</span>
         </button>
       </div>
@@ -175,7 +175,7 @@ export const ToolsSection: React.FC = () => {
                     id: {tool.identifier}
                   </span>
                   {getRiskBadge(tool.risk)}
-                  <span className="text-[10px] font-mono text-[#F2A900] flex items-center gap-1">
+                  <span className="text-[10px] font-mono text-[#FFFFFF] flex items-center gap-1">
                     <Lock className="w-2.5 h-2.5" />
                     Permission: {tool.requiredPermission}
                   </span>

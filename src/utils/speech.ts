@@ -54,11 +54,9 @@ export function sanitizeForSpeech(text: string): string {
   // Hyphen inside model identifiers like deepseek-chat, gpt-4o -> deepseek chat, gpt 4o
   s = s.replace(/([a-zA-Z0-9])-([a-zA-Z0-9])/g, '$1 $2');
 
-  // 9. Technical brackets, special characters, symbols browser TTS shouldn't pronounce
-  s = s.replace(/[{}\[\]<>|\^~@#$%&*\\/]/g, ' ');
-
-  // 10. Strip unicode emojis
-  s = s.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}]/gu, '');
+  // 9. Aggressive cleanup: Strip all characters that are NOT letters, numbers, spaces, or basic punctuation.
+  // This automatically wipes out all emojis, markdown symbols (*, #, ~, _, `), math symbols, and weird unicode.
+  s = s.replace(/[^\p{L}\p{N}\s.,?!;:'"()\-]/gu, ' ');
 
   // 11. Normalize excessive punctuation and whitespace
   s = s.replace(/[=_-]{2,}/g, ' ');
@@ -129,8 +127,8 @@ export function getAvailableVoices(): SpeechSynthesisVoice[] {
 
 /**
  * Rates the quality and acoustic suitability of a browser voice.
- * Super AI is a FEMALE AI assistant:
- * Prioritizes natural female voices (e.g. Swara, Neerja, Heera, Zira, Google हिन्दी, etc.)
+ * Super AI is a JARVIS-like AI assistant:
+ * Prioritizes natural MALE voices (e.g. Daniel, George, Google UK English Male, Microsoft David, etc.)
  */
 function scoreVoice(
   voice: SpeechSynthesisVoice,
@@ -154,46 +152,42 @@ function scoreVoice(
 
   if (isHighQuality) score += 30;
 
-  // Female voice bias for Super AI female persona
-  const isFemale =
-    name.includes('female') ||
-    name.includes('woman') ||
-    name.includes('swara') ||
-    name.includes('neerja') ||
-    name.includes('heera') ||
-    name.includes('zira') ||
-    name.includes('raveena') ||
-    name.includes('kavya') ||
-    name.includes('priya') ||
-    name.includes('aditi') ||
-    name.includes('ananya') ||
-    name.includes('sangeeta') ||
-    name.includes('veena') ||
-    name.includes('geeta') ||
-    name.includes('hazel') ||
-    name.includes('susan') ||
-    name.includes('samantha') ||
-    name.includes('victoria') ||
-    name.includes('jenny') ||
-    name.includes('aria') ||
-    name.includes('sonia') ||
-    name.includes('kalpana') ||
-    name.includes('google हिन्दी');
-
+  // Jarvis-like MALE voice bias
   const isMale =
     name.includes('male') ||
     name.includes('man') ||
     name.includes('david') ||
     name.includes('mark') ||
     name.includes('george') ||
+    name.includes('daniel') ||
+    name.includes('brian') ||
+    name.includes('arthur') ||
+    name.includes('paul') ||
+    name.includes('oliver') ||
+    name.includes('ryan') ||
     name.includes('ravi') ||
     name.includes('hemant') ||
     name.includes('madhav') ||
     name.includes('prabhat') ||
     name.includes('ajay');
 
-  if (isFemale) score += 60;
-  if (isMale) score -= 80;
+  const isFemale =
+    name.includes('female') ||
+    name.includes('woman') ||
+    name.includes('zira') ||
+    name.includes('hazel') ||
+    name.includes('susan') ||
+    name.includes('samantha') ||
+    name.includes('swara') ||
+    name.includes('neerja') ||
+    name.includes('google हिन्दी');
+
+  if (isMale) score += 80;
+  
+  // Extra bonus for British/UK accent (traditional Jarvis)
+  if (lang === 'en-gb' || name.includes('uk english')) score += 50;
+
+  if (isFemale) score -= 80;
 
   const isHindi = lang.startsWith('hi');
   const isIndianEnglish = lang === 'en-in' || (lang.startsWith('en') && (name.includes('india') || name.includes('indian')));

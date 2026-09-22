@@ -79,7 +79,7 @@ export const ToolAuthorizationModal: React.FC<ToolAuthorizationModalProps> = ({
     >
       <div
         id="tool-auth-modal-dialog"
-        className="relative w-full max-w-lg bg-[#0a0a0a] border-2 border-amber-500/60 rounded-xl p-5 shadow-[0_0_50px_rgba(245,158,11,0.3)] text-[#F2A900] font-mono"
+        className="relative w-full max-w-lg bg-[#0a0a0a] border-2 border-amber-500/60 rounded-xl p-5 shadow-[0_0_50px_rgba(245,158,11,0.3)] text-[#FFFFFF] font-mono"
       >
         {/* Radar / Alert pulse line on top */}
         <div className="absolute top-0 left-4 right-4 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent animate-pulse" />

@@ -25,6 +25,7 @@ import {
 } from './utils/speech';
 import { useRadarSocket } from './hooks/useRadarSocket';
 import { useVoiceStream } from './hooks/useVoiceStream';
+import { useJarvisVoice } from './hooks/useJarvisVoice';
 
 const INITIAL_MESSAGES: ChatMessage[] = [
   {
@@ -45,8 +46,9 @@ export default function App() {
   const [currentState, setCurrentState] = useState<AIState>('IDLE');
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [isProcessingSequence, setIsProcessingSequence] = useState(false);
-  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState<boolean>(false);
+  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState<boolean>(true); // Hidden per user request
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState<boolean>(false);
+  const [audioEnabled, setAudioEnabled] = useState<boolean>(true);
 
   // Control Panel state
   const [isControlPanelOpen, setIsControlPanelOpen] = useState(false);
@@ -93,7 +95,29 @@ export default function App() {
     pauseRecognition: isSpeakingFlag,
   });
 
-  // Phase 5: Real-time Voice Streaming Pipeline
+  // Phase 5: Real-time Voice & Jarvis Audio Engine
+  const {
+    stopAudio: stopJarvisVoice,
+  } = useJarvisVoice();
+
+  // Stop vocal output immediately and return 3D core to IDLE
+  const handleStopSpeaking = useCallback(() => {
+    stopSpeech();
+    stopJarvisVoice();
+    setCurrentState('IDLE');
+    setIsProcessingSequence(false);
+  }, [stopJarvisVoice]);
+
+  const handleToggleAudio = useCallback(() => {
+    setAudioEnabled((prev) => {
+      const next = !prev;
+      if (!next) {
+        handleStopSpeaking();
+      }
+      return next;
+    });
+  }, [handleStopSpeaking]);
+
   const {
     isStreaming: isLiveVoice,
     volume: micVolume,
@@ -197,13 +221,6 @@ export default function App() {
     ]);
   }, []);
 
-  // Stop vocal output immediately and return 3D core to IDLE
-  const handleStopSpeaking = useCallback(() => {
-    stopSpeech();
-    setCurrentState('IDLE');
-    setIsProcessingSequence(false);
-  }, []);
-
   // Process AI response and handle state/voice transitions
   const processChatResponse = async (response: ChatApiResponse) => {
     // Check if tool execution authorization is required
@@ -244,9 +261,9 @@ export default function App() {
       },
     ]);
 
-    // Check if voice output is enabled in system settings
+    // Check if voice output is enabled in system settings AND user hasn't muted
     const cfg = systemConfigRef.current || (await apiClient.getConfig().catch(() => null));
-    const voiceOutputActive = cfg?.voice?.voiceOutputEnabled ?? false;
+    const voiceOutputActive = (cfg?.voice?.voiceOutputEnabled ?? false) && audioEnabled;
 
     if (voiceOutputActive) {
       // While speaking: 3D CORE = SPEAKING
@@ -623,7 +640,7 @@ export default function App() {
   return (
     <main
       id="super-ai-command-center"
-      className="relative w-screen h-screen overflow-hidden bg-[#050505] text-[#F2A900] flex flex-col justify-between select-none"
+      className="relative w-screen h-screen overflow-hidden bg-[#050505] text-[#FFFFFF] flex flex-col justify-between select-none"
     >
       {/* 1. Sleek Interface radial canvas & tactical grid */}
       <div className="sleek-canvas absolute inset-0 pointer-events-none" />
@@ -634,26 +651,31 @@ export default function App() {
       <TopNavigation
         currentState={currentState}
         onOpenControlPanel={handleOpenControlPanel}
+        audioEnabled={audioEnabled}
+        onToggleAudio={handleToggleAudio}
       />
 
       {/* 3. Center Stage: Real-Time 3D Holographic AI Core */}
       <div className="relative flex-1 w-full h-full flex items-center justify-center overflow-hidden">
         {/* ── HOLOGRAM FACE (active) ── comment this out and restore AICore3D below to switch back */}
+        {/*
         <div style={{ width: '100%', height: '500px' }}>
-          {/* isSpeakingFlag: true only while browser speechSynthesis is actively speaking (real-time event bus) */}
           <HologramScene state={currentState} isSpeaking={isSpeakingFlag} radarData={radarData} micVolume={micVolume} />
         </div>
+        */}
         {/* ── AICore3D (original — commented out) ── */}
-        {/* <AICore3D state={currentState} onGlitchEnd={handleGlitchEnd} /> */}
+        <AICore3D state={currentState} onGlitchEnd={handleGlitchEnd} />
       </div>
 
-      {/* 4. Left Side: Core Telemetry & Status HUD Panel */}
+      {/* 4. Left Side: Core Telemetry & Status HUD Panel (HIDDEN per user request) */}
+      {/*
       <SideTelemetryPanel
         state={currentState}
         collapsed={leftPanelCollapsed}
         onToggleCollapse={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
         latestTrace={latestCognitiveTrace}
       />
+      */}
 
       {/* 5. Right Side: Dialogue Feed & Event Log */}
       <ActivityFeed
@@ -682,7 +704,7 @@ export default function App() {
             isStreaming={isProcessingSequence}
             onStartVoiceInput={handleStartVoiceInput}
             onStopVoiceInput={handleStopVoiceInput}
-            onStopSpeaking={stopSpeech}
+            onStopSpeaking={handleStopSpeaking}
             voiceTranscript={voiceTranscript}
             isListening={isListening}
             isLiveVoice={isLiveVoice}

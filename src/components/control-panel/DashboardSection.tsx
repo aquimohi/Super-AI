@@ -37,7 +37,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="p-4 rounded-lg border border-[#F2A900]/30 bg-gradient-to-r from-[#0d0d0d] via-[#121008] to-[#0a0a0a] flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-4 rounded-lg border border-[#FFFFFF]/30 bg-gradient-to-r from-[#0d0d0d] via-[#121008] to-[#0a0a0a] flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -53,13 +53,13 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
         <div className="flex items-center gap-3">
           <div className="text-right">
             <div className="text-[10px] font-mono text-stone-400">ACTIVE AI PROVIDER</div>
-            <div className="text-xs font-mono font-bold text-[#F2A900]">
+            <div className="text-xs font-mono font-bold text-[#FFFFFF]">
               {activeKey ? `OPENROUTER (${activeKey.name})` : 'STANDBY (NO KEY ACTIVE)'}
             </div>
           </div>
           <button
             onClick={() => onNavigate('api-keys')}
-            className="px-3 py-1.5 text-xs font-mono font-semibold rounded bg-[#F2A900] hover:bg-[#ffbe26] text-black transition-all cursor-pointer flex items-center gap-1"
+            className="px-3 py-1.5 text-xs font-mono font-semibold rounded bg-[#FFFFFF] hover:bg-[#ffbe26] text-black transition-all cursor-pointer flex items-center gap-1"
           >
             <span>MANAGE KEYS</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -72,13 +72,13 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
         {/* 1. API Keys Status Card */}
         <div
           onClick={() => onNavigate('api-keys')}
-          className="p-4 rounded border border-stone-800 bg-[#080808] hover:border-[#F2A900]/50 transition-all cursor-pointer group"
+          className="p-4 rounded border border-stone-800 bg-[#080808] hover:border-[#FFFFFF]/50 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between mb-3">
-            <div className="p-2 rounded bg-stone-900 text-[#F2A900]">
+            <div className="p-2 rounded bg-stone-900 text-[#FFFFFF]">
               <Key className="w-4 h-4" />
             </div>
-            <span className="text-[10px] font-mono text-stone-500 group-hover:text-[#F2A900] transition-colors">
+            <span className="text-[10px] font-mono text-stone-500 group-hover:text-[#FFFFFF] transition-colors">
               OPEN →
             </span>
           </div>
@@ -97,13 +97,13 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
         {/* 2. Models Routing Card */}
         <div
           onClick={() => onNavigate('models')}
-          className="p-4 rounded border border-stone-800 bg-[#080808] hover:border-[#F2A900]/50 transition-all cursor-pointer group"
+          className="p-4 rounded border border-stone-800 bg-[#080808] hover:border-[#FFFFFF]/50 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between mb-3">
-            <div className="p-2 rounded bg-stone-900 text-[#F2A900]">
+            <div className="p-2 rounded bg-stone-900 text-[#FFFFFF]">
               <Cpu className="w-4 h-4" />
             </div>
-            <span className="text-[10px] font-mono text-stone-500 group-hover:text-[#F2A900] transition-colors">
+            <span className="text-[10px] font-mono text-stone-500 group-hover:text-[#FFFFFF] transition-colors">
               OPEN →
             </span>
           </div>
@@ -122,13 +122,13 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
         {/* 3. Security & Permissions Card */}
         <div
           onClick={() => onNavigate('permissions')}
-          className="p-4 rounded border border-stone-800 bg-[#080808] hover:border-[#F2A900]/50 transition-all cursor-pointer group"
+          className="p-4 rounded border border-stone-800 bg-[#080808] hover:border-[#FFFFFF]/50 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between mb-3">
-            <div className="p-2 rounded bg-stone-900 text-[#F2A900]">
+            <div className="p-2 rounded bg-stone-900 text-[#FFFFFF]">
               <ShieldCheck className="w-4 h-4" />
             </div>
-            <span className="text-[10px] font-mono text-stone-500 group-hover:text-[#F2A900] transition-colors">
+            <span className="text-[10px] font-mono text-stone-500 group-hover:text-[#FFFFFF] transition-colors">
               OPEN →
             </span>
           </div>
@@ -146,13 +146,13 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
         {/* 4. Windows Computer Control Card */}
         <div
           onClick={() => onNavigate('computer-control')}
-          className="p-4 rounded border border-stone-800 bg-[#080808] hover:border-[#F2A900]/50 transition-all cursor-pointer group"
+          className="p-4 rounded border border-stone-800 bg-[#080808] hover:border-[#FFFFFF]/50 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between mb-3">
-            <div className="p-2 rounded bg-stone-900 text-[#F2A900]">
+            <div className="p-2 rounded bg-stone-900 text-[#FFFFFF]">
               <Monitor className="w-4 h-4" />
             </div>
-            <span className="text-[10px] font-mono text-stone-500 group-hover:text-[#F2A900] transition-colors">
+            <span className="text-[10px] font-mono text-stone-500 group-hover:text-[#FFFFFF] transition-colors">
               OPEN →
             </span>
           </div>
@@ -170,13 +170,13 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
         {/* 5. Controlled Browser Automation Card */}
         <div
           onClick={() => onNavigate('browser-control')}
-          className="p-4 rounded border border-stone-800 bg-[#080808] hover:border-[#F2A900]/50 transition-all cursor-pointer group"
+          className="p-4 rounded border border-stone-800 bg-[#080808] hover:border-[#FFFFFF]/50 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between mb-3">
-            <div className="p-2 rounded bg-stone-900 text-[#F2A900]">
+            <div className="p-2 rounded bg-stone-900 text-[#FFFFFF]">
               <Globe className="w-4 h-4" />
             </div>
-            <span className="text-[10px] font-mono text-stone-500 group-hover:text-[#F2A900] transition-colors">
+            <span className="text-[10px] font-mono text-stone-500 group-hover:text-[#FFFFFF] transition-colors">
               OPEN →
             </span>
           </div>
@@ -196,7 +196,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
       <div className="p-4 rounded border border-stone-800 bg-[#080808] space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Lock className="w-4 h-4 text-[#F2A900]" />
+            <Lock className="w-4 h-4 text-[#FFFFFF]" />
             <h4 className="font-mono text-xs font-semibold text-white uppercase tracking-wider">
               Cryptographic Enclave & Local Storage
             </h4>
@@ -221,7 +221,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
           </div>
           <div className="p-3 rounded bg-stone-950 border border-stone-900">
             <span className="text-stone-500 block text-[10px]">RATE LIMIT ROTATION</span>
-            <span className="text-[#F2A900] font-semibold">Auto-Failover Active</span>
+            <span className="text-[#FFFFFF] font-semibold">Auto-Failover Active</span>
           </div>
         </div>
       </div>
@@ -234,7 +234,7 @@ export const DashboardSection: React.FC<DashboardSectionProps> = ({
           </span>
           <button
             onClick={() => onNavigate('security')}
-            className="text-[11px] font-mono text-[#F2A900] hover:underline cursor-pointer"
+            className="text-[11px] font-mono text-[#FFFFFF] hover:underline cursor-pointer"
           >
             VIEW ALL LOGS →
           </button>

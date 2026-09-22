@@ -181,11 +181,11 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded border border-[#F2A900]/20 bg-[#0a0a0a]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded border border-[#FFFFFF]/20 bg-[#0a0a0a]">
         <div>
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-[#F2A900]" />
-            <h3 className="text-sm font-mono tracking-widest text-[#F2A900] uppercase">
+            <ShieldCheck className="w-5 h-5 text-[#FFFFFF]" />
+            <h3 className="text-sm font-mono tracking-widest text-[#FFFFFF] uppercase">
               Encrypted API Key Manager
             </h3>
           </div>
@@ -203,7 +203,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
             setPreTestResult(null);
             setIsAddModalOpen(true);
           }}
-          className="flex items-center justify-center gap-2 px-4 py-2 text-xs font-mono tracking-wider text-black bg-[#F2A900] hover:bg-[#ffbe26] transition-all rounded font-semibold cursor-pointer shadow-[0_0_15px_rgba(242,169,0,0.3)]"
+          className="flex items-center justify-center gap-2 px-4 py-2 text-xs font-mono tracking-wider text-black bg-[#FFFFFF] hover:bg-[#ffbe26] transition-all rounded font-semibold cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.3)]"
         >
           <Plus className="w-4 h-4" />
           <span>ADD API KEY</span>
@@ -214,11 +214,11 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
       <div className="border border-stone-800 rounded bg-[#080808] overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b border-stone-800 bg-[#0c0c0c]">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#F2A900] animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#FFFFFF] animate-pulse" />
             <span className="font-mono text-xs tracking-wider text-white font-semibold uppercase">
               OpenRouter
             </span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#F2A900]/10 border border-[#F2A900]/30 text-[#F2A900]">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#FFFFFF]/10 border border-[#FFFFFF]/30 text-[#FFFFFF]">
               {openRouterKeys.length} {openRouterKeys.length === 1 ? 'Key' : 'Keys'} Registered
             </span>
           </div>
@@ -239,7 +239,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
             </p>
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono text-[#F2A900] bg-[#F2A900]/10 border border-[#F2A900]/40 rounded hover:bg-[#F2A900]/20 transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono text-[#FFFFFF] bg-[#FFFFFF]/10 border border-[#FFFFFF]/40 rounded hover:bg-[#FFFFFF]/20 transition-all cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add First Key</span>
@@ -254,7 +254,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
                   key={k.id}
                   className={`p-4 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 ${
                     k.isActive
-                      ? 'bg-[#F2A900]/[0.03] border-l-2 border-l-[#F2A900]'
+                      ? 'bg-[#FFFFFF]/[0.03] border-l-2 border-l-[#FFFFFF]'
                       : 'hover:bg-stone-900/30'
                   }`}
                 >
@@ -267,8 +267,8 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
 
                       {/* Active Badge */}
                       {k.isActive ? (
-                        <span className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider font-semibold bg-[#F2A900]/20 border border-[#F2A900] text-[#F2A900]">
-                          <Star className="w-3 h-3 fill-[#F2A900]" />
+                        <span className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider font-semibold bg-[#FFFFFF]/20 border border-[#FFFFFF] text-[#FFFFFF]">
+                          <Star className="w-3 h-3 fill-[#FFFFFF]" />
                           ACTIVE KEY
                         </span>
                       ) : (
@@ -350,7 +350,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
                       className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-mono rounded bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 transition-all cursor-pointer disabled:opacity-50"
                     >
                       <RotateCw
-                        className={`w-3.5 h-3.5 ${testingKeyId === k.id ? 'animate-spin text-[#F2A900]' : ''}`}
+                        className={`w-3.5 h-3.5 ${testingKeyId === k.id ? 'animate-spin text-[#FFFFFF]' : ''}`}
                       />
                       <span>{testingKeyId === k.id ? 'TESTING...' : 'TEST'}</span>
                     </button>
@@ -361,7 +361,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
                         id={`btn-active-key-${k.id}`}
                         onClick={() => handleSetActive(k.id)}
                         title="Set as active primary key for OpenRouter"
-                        className="px-2.5 py-1.5 text-xs font-mono rounded bg-[#F2A900]/10 hover:bg-[#F2A900]/20 border border-[#F2A900]/30 text-[#F2A900] transition-all cursor-pointer"
+                        className="px-2.5 py-1.5 text-xs font-mono rounded bg-[#FFFFFF]/10 hover:bg-[#FFFFFF]/20 border border-[#FFFFFF]/30 text-[#FFFFFF] transition-all cursor-pointer"
                       >
                         SET ACTIVE
                       </button>
@@ -449,10 +449,10 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
       {/* ADD API KEY MODAL */}
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-lg rounded-lg border border-[#F2A900]/40 bg-[#0c0c0c] p-6 shadow-[0_0_30px_rgba(0,0,0,0.9)] space-y-4">
+          <div className="w-full max-w-lg rounded-lg border border-[#FFFFFF]/40 bg-[#0c0c0c] p-6 shadow-[0_0_30px_rgba(0,0,0,0.9)] space-y-4">
             <div className="flex items-center justify-between border-b border-stone-800 pb-3">
               <div className="flex items-center gap-2">
-                <Key className="w-4 h-4 text-[#F2A900]" />
+                <Key className="w-4 h-4 text-[#FFFFFF]" />
                 <h4 className="font-mono text-sm font-semibold text-white uppercase tracking-wider">
                   Add New API Key
                 </h4>
@@ -474,7 +474,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
                 <select
                   value={provider}
                   onChange={(e) => setProvider(e.target.value as AIProvider)}
-                  className="w-full px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#F2A900]"
+                  className="w-full px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#FFFFFF]"
                 >
                   <option value="openrouter">OpenRouter (Unified Gateway)</option>
                   <option value="openai">OpenAI (Direct API)</option>
@@ -494,7 +494,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
                   placeholder="e.g. Primary Production OpenRouter"
                   value={keyName}
                   onChange={(e) => setKeyName(e.target.value)}
-                  className="w-full px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#F2A900]"
+                  className="w-full px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#FFFFFF]"
                 />
               </div>
 
@@ -502,7 +502,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-xs font-mono text-stone-300">
-                    Secret API Key <span className="text-[#F2A900]">*</span>
+                    Secret API Key <span className="text-[#FFFFFF]">*</span>
                   </label>
                   <button
                     type="button"
@@ -522,7 +522,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
                     setPreTestResult(null);
                     setFormError(null);
                   }}
-                  className="w-full px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white tracking-wider focus:outline-none focus:border-[#F2A900]"
+                  className="w-full px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white tracking-wider focus:outline-none focus:border-[#FFFFFF]"
                 />
                 <p className="text-[10px] font-mono text-stone-500 mt-1">
                   Encrypted at rest with AES-256. Masked permanently upon saving.
@@ -538,9 +538,9 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
                   type="button"
                   onClick={handlePreTestKey}
                   disabled={preTestLoading || !rawKeyValue.trim()}
-                  className="flex items-center gap-1.5 px-3 py-1 text-xs font-mono rounded bg-stone-900 border border-stone-700 hover:border-[#F2A900] text-stone-200 transition-all cursor-pointer disabled:opacity-50"
+                  className="flex items-center gap-1.5 px-3 py-1 text-xs font-mono rounded bg-stone-900 border border-stone-700 hover:border-[#FFFFFF] text-stone-200 transition-all cursor-pointer disabled:opacity-50"
                 >
-                  <Zap className={`w-3.5 h-3.5 ${preTestLoading ? 'animate-spin text-[#F2A900]' : ''}`} />
+                  <Zap className={`w-3.5 h-3.5 ${preTestLoading ? 'animate-spin text-[#FFFFFF]' : ''}`} />
                   <span>{preTestLoading ? 'CHECKING...' : 'TEST KEY'}</span>
                 </button>
               </div>
@@ -581,7 +581,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
                   type="checkbox"
                   checked={setActiveImmediately}
                   onChange={(e) => setSetActiveImmediately(e.target.checked)}
-                  className="rounded border-stone-800 text-[#F2A900] focus:ring-0"
+                  className="rounded border-stone-800 text-[#FFFFFF] focus:ring-0"
                 />
                 <span>Set as primary active key for {provider.toUpperCase()}</span>
               </label>
@@ -603,7 +603,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
                 <button
                   type="submit"
                   disabled={formLoading}
-                  className="px-5 py-2 text-xs font-mono font-semibold text-black bg-[#F2A900] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2 text-xs font-mono font-semibold text-black bg-[#FFFFFF] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50"
                 >
                   {formLoading ? 'SAVING...' : 'ENCRYPT & SAVE KEY'}
                 </button>
@@ -616,10 +616,10 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
       {/* EDIT KEY MODAL */}
       {editingKey && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-lg rounded-lg border border-[#F2A900]/40 bg-[#0c0c0c] p-6 shadow-[0_0_30px_rgba(0,0,0,0.9)] space-y-4">
+          <div className="w-full max-w-lg rounded-lg border border-[#FFFFFF]/40 bg-[#0c0c0c] p-6 shadow-[0_0_30px_rgba(0,0,0,0.9)] space-y-4">
             <div className="flex items-center justify-between border-b border-stone-800 pb-3">
               <div className="flex items-center gap-2">
-                <Edit2 className="w-4 h-4 text-[#F2A900]" />
+                <Edit2 className="w-4 h-4 text-[#FFFFFF]" />
                 <h4 className="font-mono text-sm font-semibold text-white uppercase tracking-wider">
                   Edit API Key
                 </h4>
@@ -641,7 +641,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
                   type="text"
                   value={keyName}
                   onChange={(e) => setKeyName(e.target.value)}
-                  className="w-full px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#F2A900]"
+                  className="w-full px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#FFFFFF]"
                 />
               </div>
 
@@ -663,7 +663,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
                   placeholder="Enter new sk-or-v1-... to replace"
                   value={rawKeyValue}
                   onChange={(e) => setRawKeyValue(e.target.value)}
-                  className="w-full px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#F2A900]"
+                  className="w-full px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#FFFFFF]"
                 />
               </div>
 
@@ -684,7 +684,7 @@ export const ApiKeysSection: React.FC<ApiKeysSectionProps> = ({ keys, onRefresh 
                 <button
                   type="submit"
                   disabled={formLoading}
-                  className="px-5 py-2 text-xs font-mono font-semibold text-black bg-[#F2A900] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2 text-xs font-mono font-semibold text-black bg-[#FFFFFF] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50"
                 >
                   {formLoading ? 'UPDATING...' : 'SAVE CHANGES'}
                 </button>

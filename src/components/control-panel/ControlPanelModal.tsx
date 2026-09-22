@@ -127,7 +127,7 @@ export const ControlPanelModal: React.FC<ControlPanelModalProps> = ({
       {/* Outer Modal Container */}
       <div
         id="super-ai-control-panel"
-        className="relative w-full max-w-5xl h-[92vh] max-h-[850px] rounded-lg border border-[#F2A900]/40 bg-[#050505] shadow-[0_0_50px_rgba(242,169,0,0.15)] flex flex-col overflow-hidden text-stone-200 font-sans"
+        className="relative w-full max-w-5xl h-[92vh] max-h-[850px] rounded-lg border border-[#FFFFFF]/40 bg-[#050505] shadow-[0_0_50px_rgba(255,255,255,0.15)] flex flex-col overflow-hidden text-stone-200 font-sans"
       >
         {/* Sleek tactical grid & ambient glow */}
         <div className="sleek-grid absolute inset-0 pointer-events-none opacity-20" />
@@ -135,7 +135,7 @@ export const ControlPanelModal: React.FC<ControlPanelModalProps> = ({
         {/* Modal Header */}
         <header className="relative z-10 flex items-center justify-between px-5 py-3.5 border-b border-stone-800 bg-[#0a0a0a]/90 backdrop-blur-sm">
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded bg-[#F2A900]/10 border border-[#F2A900]/30 flex items-center justify-center text-[#F2A900]">
+            <div className="w-7 h-7 rounded bg-[#FFFFFF]/10 border border-[#FFFFFF]/30 flex items-center justify-center text-[#FFFFFF]">
               <SlidersHorizontal className="w-4 h-4" />
             </div>
             <div>
@@ -143,7 +143,7 @@ export const ControlPanelModal: React.FC<ControlPanelModalProps> = ({
                 <span className="font-mono text-sm font-bold text-white tracking-widest uppercase">
                   SUPER AI · CONTROL PANEL
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.2 rounded bg-stone-900 border border-stone-800 text-[#F2A900]">
+                <span className="text-[10px] font-mono px-2 py-0.2 rounded bg-stone-900 border border-stone-800 text-[#FFFFFF]">
                   ENCLAVE v4.2
                 </span>
               </div>
@@ -160,7 +160,7 @@ export const ControlPanelModal: React.FC<ControlPanelModalProps> = ({
               title="Refresh configuration from backend"
               className="p-1.5 rounded bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-stone-200 border border-stone-800 transition-all cursor-pointer"
             >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-[#F2A900]' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-[#FFFFFF]' : ''}`} />
             </button>
             <button
               id="btn-close-control-panel"
@@ -186,11 +186,11 @@ export const ControlPanelModal: React.FC<ControlPanelModalProps> = ({
                   onClick={() => setActiveSection(item.id)}
                   className={`flex items-center gap-2.5 px-3 py-2.5 rounded text-xs font-mono tracking-wider text-left transition-all whitespace-nowrap cursor-pointer ${
                     isActive
-                      ? 'bg-[#F2A900]/15 text-[#F2A900] font-semibold border-l-2 border-l-[#F2A900] shadow-[0_0_12px_rgba(242,169,0,0.15)]'
+                      ? 'bg-[#FFFFFF]/15 text-[#FFFFFF] font-semibold border-l-2 border-l-[#FFFFFF] shadow-[0_0_12px_rgba(255,255,255,0.15)]'
                       : 'text-stone-400 hover:text-stone-200 hover:bg-stone-900/60'
                   }`}
                 >
-                  <span className={isActive ? 'text-[#F2A900]' : 'text-stone-500'}>
+                  <span className={isActive ? 'text-[#FFFFFF]' : 'text-stone-500'}>
                     {item.icon}
                   </span>
                   <span>{item.label}</span>
@@ -215,7 +215,7 @@ export const ControlPanelModal: React.FC<ControlPanelModalProps> = ({
 
             {loading && !config ? (
               <div className="h-full flex items-center justify-center font-mono text-xs text-stone-500 space-x-2">
-                <RefreshCw className="w-4 h-4 animate-spin text-[#F2A900]" />
+                <RefreshCw className="w-4 h-4 animate-spin text-[#FFFFFF]" />
                 <span>Reading encrypted local database...</span>
               </div>
             ) : (

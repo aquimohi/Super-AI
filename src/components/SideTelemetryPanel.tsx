@@ -152,27 +152,27 @@ export const SideTelemetryPanel: React.FC<SideTelemetryPanelProps> = ({
         collapsed ? '-translate-x-[calc(100%-12px)]' : 'translate-x-0'
       }`}
     >
-      <div className="hud-panel rounded-xl w-72 sm:w-80 h-full p-4 flex flex-col justify-between overflow-y-auto pointer-events-auto border border-[#F2A900]/20 bg-black/50 backdrop-blur-xl">
+      <div className="hud-panel rounded-xl w-72 sm:w-80 h-full p-4 flex flex-col justify-between overflow-y-auto pointer-events-auto border border-[#FFFFFF]/20 bg-black/50 backdrop-blur-xl">
         {/* Top Header & Environment Card */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between pb-2.5 border-b border-[#F2A900]/20">
+          <div className="flex items-center justify-between pb-2.5 border-b border-[#FFFFFF]/20">
             <div className="flex items-center gap-2">
-              <Gauge className="w-4 h-4 text-[#F2A900]" />
-              <span className="text-[11px] font-mono tracking-[0.2em] text-[#F2A900] font-bold uppercase">
+              <Gauge className="w-4 h-4 text-[#FFFFFF]" />
+              <span className="text-[11px] font-mono tracking-[0.2em] text-[#FFFFFF] font-bold uppercase">
                 Core Telemetry
               </span>
             </div>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#F2A900]/10 border border-[#F2A900]/30 text-[#F2A900]">
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#FFFFFF]/10 border border-[#FFFFFF]/30 text-[#FFFFFF]">
               SYS-01
             </span>
           </div>
 
           {/* Sleek Interface Environment Card with Left Accent Border */}
           <div className="sleek-accent-card p-3 rounded-r-md">
-            <div className="text-[10px] uppercase tracking-widest opacity-50 mb-2 text-[#F2A900]">
+            <div className="text-[10px] uppercase tracking-widest opacity-50 mb-2 text-[#FFFFFF]">
               Environment
             </div>
-            <div className="text-xs font-mono space-y-1 text-[#F2A900]/90">
+            <div className="text-xs font-mono space-y-1 text-[#FFFFFF]/90">
               <div className="flex justify-between">
                 <span className="opacity-60">TEMP</span>
                 <span className="font-semibold">24.5°C</span>
@@ -183,33 +183,33 @@ export const SideTelemetryPanel: React.FC<SideTelemetryPanelProps> = ({
               </div>
               <div className="flex justify-between">
                 <span className="opacity-60">SYNC</span>
-                <span className="font-semibold text-[#F2A900]">ACTIVE</span>
+                <span className="font-semibold text-[#FFFFFF]">ACTIVE</span>
               </div>
             </div>
           </div>
 
           {/* Active State Card */}
-          <div className="p-3 rounded-lg bg-black/40 border border-[#F2A900]/20">
+          <div className="p-3 rounded-lg bg-black/40 border border-[#FFFFFF]/20">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] font-mono uppercase opacity-50 text-[#F2A900] tracking-wider">
+              <span className="text-[10px] font-mono uppercase opacity-50 text-[#FFFFFF] tracking-wider">
                 Active: {state}
               </span>
-              <div className="w-2 h-2 rounded-full bg-[#F2A900] shadow-[0_0_8px_#F2A900] animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-[#FFFFFF] shadow-[0_0_8px_#FFFFFF] animate-pulse" />
             </div>
-            <h3 className="text-sm font-bold text-[#F2A900] tracking-wide italic">
+            <h3 className="text-sm font-bold text-[#FFFFFF] tracking-wide italic">
               {currentDetails.title}
             </h3>
-            <p className="text-xs text-[#F2A900]/70 mt-1 leading-relaxed font-rajdhani">
+            <p className="text-xs text-[#FFFFFF]/70 mt-1 leading-relaxed font-rajdhani">
               {currentDetails.description}
             </p>
           </div>
 
           {/* LIVE COGNITIVE TRACE CARD */}
           {latestTrace && latestTrace.length > 0 && (
-            <div className="p-3 rounded-lg bg-black/60 border border-[#F2A900]/30 space-y-2 font-mono text-[10px]">
-              <div className="flex items-center justify-between text-[#F2A900] border-b border-[#F2A900]/20 pb-1.5">
+            <div className="p-3 rounded-lg bg-black/60 border border-[#FFFFFF]/30 space-y-2 font-mono text-[10px]">
+              <div className="flex items-center justify-between text-[#FFFFFF] border-b border-[#FFFFFF]/20 pb-1.5">
                 <div className="flex items-center gap-1.5 font-bold tracking-wider uppercase">
-                  <Brain className="w-3.5 h-3.5 text-[#F2A900]" />
+                  <Brain className="w-3.5 h-3.5 text-[#FFFFFF]" />
                   <span>LIVE COGNITIVE TRACE</span>
                 </div>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -220,7 +220,7 @@ export const SideTelemetryPanel: React.FC<SideTelemetryPanelProps> = ({
                     <span
                       className={`font-bold ${
                         tr.agent === 'PLANNER'
-                          ? 'text-[#F2A900]'
+                          ? 'text-[#FFFFFF]'
                           : tr.agent === 'TASK'
                           ? 'text-cyan-300'
                           : tr.agent === 'RECOVERY'
@@ -247,46 +247,46 @@ export const SideTelemetryPanel: React.FC<SideTelemetryPanelProps> = ({
 
           {/* Core Metrics Grid */}
           <div className="space-y-2 text-xs font-mono">
-            <div className="flex items-center justify-between p-2 rounded bg-black/30 border border-[#F2A900]/10">
-              <div className="flex items-center gap-2 text-[#F2A900]/60">
-                <RotateCw className="w-3.5 h-3.5 text-[#F2A900]" />
+            <div className="flex items-center justify-between p-2 rounded bg-black/30 border border-[#FFFFFF]/10">
+              <div className="flex items-center gap-2 text-[#FFFFFF]/60">
+                <RotateCw className="w-3.5 h-3.5 text-[#FFFFFF]" />
                 <span>Rotation Velocity</span>
               </div>
-              <span className="text-[#F2A900] font-semibold">{currentDetails.rotationRate}</span>
+              <span className="text-[#FFFFFF] font-semibold">{currentDetails.rotationRate}</span>
             </div>
 
-            <div className="flex items-center justify-between p-2 rounded bg-black/30 border border-[#F2A900]/10">
-              <div className="flex items-center gap-2 text-[#F2A900]/60">
-                <Sparkles className="w-3.5 h-3.5 text-[#F2A900]" />
+            <div className="flex items-center justify-between p-2 rounded bg-black/30 border border-[#FFFFFF]/10">
+              <div className="flex items-center gap-2 text-[#FFFFFF]/60">
+                <Sparkles className="w-3.5 h-3.5 text-[#FFFFFF]" />
                 <span>Particle Stream</span>
               </div>
-              <span className="text-[#F2A900] font-semibold">{currentDetails.particleFlow}</span>
+              <span className="text-[#FFFFFF] font-semibold">{currentDetails.particleFlow}</span>
             </div>
 
-            <div className="flex items-center justify-between p-2 rounded bg-black/30 border border-[#F2A900]/10">
-              <div className="flex items-center gap-2 text-[#F2A900]/60">
-                <Activity className="w-3.5 h-3.5 text-[#F2A900]" />
+            <div className="flex items-center justify-between p-2 rounded bg-black/30 border border-[#FFFFFF]/10">
+              <div className="flex items-center gap-2 text-[#FFFFFF]/60">
+                <Activity className="w-3.5 h-3.5 text-[#FFFFFF]" />
                 <span>Holo Frequency</span>
               </div>
-              <span className="text-[#F2A900] font-semibold">{currentDetails.hologramWave}</span>
+              <span className="text-[#FFFFFF] font-semibold">{currentDetails.hologramWave}</span>
             </div>
 
-            <div className="flex items-center justify-between p-2 rounded bg-black/30 border border-[#F2A900]/10">
-              <div className="flex items-center gap-2 text-[#F2A900]/60">
-                <Layers className="w-3.5 h-3.5 text-[#F2A900]" />
+            <div className="flex items-center justify-between p-2 rounded bg-black/30 border border-[#FFFFFF]/10">
+              <div className="flex items-center gap-2 text-[#FFFFFF]/60">
+                <Layers className="w-3.5 h-3.5 text-[#FFFFFF]" />
                 <span>Quantum Coherence</span>
               </div>
-              <span className="text-[#F2A900] font-semibold">{currentDetails.coherence}</span>
+              <span className="text-[#FFFFFF] font-semibold">{currentDetails.coherence}</span>
             </div>
 
-            <div className="flex items-center justify-between p-2 rounded bg-black/30 border border-[#F2A900]/10">
-              <div className="flex items-center gap-2 text-[#F2A900]/60">
-                <Zap className="w-3.5 h-3.5 text-[#F2A900]" />
+            <div className="flex items-center justify-between p-2 rounded bg-black/30 border border-[#FFFFFF]/10">
+              <div className="flex items-center gap-2 text-[#FFFFFF]/60">
+                <Zap className="w-3.5 h-3.5 text-[#FFFFFF]" />
                 <span>Core Flux</span>
               </div>
               <span
                 className={`font-semibold ${
-                  state === 'ERROR' ? 'text-red-400 animate-pulse' : 'text-[#F2A900]'
+                  state === 'ERROR' ? 'text-red-400 animate-pulse' : 'text-[#FFFFFF]'
                 }`}
               >
                 {currentDetails.flux}
@@ -296,13 +296,13 @@ export const SideTelemetryPanel: React.FC<SideTelemetryPanelProps> = ({
         </div>
 
         {/* Bottom Audio / Reactive Waveform Visualizer Preview */}
-        <div className="mt-4 pt-3 border-t border-[#F2A900]/20">
-          <div className="flex items-center justify-between text-[10px] font-mono text-[#F2A900]/60 mb-2">
+        <div className="mt-4 pt-3 border-t border-[#FFFFFF]/20">
+          <div className="flex items-center justify-between text-[10px] font-mono text-[#FFFFFF]/60 mb-2">
             <span className="tracking-widest uppercase">Acoustic Resonance</span>
-            <span className="text-[#F2A900]">STANDBY READY</span>
+            <span className="text-[#FFFFFF]">STANDBY READY</span>
           </div>
-          {/* Animated Waveform Bars with Sleek #F2A900 styling */}
-          <div className="flex items-end justify-between gap-1 h-9 px-1.5 py-1 rounded bg-black/40 border border-[#F2A900]/20">
+          {/* Animated Waveform Bars with Sleek #FFFFFF styling */}
+          <div className="flex items-end justify-between gap-1 h-9 px-1.5 py-1 rounded bg-black/40 border border-[#FFFFFF]/20">
             {[45, 75, 30, 90, 60, 100, 40, 85, 70, 95, 50, 80, 65, 90, 35, 70].map(
               (baseHeight, idx) => {
                 const isSpeakingNow = isSpeakingLive || state === 'SPEAKING';
@@ -328,10 +328,10 @@ export const SideTelemetryPanel: React.FC<SideTelemetryPanelProps> = ({
                       state === 'ERROR'
                         ? 'bg-red-400'
                         : isSpeakingNow
-                        ? 'bg-[#F2A900] shadow-[0_0_6px_#F2A900]'
+                        ? 'bg-[#FFFFFF] shadow-[0_0_6px_#FFFFFF]'
                         : state === 'LISTENING'
                         ? 'bg-sky-400 shadow-[0_0_4px_rgba(56,189,248,0.6)]'
-                        : 'bg-[#F2A900]/50'
+                        : 'bg-[#FFFFFF]/50'
                     }`}
                     style={{ height: `${actualHeight}%` }}
                   />
@@ -346,7 +346,7 @@ export const SideTelemetryPanel: React.FC<SideTelemetryPanelProps> = ({
       <button
         id="toggle-telemetry-btn"
         onClick={onToggleCollapse}
-        className="pointer-events-auto self-center -ml-px px-1 py-4 rounded-r-md hud-panel border border-l-0 border-[#F2A900]/30 text-[#F2A900] hover:text-white transition-colors cursor-pointer"
+        className="pointer-events-auto self-center -ml-px px-1 py-4 rounded-r-md hud-panel border border-l-0 border-[#FFFFFF]/30 text-[#FFFFFF] hover:text-white transition-colors cursor-pointer"
         title={collapsed ? 'Expand Telemetry Panel' : 'Collapse Telemetry Panel'}
       >
         {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}

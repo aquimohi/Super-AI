@@ -1,29 +1,21 @@
 # Super AI
 
-> Futuristic personal AI assistant featuring a real-time animated 3D holographic neural core, multi-model cognitive orchestration, autonomous task execution, and a tactical command center interface.
+> Futuristic personal AI assistant featuring a real-time animated 3D holographic neural core, multi-model cognitive orchestration, autonomous multi-agent swarm, design genius pipeline, hardware IoT integration, and a tactical command center interface.
 
 ---
 
 ## Overview
 
-**Super AI** is an advanced AI assistant platform inspired by high-tech holographic command consoles (JARVIS-style). Built with a full-stack architecture (Express + React 19 + Three.js + Tailwind CSS), it combines real-time spatial visual feedback with cognitive routing, autonomous multi-step planning, working and long-term memory, voice interaction, and security authorization gates.
+**Super AI** is an advanced AI assistant platform inspired by high-tech holographic command consoles (JARVIS-style). Built with a full-stack architecture (Express + React 19 + Three.js + Tailwind CSS), it combines real-time spatial visual feedback with cognitive routing, autonomous multi-step planning, working and long-term memory, voice interaction, and security authorization gates. 
 
 ---
 
 ## Key Features
 
 ### 1. Real-Time 3D Holographic Singularity Core
-- **Procedural Hologram**: Implemented with Three.js featuring an emissive inner core, nested icosahedron lattices, 5 differential orbital gyroscope rings, and 3,200 reactive vector particles.
-- **Dynamic State Engine**: Adapts color palettes, rotation rates, pulse frequencies, laser scanning planes, and shield geometries across system states:
-  - `IDLE` (Amber solar resonance)
-  - `LISTENING` (Acoustic cyan pulse)
-  - `THINKING` (Deep neural blue oscillation)
-  - `PROCESSING` (High-frequency cyan scan)
-  - `EXECUTING` (Dynamic particle surge)
-  - `SPEAKING` (Harmonic acoustic emission)
-  - `AUTHORIZATION` (Amber security clearance barrier)
-  - `ERROR` (Quantum flux chromatic jitter)
-  - `RECOVERING` (Restorative self-healing loop)
+- **Procedural Hologram**: Implemented with Three.js featuring an emissive inner core, nested icosahedron lattices, 5 differential orbital gyroscope rings, and 3,200 reactive vector particles. 
+- **Hologram Scene**: Switchable rendering between the abstract 3D core (`AICore3D`) and a futuristic responsive holographic face (`HologramScene`).
+- **Dynamic State Engine**: Adapts color palettes, rotation rates, pulse frequencies, laser scanning planes, and shield geometries across system states (`IDLE`, `LISTENING`, `THINKING`, `PROCESSING`, `EXECUTING`, `SPEAKING`, `AUTHORIZATION`, `ERROR`, `RECOVERING`).
 - **Interactive Parallax**: Subtly responds to pointer movements and canvas resizing.
 
 ### 2. Cognitive Brain & Multi-Model Orchestration
@@ -32,23 +24,28 @@
 - **Autonomous Task Engine**: Deconstructs complex user prompts into discrete executable steps, verifies prerequisites, and tracks step execution history.
 - **Self-Healing & Recovery Engine**: Observability layer capable of detecting execution failures, initiating retry circuits, fallback strategies, and self-stabilization.
 
-### 3. Comprehensive Tool & Capability Ecosystem
-- **Built-in System Tools**:
-  - `current_date` & `current_time`
-  - `calculator` (Mathematical expression evaluator)
-  - `read_file` (Secure local file reading)
-  - `web_search` (Real-time web discovery & search queries)
-- **Browser Automation (Planned Actions)**: Structured URL validation, DOM inspection, navigation, and screenshot action abstractions.
-- **Computer Control (Planned Actions)**: Allowlisted application launching, keyboard shortcuts, and file browsing with role-based permission boundaries.
+### 3. Swarm Intelligence & Design Genius Pipeline
+- **Swarm Router**: Advanced multi-agent orchestration for massive parallel tasks, splitting goals across `HEAD`, `CODER`, `SCRAPER`, and `TESTER` agents.
+- **Design Genius Ecosystem**: 
+  - Centralized aesthetic control using frozen CSS tokens (`tokens.css`), brand guidelines (`brand.md`), and personality tone bibles (`voice.md`).
+  - **DESIGNER Agent**: Specialized agent that injects design systems into its context to output strict, on-brand React components.
+  - **COPY_EDITOR Agent & Humanizer**: Middleware that reviews and refines all user-facing text to strip out generic "AI-isms" (e.g., "Absolutely!", "Let's dive in") and enforces a confident, direct persona.
 
-### 4. Memory & Context Architecture
+### 4. Comprehensive Tool & Capability Ecosystem
+- **Built-in System Tools**: Mathematical evaluators, secure local file reading/writing, real-time web discovery & search queries.
+- **Browser Automation**: Structured URL validation, DOM inspection, navigation, and screenshot action abstractions.
+- **Computer Control**: Allowlisted application launching, keyboard shortcuts, and file browsing with role-based permission boundaries.
+- **Hardware & IoT (Phase 3)**: Radar sensor webhooks (`/api/iot/radar/event`), Smart Gate triggers, and hardware telemetry integration.
+
+### 5. Memory & Context Architecture
 - **Hierarchical Memory**:
   - **Working Memory**: Active session scratchpad for current multi-turn goal tracking.
   - **Short-Term Memory**: Conversation history with configurable context window length.
-  - **Long-Term Memory**: Structured factual memories with importance scoring, tags, and retention policies (30 days, 90 days, or permanent).
+  - **Long-Term Memory**: Structured factual memories with importance scoring, tags, and retention policies.
+  - **Design Memory**: Centralized typed API module that bridges `design_genius` artifacts into Agent prompts dynamically.
 
-### 5. Tactical Command Center HUD
-- **HUD Navigation**: Live AI state indicator, active model pill, voice feedback toggle, and direct Control Panel launcher.
+### 6. Tactical Command Center HUD
+- **HUD Navigation & Real-time TTS**: Live AI state indicator, voice feedback toggle, and direct Control Panel launcher. Features WebSocket-streamed cinematic TTS audio (e.g. ElevenLabs).
 - **Side Telemetry Panel**: Live system metrics, flux readings, holographic coherence meters, audio spectral waveforms, and cognitive reasoning traces.
 - **Activity & Dialogue Feed**: Formatted conversation logs with expandable tool execution badges, cognitive trace inspections, and markdown rendering.
 - **Control Panel**: Tabbed configuration suite for API Keys, Models, Routing, Permissions, Tools, Skills, Browser Control, Computer Control, Voice, Memory, Autonomous Tasks, and Security Logs.
@@ -123,14 +120,16 @@ npm run lint
 
 ## Project Structure
 
-```
+```text
 ├── public/                    # Static assets
 ├── server/                    # Express backend services
-│   ├── routes/                # API endpoints (chat, config, keys, memory, tasks)
+│   ├── design_genius/         # Frozen UI design system and voice rules
+│   ├── routes/                # API endpoints (chat, config, keys, memory, IoT)
 │   ├── services/
 │   │   ├── browser/           # Browser automation & URL validation
 │   │   ├── cognitive/         # Planner, specialist, judge, and cognitive brain
-│   │   ├── memory/            # Storage, working memory, and long-term memory
+│   │   ├── memory/            # Storage, working memory, long-term memory, design memory
+│   │   ├── swarm/             # Multi-agent Swarm router, agents, and execution engine
 │   │   ├── task/              # Autonomous task engine & recovery observer
 │   │   └── tools/             # Built-in tool registry & implementations
 │   ├── crypto.ts              # AES-256-GCM encryption utilities
@@ -144,6 +143,7 @@ npm run lint
 │   │   ├── SideTelemetryPanel.tsx # HUD metrics & telemetry
 │   │   ├── StateController.tsx# Manual state override bar
 │   │   └── TopNavigation.tsx  # Top HUD status bar
+│   ├── hooks/                 # Real-time WebSocket and Audio Stream hooks
 │   ├── services/              # Client API bridge
 │   ├── utils/                 # Web Speech API & speech synthesis
 │   ├── App.tsx                # Main application layout & orchestration

@@ -108,11 +108,11 @@ export function useVoiceInput({
       // Handle Wake Word Logic
       if (isWakeWordModeRef.current && finalStr) {
         const lower = finalStr.toLowerCase();
-        if (lower.includes('jarvis') || lower.includes('hey jarvis')) {
+        if (lower.includes('super ai')) {
           // Strip the wake word
-          let cleaned = lower.replace(/hey jarvis|jarvis/g, '').trim();
+          let cleaned = lower.replace(/super ai/g, '').trim();
           if (cleaned && onWakeWordDetected) {
-            onWakeWordDetected(finalStr.replace(/hey jarvis|jarvis/gi, '').trim());
+            onWakeWordDetected(finalStr.replace(/super ai/gi, '').trim());
           }
         }
         // Clear transcript after processing final in wake word mode

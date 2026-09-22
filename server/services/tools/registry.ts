@@ -25,6 +25,8 @@ import {
 } from '../browser/browserTools.js';
 import { smartGateTool } from './smartGateTool.js';
 import { repoModifierTool } from './repoModifierTool.js';
+import { scanWifiDevicesTool } from './scanWifiDevicesTool.js';
+import { createFileTool } from './createFileTool.js';
 
 class ToolRegistry {
   private tools: Map<string, ToolDefinition> = new Map();
@@ -49,7 +51,6 @@ class ToolRegistry {
     'regedit',
     'wscript',
     'cscript',
-    'write_file',
     'delete_file',
     'modify_file',
     'spawn',
@@ -72,6 +73,7 @@ class ToolRegistry {
     this.register(currentDateTool);
     this.register(webSearchTool);
     this.register(readFileTool);
+    this.register(createFileTool);
     // Autonomous Code Execution Sandbox
     this.register(executeCodeTool);
     this.register(openApplicationTool);
@@ -93,6 +95,8 @@ class ToolRegistry {
     this.register(smartGateTool);
     // Code Evolution
     this.register(repoModifierTool);
+    // Network Scanning
+    this.register(scanWifiDevicesTool);
   }
 
   public register(tool: ToolDefinition): void {
@@ -180,7 +184,10 @@ class ToolRegistry {
       `   RULE: Always write complete, self-contained code (no shell commands, no subprocess calls).\n` +
       `   RULE: The sandbox enforces a strict 5-second timeout — avoid infinite loops.\n` +
       `   Example: User asks "Write a Python script to calculate primes" → generate code, then call execute_code to run it and show results.\n\n` +
-      `13. trigger_smart_gate: Control the physical smart gate/door lock via ESP32 relay hardware.\n` +
+      `13. write_file: Generates and writes raw content to a file in the workspace.\n` +
+      `   Parameters: { "path": string, "content": string }\n` +
+      `   Example user prompts: "ye file generate karo", "create a python script"\n\n` +
+      `14. trigger_smart_gate: Control the physical smart gate/door lock via ESP32 relay hardware.\n` +
       `   Parameters: { "command": "UNLOCK" | "LOCK" | "PULSE_UNLOCK", "reason"?: string }\n` +
       `   RULE: Use PULSE_UNLOCK for safe timed entry (auto-relocks after 5s). Always confirm before triggering.\n` +
       `   Example: User says "Gate kholo" → { command: "PULSE_UNLOCK", reason: "User requested entry" }\n\n` +
@@ -188,6 +195,9 @@ class ToolRegistry {
       `   Parameters: { "files": [{ "path": string, "content": string }], "commitMessage": string }\n` +
       `   RULE: Use this to autonomously evolve the codebase based on instructions. Modifying core configs (.env, package.json) is blocked.\n` +
       `   Example: User says "Add timestamps to chat controller" → Generate new code, then call modify_backend_code to save and push.\n\n` +
+      `15. scan_wifi_devices: Scans the local Wi-Fi network and returns a list of active connected devices (IP and MAC addresses).\n` +
+      `   Parameters: {}\n` +
+      `   RULE: Use this when the user asks who is on the network or connected to Wi-Fi.\n\n` +
       `HOW TO CALL TOOLS:\n` +
       `- If your interface supports native function calling, invoke the function directly.\n` +
       `- Otherwise, output a single JSON block:\n` +

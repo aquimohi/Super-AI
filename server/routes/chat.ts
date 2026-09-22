@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { orchestrateChatRequest } from '../services/orchestrator.js';
+import { generateSpeech } from '../services/ttsService.js';
 
 export const chatRouter = Router();
 
@@ -42,6 +43,18 @@ chatRouter.post('/', async (req, res) => {
       authorizationDecision,
       stepId,
     });
+
+    // Phase 6: Inject Custom Cinematic TTS audio (Base64)
+    if (result.success && result.text) {
+      try {
+        const audioBase64 = await generateSpeech(result.text);
+        if (audioBase64) {
+          result.audioBase64 = audioBase64;
+        }
+      } catch (ttsErr) {
+        console.error('[chatRouter] TTS Generation failed:', ttsErr);
+      }
+    }
 
     res.json(result);
   } catch (err: any) {

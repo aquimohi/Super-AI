@@ -42,16 +42,16 @@ export const StateController: React.FC<StateControllerProps> = ({
   return (
     <div
       id="state-controller"
-      className="hud-panel rounded-xl p-2 sm:p-2.5 border border-[#F2A900]/20 bg-black/50 backdrop-blur-xl shadow-2xl transition-all duration-300"
+      className="hud-panel rounded-xl p-2 sm:p-2.5 border border-[#FFFFFF]/20 bg-black/50 backdrop-blur-xl shadow-2xl transition-all duration-300"
     >
       <div className="flex items-center justify-between gap-3 mb-1.5 px-1">
         <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#F2A900] shadow-[0_0_6px_#F2A900] animate-pulse" />
-          <span className="text-[10px] font-mono tracking-[0.2em] text-[#F2A900] font-semibold uppercase opacity-70">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#FFFFFF] shadow-[0_0_6px_#FFFFFF] animate-pulse" />
+          <span className="text-[10px] font-mono tracking-[0.2em] text-[#FFFFFF] font-semibold uppercase opacity-70">
             Core State Matrix
           </span>
         </div>
-        <span className="text-[9px] font-mono text-[#F2A900]/40 hidden sm:inline">
+        <span className="text-[9px] font-mono text-[#FFFFFF]/40 hidden sm:inline">
           CORE STATES [1-7]
         </span>
       </div>
@@ -76,12 +76,12 @@ export const StateController: React.FC<StateControllerProps> = ({
                     ? 'bg-red-950/70 border-red-500 text-red-300 shadow-[0_0_12px_rgba(239,68,68,0.4)] font-bold'
                     : isAuth
                     ? 'bg-amber-950/80 border-amber-400 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.5)] font-bold animate-pulse'
-                    : 'bg-[#F2A900]/20 border-[#F2A900]/60 text-[#F2A900] shadow-[0_0_12px_rgba(242,169,0,0.3)] font-bold'
+                    : 'bg-[#FFFFFF]/20 border-[#FFFFFF]/60 text-[#FFFFFF] shadow-[0_0_12px_rgba(255,255,255,0.3)] font-bold'
                   : isError
                   ? 'border-red-500/20 text-red-400/60 hover:text-red-300 hover:bg-red-500/10'
                   : isAuth
                   ? 'border-amber-500/20 text-amber-400/60 hover:text-amber-300 hover:bg-amber-500/10'
-                  : 'border-[#F2A900]/20 bg-black/40 text-[#F2A900]/60 hover:text-[#F2A900] hover:border-[#F2A900]/40 hover:bg-[#F2A900]/10'
+                  : 'border-[#FFFFFF]/20 bg-black/40 text-[#FFFFFF]/60 hover:text-[#FFFFFF] hover:border-[#FFFFFF]/40 hover:bg-[#FFFFFF]/10'
               }`}
             >
               <Icon
@@ -91,7 +91,7 @@ export const StateController: React.FC<StateControllerProps> = ({
                       ? 'text-red-400'
                       : isAuth
                       ? 'text-amber-300'
-                      : 'text-[#F2A900] animate-pulse'
+                      : 'text-[#FFFFFF] animate-pulse'
                     : ''
                 }`}
               />

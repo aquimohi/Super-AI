@@ -82,15 +82,15 @@ export const MemorySection: React.FC<MemorySectionProps> = ({
   return (
     <div className="space-y-6">
       {/* Header Info */}
-      <div className="p-4 rounded-xl border border-[#F2A900]/20 bg-[#0a0a0a]">
+      <div className="p-4 rounded-xl border border-[#FFFFFF]/20 bg-[#0a0a0a]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Database className="w-5 h-5 text-[#F2A900]" />
-            <h3 className="text-sm font-mono tracking-widest text-[#F2A900] uppercase font-bold">
+            <Database className="w-5 h-5 text-[#FFFFFF]" />
+            <h3 className="text-sm font-mono tracking-widest text-[#FFFFFF] uppercase font-bold">
               Memory Subsystem Architecture
             </h3>
           </div>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#F2A900]/10 border border-[#F2A900]/30 text-[#F2A900]">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#FFFFFF]/10 border border-[#FFFFFF]/30 text-[#FFFFFF]">
             3-TIER MEMORY
           </span>
         </div>
@@ -113,7 +113,7 @@ export const MemorySection: React.FC<MemorySectionProps> = ({
             <div className="p-3 rounded-lg border border-stone-800 bg-black/60 flex flex-col justify-between gap-3">
               <div>
                 <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-white">
-                  <Clock className="w-3.5 h-3.5 text-[#F2A900]" />
+                  <Clock className="w-3.5 h-3.5 text-[#FFFFFF]" />
                   <span>Short-Term</span>
                 </div>
                 <div className="text-[11px] font-mono text-stone-400 mt-0.5">
@@ -139,7 +139,7 @@ export const MemorySection: React.FC<MemorySectionProps> = ({
             <div className="p-3 rounded-lg border border-stone-800 bg-black/60 flex flex-col justify-between gap-3">
               <div>
                 <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-white">
-                  <Brain className="w-3.5 h-3.5 text-[#F2A900]" />
+                  <Brain className="w-3.5 h-3.5 text-[#FFFFFF]" />
                   <span>Long-Term</span>
                 </div>
                 <div className="text-[11px] font-mono text-stone-400 mt-0.5">
@@ -165,7 +165,7 @@ export const MemorySection: React.FC<MemorySectionProps> = ({
             <div className="p-3 rounded-lg border border-stone-800 bg-black/60 flex flex-col justify-between gap-3">
               <div>
                 <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-white">
-                  <Cpu className="w-3.5 h-3.5 text-[#F2A900]" />
+                  <Cpu className="w-3.5 h-3.5 text-[#FFFFFF]" />
                   <span>Working Memory</span>
                 </div>
                 <div className="text-[11px] font-mono text-stone-400 mt-0.5">
@@ -192,7 +192,7 @@ export const MemorySection: React.FC<MemorySectionProps> = ({
         {/* Storage Info: LOCAL */}
         <div className="p-4 rounded-xl border border-stone-800 bg-[#080808] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded bg-stone-900 border border-stone-800 text-[#F2A900]">
+            <div className="p-2 rounded bg-stone-900 border border-stone-800 text-[#FFFFFF]">
               <HardDrive className="w-4 h-4" />
             </div>
             <div>
@@ -228,7 +228,7 @@ export const MemorySection: React.FC<MemorySectionProps> = ({
                 onClick={() => setMemory({ ...memory, retention: p.id as any })}
                 className={`py-2 text-xs font-mono rounded-lg border text-center transition-all cursor-pointer ${
                   memory.retention === p.id
-                    ? 'bg-[#F2A900]/20 border-[#F2A900] text-[#F2A900] font-bold'
+                    ? 'bg-[#FFFFFF]/20 border-[#FFFFFF] text-[#FFFFFF] font-bold'
                     : 'bg-black/60 border-stone-800 text-stone-400 hover:text-stone-200'
                 }`}
               >
@@ -242,7 +242,7 @@ export const MemorySection: React.FC<MemorySectionProps> = ({
         <div className="p-4 rounded-xl border border-stone-800 bg-[#080808] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono font-bold text-white uppercase">Context Window Limit</span>
-            <span className="text-xs font-mono text-[#F2A900] font-bold">{memory.contextWindowLimit} tokens</span>
+            <span className="text-xs font-mono text-[#FFFFFF] font-bold">{memory.contextWindowLimit} tokens</span>
           </div>
           <input
             type="range"
@@ -251,7 +251,7 @@ export const MemorySection: React.FC<MemorySectionProps> = ({
             step="1024"
             value={memory.contextWindowLimit}
             onChange={(e) => setMemory({ ...memory, contextWindowLimit: parseInt(e.target.value, 10) })}
-            className="w-full accent-[#F2A900] cursor-pointer"
+            className="w-full accent-[#FFFFFF] cursor-pointer"
           />
           <div className="flex justify-between text-[10px] font-mono text-stone-500">
             <span>2K (Minimal)</span>
@@ -308,7 +308,7 @@ export const MemorySection: React.FC<MemorySectionProps> = ({
             <button
               type="button"
               onClick={() => setIsViewModalOpen(true)}
-              className="px-4 py-2 text-xs font-mono font-bold rounded-lg bg-[#F2A900]/15 border border-[#F2A900]/40 text-[#F2A900] hover:bg-[#F2A900]/25 transition-all flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2 text-xs font-mono font-bold rounded-lg bg-[#FFFFFF]/15 border border-[#FFFFFF]/40 text-[#FFFFFF] hover:bg-[#FFFFFF]/25 transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <Eye className="w-3.5 h-3.5" />
               <span>VIEW MEMORY</span>
@@ -336,7 +336,7 @@ export const MemorySection: React.FC<MemorySectionProps> = ({
           <button
             type="submit"
             disabled={saving}
-            className="px-5 py-2 text-xs font-mono font-bold text-black bg-[#F2A900] hover:bg-[#ffbe26] rounded-lg transition-all cursor-pointer disabled:opacity-50"
+            className="px-5 py-2 text-xs font-mono font-bold text-black bg-[#FFFFFF] hover:bg-[#ffbe26] rounded-lg transition-all cursor-pointer disabled:opacity-50"
           >
             {saving ? 'SAVING...' : 'SAVE CONFIGURATION'}
           </button>

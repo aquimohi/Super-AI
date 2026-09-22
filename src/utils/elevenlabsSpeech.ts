@@ -24,7 +24,7 @@ export async function speakWithElevenLabs(
       },
       body: JSON.stringify({
         text,
-        model_id: 'eleven_turbo_v2_5', // fast + cheap model
+        model_id: 'eleven_flash_v2_5', // ultra-fast low latency model
         voice_settings: {
           stability: 0.5,
           similarity_boost: 0.75,

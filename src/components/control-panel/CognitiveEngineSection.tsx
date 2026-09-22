@@ -76,7 +76,7 @@ export const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
             <h2 className="text-base font-semibold text-white tracking-wide">
               Cognitive Engine Settings
             </h2>
-            <span className="px-2 py-0.5 text-[10px] font-mono font-bold uppercase rounded bg-[#F2A900]/10 border border-[#F2A900]/40 text-[#F2A900]">
+            <span className="px-2 py-0.5 text-[10px] font-mono font-bold uppercase rounded bg-[#FFFFFF]/10 border border-[#FFFFFF]/40 text-[#FFFFFF]">
               Multi-Agent V1
             </span>
           </div>
@@ -102,7 +102,7 @@ export const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#F2A900] text-black font-semibold hover:bg-[#F2A900]/90 transition-colors text-xs shadow-sm font-mono cursor-pointer disabled:opacity-50"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#FFFFFF] text-black font-semibold hover:bg-[#FFFFFF]/90 transition-colors text-xs shadow-sm font-mono cursor-pointer disabled:opacity-50"
           >
             <Save className="w-3.5 h-3.5" />
             <span>{saving ? 'Saving...' : 'Apply Config'}</span>
@@ -150,7 +150,7 @@ export const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
             onChange={(e) => setConfig({ ...config, enabled: e.target.checked })}
             className="sr-only peer"
           />
-          <div className="w-11 h-6 bg-stone-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#F2A900]"></div>
+          <div className="w-11 h-6 bg-stone-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FFFFFF]"></div>
         </label>
       </div>
 
@@ -159,7 +159,7 @@ export const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
         {/* Planner Card */}
         <div className="p-4 rounded-xl border border-stone-800 bg-[#111111] space-y-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-[#F2A900]">
+            <div className="flex items-center gap-2 text-[#FFFFFF]">
               <Brain className="w-4 h-4" />
               <span className="text-xs font-mono font-bold tracking-wider uppercase">PLANNER</span>
             </div>
@@ -227,7 +227,7 @@ export const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
       <div className="p-4 rounded-xl border border-stone-800 bg-[#111111] space-y-4">
         <div>
           <h3 className="text-sm font-medium text-white flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-[#F2A900]" />
+            <ShieldCheck className="w-4 h-4 text-[#FFFFFF]" />
             <span>Judge Verification Mode</span>
           </h3>
           <p className="text-xs text-stone-400 mt-0.5">
@@ -242,15 +242,15 @@ export const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
             onClick={() => setConfig({ ...config, judgeMode: 'AUTO' })}
             className={`p-3.5 rounded-lg border text-left transition-all ${
               config.judgeMode === 'AUTO'
-                ? 'bg-[#F2A900]/10 border-[#F2A900] shadow-[0_0_12px_rgba(242,169,0,0.15)]'
+                ? 'bg-[#FFFFFF]/10 border-[#FFFFFF] shadow-[0_0_12px_rgba(255,255,255,0.15)]'
                 : 'bg-stone-900/50 border-stone-800 hover:border-stone-700 text-stone-400'
             }`}
           >
             <div className="flex items-center justify-between mb-1">
-              <span className={`text-xs font-mono font-bold ${config.judgeMode === 'AUTO' ? 'text-[#F2A900]' : 'text-stone-300'}`}>
+              <span className={`text-xs font-mono font-bold ${config.judgeMode === 'AUTO' ? 'text-[#FFFFFF]' : 'text-stone-300'}`}>
                 AUTO (RECOMMENDED)
               </span>
-              {config.judgeMode === 'AUTO' && <CheckCircle2 className="w-3.5 h-3.5 text-[#F2A900]" />}
+              {config.judgeMode === 'AUTO' && <CheckCircle2 className="w-3.5 h-3.5 text-[#FFFFFF]" />}
             </div>
             <p className="text-[11px] text-stone-400 leading-relaxed">
               Judge activates strictly for coding, mathematical proofs, complex logic, and verification requests. Bypasses greetings and simple Q&A.
@@ -263,15 +263,15 @@ export const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
             onClick={() => setConfig({ ...config, judgeMode: 'ALWAYS' })}
             className={`p-3.5 rounded-lg border text-left transition-all ${
               config.judgeMode === 'ALWAYS'
-                ? 'bg-[#F2A900]/10 border-[#F2A900] shadow-[0_0_12px_rgba(242,169,0,0.15)]'
+                ? 'bg-[#FFFFFF]/10 border-[#FFFFFF] shadow-[0_0_12px_rgba(255,255,255,0.15)]'
                 : 'bg-stone-900/50 border-stone-800 hover:border-stone-700 text-stone-400'
             }`}
           >
             <div className="flex items-center justify-between mb-1">
-              <span className={`text-xs font-mono font-bold ${config.judgeMode === 'ALWAYS' ? 'text-[#F2A900]' : 'text-stone-300'}`}>
+              <span className={`text-xs font-mono font-bold ${config.judgeMode === 'ALWAYS' ? 'text-[#FFFFFF]' : 'text-stone-300'}`}>
                 ALWAYS
               </span>
-              {config.judgeMode === 'ALWAYS' && <CheckCircle2 className="w-3.5 h-3.5 text-[#F2A900]" />}
+              {config.judgeMode === 'ALWAYS' && <CheckCircle2 className="w-3.5 h-3.5 text-[#FFFFFF]" />}
             </div>
             <p className="text-[11px] text-stone-400 leading-relaxed">
               Judge verifies every candidate response (except 1-word greetings). Maximizes correctness checks at the cost of additional latency.
@@ -284,15 +284,15 @@ export const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
             onClick={() => setConfig({ ...config, judgeMode: 'OFF' })}
             className={`p-3.5 rounded-lg border text-left transition-all ${
               config.judgeMode === 'OFF'
-                ? 'bg-[#F2A900]/10 border-[#F2A900] shadow-[0_0_12px_rgba(242,169,0,0.15)]'
+                ? 'bg-[#FFFFFF]/10 border-[#FFFFFF] shadow-[0_0_12px_rgba(255,255,255,0.15)]'
                 : 'bg-stone-900/50 border-stone-800 hover:border-stone-700 text-stone-400'
             }`}
           >
             <div className="flex items-center justify-between mb-1">
-              <span className={`text-xs font-mono font-bold ${config.judgeMode === 'OFF' ? 'text-[#F2A900]' : 'text-stone-300'}`}>
+              <span className={`text-xs font-mono font-bold ${config.judgeMode === 'OFF' ? 'text-[#FFFFFF]' : 'text-stone-300'}`}>
                 OFF (FASTEST)
               </span>
-              {config.judgeMode === 'OFF' && <CheckCircle2 className="w-3.5 h-3.5 text-[#F2A900]" />}
+              {config.judgeMode === 'OFF' && <CheckCircle2 className="w-3.5 h-3.5 text-[#FFFFFF]" />}
             </div>
             <p className="text-[11px] text-stone-400 leading-relaxed">
               Judge is bypassed entirely. The Specialist model delivers candidate answers directly. Minimal latency and lowest token usage.
@@ -310,7 +310,7 @@ export const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
               Sequential Cognitive Pipeline Flow
             </span>
           </div>
-          <span className="text-[10px] font-mono text-[#F2A900] bg-[#F2A900]/10 px-2 py-0.5 rounded border border-[#F2A900]/30">
+          <span className="text-[10px] font-mono text-[#FFFFFF] bg-[#FFFFFF]/10 px-2 py-0.5 rounded border border-[#FFFFFF]/30">
             HARD CAP: MAX {config.maxModelCalls} MODEL CALLS
           </span>
         </div>
@@ -319,7 +319,7 @@ export const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
         <div className="flex flex-wrap items-center gap-2 py-2 px-3 rounded-lg bg-black/50 border border-stone-800 text-[11px] font-mono">
           <span className="text-stone-400">User Command</span>
           <ArrowRight className="w-3.5 h-3.5 text-stone-600" />
-          <span className="text-[#F2A900] font-bold">[ PLANNER ]</span>
+          <span className="text-[#FFFFFF] font-bold">[ PLANNER ]</span>
           <ArrowRight className="w-3.5 h-3.5 text-stone-600" />
           <span className="text-cyan-400 font-bold">[ SPECIALIST ]</span>
           <ArrowRight className="w-3.5 h-3.5 text-stone-600" />

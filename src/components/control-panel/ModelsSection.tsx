@@ -101,7 +101,7 @@ export const ModelsSection: React.FC<ModelsSectionProps> = ({ initialModels, onR
           ACTIVE
         </span>
         {role === 'general' && (
-          <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-[#F2A900]/10 text-[#F2A900] border border-[#F2A900]/30">
+          <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-[#FFFFFF]/10 text-[#FFFFFF] border border-[#FFFFFF]/30">
             FALLBACK TARGET
           </span>
         )}
@@ -112,10 +112,10 @@ export const ModelsSection: React.FC<ModelsSectionProps> = ({ initialModels, onR
   return (
     <div className="space-y-6">
       {/* Header Info */}
-      <div className="p-4 rounded border border-[#F2A900]/20 bg-[#0a0a0a]">
+      <div className="p-4 rounded border border-[#FFFFFF]/20 bg-[#0a0a0a]">
         <div className="flex items-center gap-2">
-          <Cpu className="w-5 h-5 text-[#F2A900]" />
-          <h3 className="text-sm font-mono tracking-widest text-[#F2A900] uppercase">
+          <Cpu className="w-5 h-5 text-[#FFFFFF]" />
+          <h3 className="text-sm font-mono tracking-widest text-[#FFFFFF] uppercase">
             Super AI Model Orchestration Matrix
           </h3>
         </div>
@@ -125,9 +125,9 @@ export const ModelsSection: React.FC<ModelsSectionProps> = ({ initialModels, onR
       </div>
 
       {/* Routing Visualization */}
-      <div className="p-4 rounded border border-[#F2A900]/25 bg-black/60 font-mono">
-        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[#F2A900]/20 text-[11px] uppercase tracking-wider text-[#F2A900]">
-          <GitFork className="w-4 h-4 text-[#F2A900]" />
+      <div className="p-4 rounded border border-[#FFFFFF]/25 bg-black/60 font-mono">
+        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[#FFFFFF]/20 text-[11px] uppercase tracking-wider text-[#FFFFFF]">
+          <GitFork className="w-4 h-4 text-[#FFFFFF]" />
           <span>Active Cognitive Routing Pipeline</span>
         </div>
 
@@ -136,19 +136,19 @@ export const ModelsSection: React.FC<ModelsSectionProps> = ({ initialModels, onR
           <div className="px-3 py-1 rounded bg-stone-900 border border-stone-800 text-stone-200 text-center w-full max-w-xs shadow-sm">
             USER REQUEST
           </div>
-          <ArrowDown className="w-3.5 h-3.5 text-[#F2A900]" />
+          <ArrowDown className="w-3.5 h-3.5 text-[#FFFFFF]" />
 
           {/* Step 2: Task Classifier */}
-          <div className="px-3 py-1 rounded bg-[#F2A900]/10 border border-[#F2A900]/40 text-[#F2A900] text-center w-full max-w-xs font-semibold">
+          <div className="px-3 py-1 rounded bg-[#FFFFFF]/10 border border-[#FFFFFF]/40 text-[#FFFFFF] text-center w-full max-w-xs font-semibold">
             TASK CLASSIFIER (Deterministic Rules)
           </div>
-          <ArrowDown className="w-3.5 h-3.5 text-[#F2A900]" />
+          <ArrowDown className="w-3.5 h-3.5 text-[#FFFFFF]" />
 
           {/* Step 3: Model Router */}
           <div className="px-3 py-1 rounded bg-cyan-950/30 border border-cyan-800/60 text-cyan-300 text-center w-full max-w-xs font-semibold">
             MODEL ROUTER
           </div>
-          <ArrowDown className="w-3.5 h-3.5 text-[#F2A900]" />
+          <ArrowDown className="w-3.5 h-3.5 text-[#FFFFFF]" />
 
           {/* Step 4: Specialized Model Nodes */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full text-[10px] my-1">
@@ -178,10 +178,10 @@ export const ModelsSection: React.FC<ModelsSectionProps> = ({ initialModels, onR
             </div>
           </div>
 
-          <ArrowDown className="w-3.5 h-3.5 text-[#F2A900]" />
+          <ArrowDown className="w-3.5 h-3.5 text-[#FFFFFF]" />
 
           {/* Step 5: OpenRouter Execution */}
-          <div className="px-3 py-1 rounded bg-[#F2A900]/15 border border-[#F2A900]/50 text-[#F2A900] text-center w-full max-w-xs font-bold tracking-wide">
+          <div className="px-3 py-1 rounded bg-[#FFFFFF]/15 border border-[#FFFFFF]/50 text-[#FFFFFF] text-center w-full max-w-xs font-bold tracking-wide">
             OPENROUTER GATEWAY (Auto Key Rotation + Fallback)
           </div>
         </div>
@@ -206,7 +206,7 @@ export const ModelsSection: React.FC<ModelsSectionProps> = ({ initialModels, onR
               type="text"
               value={models.general}
               onChange={(e) => handleChange('general', e.target.value)}
-              className="flex-1 px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#F2A900]"
+              className="flex-1 px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#FFFFFF]"
               placeholder="e.g. deepseek/deepseek-chat"
             />
             <select
@@ -242,7 +242,7 @@ export const ModelsSection: React.FC<ModelsSectionProps> = ({ initialModels, onR
               type="text"
               value={models.reasoning}
               onChange={(e) => handleChange('reasoning', e.target.value)}
-              className="flex-1 px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#F2A900]"
+              className="flex-1 px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#FFFFFF]"
               placeholder="e.g. deepseek/deepseek-r1"
             />
             <select
@@ -278,7 +278,7 @@ export const ModelsSection: React.FC<ModelsSectionProps> = ({ initialModels, onR
               type="text"
               value={models.coding}
               onChange={(e) => handleChange('coding', e.target.value)}
-              className="flex-1 px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#F2A900]"
+              className="flex-1 px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#FFFFFF]"
               placeholder="e.g. qwen/qwen-2.5-coder-32b-instruct"
             />
             <select
@@ -314,7 +314,7 @@ export const ModelsSection: React.FC<ModelsSectionProps> = ({ initialModels, onR
               type="text"
               value={models.vision}
               onChange={(e) => handleChange('vision', e.target.value)}
-              className="flex-1 px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#F2A900]"
+              className="flex-1 px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#FFFFFF]"
               placeholder="e.g. meta-llama/llama-3.2-11b-vision-instruct"
             />
             <select
@@ -350,7 +350,7 @@ export const ModelsSection: React.FC<ModelsSectionProps> = ({ initialModels, onR
               type="text"
               value={models.judge}
               onChange={(e) => handleChange('judge', e.target.value)}
-              className="flex-1 px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#F2A900]"
+              className="flex-1 px-3 py-2 text-xs font-mono rounded bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-[#FFFFFF]"
               placeholder="e.g. google/gemini-2.0-flash-001"
             />
             <select
@@ -385,7 +385,7 @@ export const ModelsSection: React.FC<ModelsSectionProps> = ({ initialModels, onR
           <button
             type="submit"
             disabled={saving}
-            className="px-5 py-2 text-xs font-mono font-semibold text-black bg-[#F2A900] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50 flex items-center gap-2"
+            className="px-5 py-2 text-xs font-mono font-semibold text-black bg-[#FFFFFF] hover:bg-[#ffbe26] rounded transition-all cursor-pointer disabled:opacity-50 flex items-center gap-2"
           >
             {saving ? <RotateCcw className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
             <span>{saving ? 'SAVING CONFIG...' : 'APPLY MODEL CONFIGURATION'}</span>

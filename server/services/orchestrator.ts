@@ -22,6 +22,7 @@ import { skillsRegistry } from './skills/registry.js';
 import { autonomousTaskEngine } from './task/autonomousTaskEngine.js';
 import { AutonomousTaskState } from './task/types.js';
 import { recoveryObservabilityEngine } from './task/recoveryObservabilityEngine.js';
+import { humanize, getVoiceGuide } from '../design_genius/humanizer.js';
 
 export interface PendingToolAuthorization {
   tool: string;
@@ -99,8 +100,10 @@ export interface OrchestrationResponse {
   // Autonomous Task Loop V1
   isAutonomousTask?: boolean;
   taskId?: string;
-  taskState?: AutonomousTaskState;
+  taskState?: any;
   taskSteps?: any[];
+  // Phase 6: Custom Cinematic TTS
+  audioBase64?: string;
 }
 
 export interface JudgeEvaluationRequest {
@@ -372,16 +375,33 @@ export async function orchestrateChatRequest(
   // Append user message to conversation memory
   memoryService.appendMessage(conversationId, { role: 'user', content: rawMessage });
 
-  // 0. SWARM INTELLIGENCE ORCHESTRATION V1: Handle massive multi-agent parallel tasks
-  // For demonstration, we trigger the swarm if the prompt explicitly mentions 'swarm', 'website', or 'agents'.
-  // In a full production setup, this would use a fast local classifier.
+  // 0. SWARM INTELLIGENCE ORCHESTRATION — Multi-Agent + Design Pipeline Router
+  // Triggers for: explicit swarm tasks, massive parallel tasks, AND UI/frontend design requests.
   const lowerMsg = rawMessage.toLowerCase();
-  if (lowerMsg.includes('swarm') || lowerMsg.includes('website') || lowerMsg.includes('agents')) {
+
+  // Design task keywords — triggers the DESIGNER → COPY_EDITOR → humanize pipeline
+  const designKeywords = [
+    'ui', 'component', 'frontend', 'design', 'dashboard', 'form', 'modal',
+    'card', 'navbar', 'sidebar', 'layout', 'interface', 'screen', 'panel',
+    'widget', 'tsx', 'react component', 'landing page', 'hero section',
+    'bana do', 'bana de', 'banao', 'design kar', 'bnao',
+  ];
+  const isDesignIntent = designKeywords.some((kw) => lowerMsg.includes(kw));
+
+  // Explicit swarm keywords — triggers the multi-agent parallel pipeline
+  const swarmKeywords = ['swarm', 'website', 'agents', 'parallel', 'multi-agent'];
+  const isSwarmIntent = swarmKeywords.some((kw) => lowerMsg.includes(kw));
+
+  if (isDesignIntent || isSwarmIntent) {
     try {
       const { orchestrateSwarm } = await import('./swarm/swarmRouter.js');
       const swarmResult = await orchestrateSwarm(rawMessage);
-      
+
       memoryService.appendMessage(conversationId, { role: 'assistant', content: swarmResult });
+
+      const routingReason = isDesignIntent
+        ? 'Design/UI task routed to DESIGNER → COPY_EDITOR → humanize pipeline.'
+        : 'Massive parallel task routed to Swarm Specialists.';
 
       return {
         success: true,
@@ -389,21 +409,21 @@ export async function orchestrateChatRequest(
         conversationId,
         memoryEvents: [],
         metadata: {
-          taskType: 'GENERAL',
-          selectedModel: 'Super AI Swarm Orchestrator',
+          taskType: 'CODING',
+          selectedModel: isDesignIntent ? 'Super AI Design Genius Pipeline' : 'Super AI Swarm Orchestrator',
           requestedModel: 'internal/swarm',
           fallbackOccurred: false,
           provider: 'openrouter',
-          keyLabel: 'Swarm Intelligence Engine',
+          keyLabel: isDesignIntent ? 'Design Genius Engine' : 'Swarm Intelligence Engine',
           latencyMs: Date.now() - startTime,
           confidence: 0.99,
-          reasoning: 'Massive parallel task routed to Swarm Specialists.',
+          reasoning: routingReason,
         },
-        model: 'Super AI Swarm Orchestrator',
+        model: isDesignIntent ? 'Super AI Design Genius Pipeline' : 'Super AI Swarm Orchestrator',
         provider: 'local-swarm' as any,
-        keyUsedName: 'Swarm Intelligence Engine',
+        keyUsedName: isDesignIntent ? 'Design Genius Engine' : 'Swarm Intelligence Engine',
         rotated: false,
-        taskType: 'GENERAL',
+        taskType: 'CODING',
         latencyMs: Date.now() - startTime,
         toolActivities: [],
       };
@@ -412,6 +432,7 @@ export async function orchestrateChatRequest(
       // Fall through to standard task engine if error
     }
   }
+
 
   // 1. AUTONOMOUS TASK ENGINE V1: Handle multi-step tasks or active autonomous task authorizations
   const taskConfig = storage.getAutonomousTaskConfig();
@@ -480,6 +501,64 @@ export async function orchestrateChatRequest(
     } catch (err: any) {
       console.error('[AutonomousTaskEngine] Execution error:', err);
       // Fall through to standard cognitive orchestrator if unexpected error
+    }
+  }
+
+  // 0.5. Wi-Fi Range & Device Scanner Interceptor (Phase 5)
+  const wifiKeywords = ['wifi', 'wi-fi', 'network', 'devices', 'scan range', 'connected'];
+  const hasWifiKeyword = wifiKeywords.some((kw) => lowerMsg.includes(kw));
+  const isWifiScanIntent = hasWifiKeyword && (lowerMsg.includes('scan') || lowerMsg.includes('check') || lowerMsg.includes('who') || lowerMsg.includes('active'));
+
+  if (isWifiScanIntent && !request.approvedToolCall) {
+    try {
+      const scanResult = await toolRegistry.execute('scan_wifi_devices', {}, { userId: 'system' });
+      let naturalResponse = '';
+      if (scanResult.success) {
+        const devs = scanResult.result || [];
+        naturalResponse = `Maine local Wi-Fi scan complete kar liya hai.\n\n${scanResult.displaySummary}\n\n**Connected Devices:**\n` + 
+          devs.map((d: any) => `- 💻 IP: \`${d.ip}\` | MAC: \`${d.mac}\``).join('\n');
+      } else {
+        naturalResponse = `Scan execute nahi ho paya: ${scanResult.error}`;
+      }
+      
+      memoryService.appendMessage(conversationId, { role: 'assistant', content: naturalResponse });
+
+      return {
+        success: true,
+        text: naturalResponse,
+        conversationId,
+        memoryEvents: [],
+        metadata: {
+          taskType: 'GENERAL',
+          selectedModel: 'Super AI Network Subsystem',
+          requestedModel: 'internal/network',
+          fallbackOccurred: false,
+          provider: 'openrouter',
+          keyLabel: 'Network Subsystem',
+          latencyMs: Date.now() - startTime,
+          confidence: 1.0,
+          reasoning: 'Explicit Wi-Fi scan intent detected and routed to native tool.',
+        },
+        model: 'Super AI Network Subsystem',
+        provider: 'local-action' as any,
+        keyUsedName: 'Network Subsystem',
+        rotated: false,
+        taskType: 'GENERAL',
+        latencyMs: Date.now() - startTime,
+        toolActivities: [
+          {
+            id: `act_${Date.now()}`,
+            timestamp: new Date().toLocaleTimeString(),
+            tool: 'Scan Wi-Fi Devices',
+            permission: 'ALLOWED',
+            execution: 'scan_wifi_devices()',
+            result: scanResult.success ? 'SUCCESS' : 'FAILED',
+            risk: 'LOW',
+          }
+        ],
+      };
+    } catch (err: any) {
+      console.error('[WifiScanner] Interceptor error:', err);
     }
   }
 
@@ -1413,10 +1492,16 @@ export async function orchestrateChatRequest(
     `  "Ho gaya. Chrome open kar diya."\n` +
     `  "Ye thoda interesting hai, main ise check karti hoon."\n\n`;
 
-  // Inject system tool instructions
+  // Inject Design Genius: Voice Guide (loaded from design_genius/voice.md)
+  const voiceGuide = getVoiceGuide();
+  const voiceInstruction = voiceGuide
+    ? `\n\nDESIGN GENIUS — VOICE & TONE RULES (MANDATORY):\n${voiceGuide}\n\nNEVER break these rules. They override any default response style.\n`
+    : '';
+
+  // Inject system tool instructions + voice guide
   formattedMessages.push({
     role: 'system',
-    content: personaInstruction + toolRegistry.getSystemToolInstructions(),
+    content: personaInstruction + voiceInstruction + toolRegistry.getSystemToolInstructions(),
   });
 
   // Inject retrieved long-term memories & working memory context
@@ -1945,7 +2030,8 @@ export async function orchestrateChatRequest(
     .trim();
 
   // Save assistant response to conversation memory
-  const finalAnswer = cleanFinalText || finalReplyText || 'Task processed successfully.';
+  const rawFinalAnswer = cleanFinalText || finalReplyText || 'Task processed successfully.';
+  const finalAnswer = humanize(rawFinalAnswer);
   memoryService.appendMessage(conversationId, {
     role: 'assistant',
     content: finalAnswer,
