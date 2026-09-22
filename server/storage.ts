@@ -271,7 +271,7 @@ const DEFAULT_STORE: AppStoreData = {
     reasoning: 'deepseek/deepseek-r1',
     coding: 'qwen/qwen-2.5-coder-32b-instruct',
     vision: 'meta-llama/llama-3.2-11b-vision-instruct',
-    judge: 'google/gemini-2.0-flash-001',
+    judge: 'deepseek/deepseek-chat',
   },
   routing: {
     defaultProvider: 'openrouter',

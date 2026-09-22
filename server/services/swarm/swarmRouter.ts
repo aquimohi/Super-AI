@@ -3,6 +3,7 @@ import { executeAgentTask } from './agents.js';
 import { executeOpenRouterChat } from '../openrouter.js';
 import { humanize } from '../../design_genius/humanizer.js';
 import { randomUUID } from 'crypto';
+import { storage } from '../../storage.js';
 
 // ── Design Intent Detection ───────────────────────────────────────────────────
 
@@ -100,9 +101,12 @@ async function generateSwarmPlan(prompt: string): Promise<string> {
     `  { "agent": "CODER", "instructions": "Write the integration script" }\n` +
     `]`;
 
+  const config = storage.getConfig();
+  const targetModel = config.models.general || 'deepseek/deepseek-chat';
+
   const result = await executeOpenRouterChat({
     messages: [{ role: 'user', content: planPrompt }],
-    model: 'google/gemini-2.0-flash-001',
+    model: targetModel,
   });
 
   return result.text || '[]';
@@ -164,9 +168,12 @@ async function runStandardPipeline(prompt: string): Promise<string> {
       .join('\n')}\n\n` +
     `Synthesize these into a final, coherent, actionable response for the user.`;
 
+  const config = storage.getConfig();
+  const targetModel = config.models.general || 'deepseek/deepseek-chat';
+
   const finalResponse = await executeOpenRouterChat({
     messages: [{ role: 'system', content: synthesisPrompt }],
-    model: 'google/gemini-2.0-flash-001',
+    model: targetModel,
   });
 
   const rawText = finalResponse.text || 'Swarm execution completed, but synthesis failed.';

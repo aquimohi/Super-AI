@@ -22,7 +22,7 @@ export interface JudgeOptions {
 export async function evaluateCandidateAnswer(options: JudgeOptions): Promise<JudgeEvaluation> {
   const startTime = Date.now();
   const config = storage.getConfig();
-  const judgeModel = config.models.judge || 'google/gemini-2.0-flash-001';
+  const judgeModel = config.models.judge || config.models.general || 'deepseek/deepseek-chat';
   const hasKeys = keyManager.hasAvailableKey('openrouter');
 
   const systemPrompt =

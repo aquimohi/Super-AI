@@ -23,6 +23,7 @@ import { autonomousTaskEngine } from './task/autonomousTaskEngine.js';
 import { AutonomousTaskState } from './task/types.js';
 import { recoveryObservabilityEngine } from './task/recoveryObservabilityEngine.js';
 import { humanize, getVoiceGuide } from '../design_genius/humanizer.js';
+import { evaluateCapability } from './capabilityGuard.js';
 
 export interface PendingToolAuthorization {
   tool: string;
@@ -569,7 +570,56 @@ export async function orchestrateChatRequest(
     }
   }
 
-  // 0a. Controlled Browser Automation Planner: Analyze intent for safe browser actions or high-risk prohibited actions
+  // 0a. Capability Guard: Strictly enforce boundaries on unsupported/blocked actions (hardware, physical, destructive, hacking, etc.)
+  const capabilityCheck = evaluateCapability(rawMessage);
+  if (capabilityCheck?.isUnsupported) {
+    const latencyMs = Date.now() - startTime;
+    storage.logAudit(
+      'UNSUPPORTED_TASK_INTERCEPTED',
+      `User requested unsupported task (${capabilityCheck.category}): "${rawMessage}"`,
+      'info'
+    );
+    memoryService.appendMessage(conversationId, {
+      role: 'assistant',
+      content: capabilityCheck.explanation,
+    });
+    return {
+      success: true,
+      text: capabilityCheck.explanation,
+      conversationId,
+      memoryEvents: [],
+      metadata: {
+        taskType: 'GENERAL',
+        selectedModel: 'Super AI Capability Guard',
+        requestedModel: 'internal/capability-guard',
+        fallbackOccurred: false,
+        provider: 'local-guard' as any,
+        keyLabel: 'Capability Guard',
+        latencyMs,
+        confidence: 1.0,
+        reasoning: `Task rejected by Capability Guard: ${capabilityCheck.category}.`,
+      },
+      model: 'Super AI Capability Guard',
+      provider: 'local-guard' as any,
+      keyUsedName: 'Capability Guard',
+      rotated: false,
+      taskType: 'GENERAL',
+      latencyMs,
+      toolActivities: [
+        {
+          id: `act_${Date.now()}`,
+          timestamp: new Date().toLocaleTimeString(),
+          tool: 'Capability Guard',
+          permission: 'DENIED',
+          execution: rawMessage,
+          result: `UNSUPPORTED (${capabilityCheck.category})`,
+          risk: 'LOW',
+        },
+      ],
+    };
+  }
+
+  // 0b. Controlled Browser Automation Planner: Analyze intent for safe browser actions or high-risk prohibited actions
   const plannedBrowserAction = browserPlanner.planAction(rawMessage, conversationId);
 
   if (plannedBrowserAction?.action === 'blocked_browser_action') {
@@ -2129,7 +2179,7 @@ export async function evaluateWithJudge(
   evalRequest: JudgeEvaluationRequest
 ): Promise<JudgeEvaluationResult> {
   const config = storage.getConfig();
-  const judgeModel = config.models.judge || 'google/gemini-2.0-flash-001';
+  const judgeModel = config.models.judge || config.models.general || 'deepseek/deepseek-chat';
 
   try {
     const prompt =

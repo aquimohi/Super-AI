@@ -2,6 +2,7 @@ import { AgentRole, SwarmAgentResult, SwarmSubTask } from './types.js';
 import { executeOpenRouterChat } from '../openrouter.js';
 import { humanize } from '../../design_genius/humanizer.js';
 import { designMemory } from '../../memory/design/designMemory.js';
+import { storage } from '../../storage.js';
 
 // ── Role-specific system prompts ─────────────────────────────────────────────
 
@@ -54,12 +55,15 @@ export async function executeAgentTask(
   const systemPrompt = buildRolePrompt(task.assignedAgent);
 
   try {
+    const config = storage.getConfig();
+    const targetModel = config.models.general || 'deepseek/deepseek-chat';
+
     const result = await executeOpenRouterChat({
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: `Context:\n${context}\n\nTask:\n${task.instructions}` },
       ],
-      model: 'google/gemini-2.0-flash-001',
+      model: targetModel,
     });
 
     const rawOutput = result.text || 'Agent returned empty response.';

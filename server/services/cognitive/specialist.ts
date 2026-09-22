@@ -2,6 +2,7 @@ import { TaskCategory } from '../classifier.js';
 import { executeOpenRouterChat } from '../openrouter.js';
 import { keyManager } from '../keyManager.js';
 import { storage } from '../../storage.js';
+import { evaluateCapability } from '../capabilityGuard.js';
 
 export interface SpecialistOptions {
   userMessage: string;
@@ -187,13 +188,18 @@ export async function executeSpecialist(options: SpecialistOptions): Promise<Spe
     generatedAnswer =
       `Based on the retrieved tool telemetry:\n\n${options.toolResultSummary}\n\nSummary: OpenRouter provides OpenAI-compatible tool-calling schemas with structured function definitions, permitting automated function calling and streaming execution across frontier and open-source models.`;
   } else {
-    const rawTrim = options.userMessage.trim();
-    if (/(?:open|kholo|chalao|launch)\s+(.+)/i.test(rawTrim)) {
-      const match = rawTrim.match(/(?:open|kholo|chalao|launch)\s+(.+)/i);
-      const appName = match ? match[1].trim() : 'Application';
-      generatedAnswer = `${appName} open kar diya hai.`;
+    const cap = evaluateCapability(options.userMessage);
+    if (cap?.isUnsupported) {
+      generatedAnswer = cap.explanation;
     } else {
-      generatedAnswer = `Command "${rawTrim}" samajh aa gaya hai. Batao, isme aage kya karna hai?`;
+      const rawTrim = options.userMessage.trim();
+      if (/(?:open|launch|kholo|chalao)\s+(.+)/i.test(rawTrim)) {
+        const match = rawTrim.match(/(?:open|launch|kholo|chalao)\s+(.+)/i);
+        const appName = match ? match[1].trim() : 'Application';
+        generatedAnswer = `${appName} open karna mere system me permitted ya available nahi hai bhai. Main web browsing (YouTube, Google, WhatsApp Web, etc.) aur standard desktop tools open kar sakti hoon.`;
+      } else {
+        generatedAnswer = `Main digital queries, coding, web browsing aur data analysis handle kar sakti hoon. Batao, isme kis cheez me help chahiye?`;
+      }
     }
   }
 

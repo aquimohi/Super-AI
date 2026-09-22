@@ -159,6 +159,14 @@ export async function executeOpenRouterChat(
       'Conversational Style: Crisp, confident, calm, slightly witty tactical English. Keep spoken responses short and direct where appropriate.';
   }
 
+  // Mandatory Honesty & Capability Boundary Rules
+  systemInstructions +=
+    '\n\nHONESTY & CAPABILITY BOUNDARY RULES (MANDATORY):\n' +
+    '- If the user asks you to perform an action outside your capabilities (e.g. physical actions, operating cameras/bluetooth hardware, making phone calls, hacking accounts/Wi-Fi, shutting down or restarting the PC, transferring money, ordering food, or running unsupported local software), you MUST be completely honest and directly state that you cannot do it and why.\n' +
+    '- In Hinglish, be direct, calm, and friendly: e.g., "Ye kaam mere system capabilities me nahi hai bhai. Main digital queries, coding, web browsing aur permitted system tools handle kar sakti hoon."\n' +
+    '- NEVER pretend, hallucinate, or claim an action was executed when it was not.\n' +
+    '- NEVER say "Open kar diya" or "Ho gaya" unless an actual tool execution confirms it.\n';
+
   const finalMessages = [
     { role: 'system', content: systemInstructions },
     ...req.messages,
