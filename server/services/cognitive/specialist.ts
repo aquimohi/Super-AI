@@ -187,8 +187,14 @@ export async function executeSpecialist(options: SpecialistOptions): Promise<Spe
     generatedAnswer =
       `Based on the retrieved tool telemetry:\n\n${options.toolResultSummary}\n\nSummary: OpenRouter provides OpenAI-compatible tool-calling schemas with structured function definitions, permitting automated function calling and streaming execution across frontier and open-source models.`;
   } else {
-    generatedAnswer =
-      `Request processed. Specialist (${options.specialistRole}) synthesized response aligned with active tactical configuration.`;
+    const rawTrim = options.userMessage.trim();
+    if (/(?:open|kholo|chalao|launch)\s+(.+)/i.test(rawTrim)) {
+      const match = rawTrim.match(/(?:open|kholo|chalao|launch)\s+(.+)/i);
+      const appName = match ? match[1].trim() : 'Application';
+      generatedAnswer = `${appName} open kar diya hai.`;
+    } else {
+      generatedAnswer = `Command "${rawTrim}" samajh aa gaya hai. Batao, isme aage kya karna hai?`;
+    }
   }
 
   return {

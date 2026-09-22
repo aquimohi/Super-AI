@@ -289,36 +289,93 @@ export class BrowserActionPlanner {
       };
     }
 
-    // 1b. Popular web platforms (YouTube, Google, GitHub, etc.)
-    const POPULAR_DOMAINS: Record<string, string> = {
-      google: 'https://www.google.com',
-      youtube: 'https://www.youtube.com',
-      github: 'https://www.github.com',
-      twitter: 'https://twitter.com',
-      x: 'https://x.com',
-      chatgpt: 'https://chatgpt.com',
-      reddit: 'https://www.reddit.com',
-      linkedin: 'https://www.linkedin.com',
-      instagram: 'https://www.instagram.com',
-      facebook: 'https://www.facebook.com',
-      wikipedia: 'https://www.wikipedia.org',
-      netflix: 'https://www.netflix.com',
-      amazon: 'https://www.amazon.com',
+    // 1b. Known web platforms & applications (WhatsApp, YouTube, Spotify, etc.)
+    const KNOWN_WEB_SERVICES: Record<
+      string,
+      { url: string; displayName: string; aliases?: string[] }
+    > = {
+      whatsapp: { url: 'https://web.whatsapp.com', displayName: 'WhatsApp', aliases: ['wa', 'whatsapp web', 'watsapp', 'whatsap'] },
+      youtube: { url: 'https://www.youtube.com', displayName: 'YouTube', aliases: ['yt', 'you tube'] },
+      google: { url: 'https://www.google.com', displayName: 'Google', aliases: ['google search'] },
+      gmail: { url: 'https://mail.google.com', displayName: 'Gmail', aliases: ['email', 'mail', 'google mail'] },
+      spotify: { url: 'https://open.spotify.com', displayName: 'Spotify', aliases: ['music'] },
+      telegram: { url: 'https://web.telegram.org', displayName: 'Telegram', aliases: ['tg', 'telegram web'] },
+      discord: { url: 'https://discord.com/app', displayName: 'Discord' },
+      github: { url: 'https://www.github.com', displayName: 'GitHub', aliases: ['git'] },
+      chatgpt: { url: 'https://chatgpt.com', displayName: 'ChatGPT', aliases: ['openai', 'gpt'] },
+      claude: { url: 'https://claude.ai', displayName: 'Claude', aliases: ['claude ai', 'anthropic'] },
+      gemini: { url: 'https://gemini.google.com', displayName: 'Gemini', aliases: ['google gemini', 'bard'] },
+      perplexity: { url: 'https://www.perplexity.ai', displayName: 'Perplexity', aliases: ['perplexity ai'] },
+      twitter: { url: 'https://x.com', displayName: 'Twitter / X', aliases: ['x', 'x.com', 'tweets'] },
+      instagram: { url: 'https://www.instagram.com', displayName: 'Instagram', aliases: ['insta', 'ig'] },
+      facebook: { url: 'https://www.facebook.com', displayName: 'Facebook', aliases: ['fb'] },
+      linkedin: { url: 'https://www.linkedin.com', displayName: 'LinkedIn' },
+      reddit: { url: 'https://www.reddit.com', displayName: 'Reddit' },
+      netflix: { url: 'https://www.netflix.com', displayName: 'Netflix' },
+      prime: { url: 'https://www.primevideo.com', displayName: 'Prime Video', aliases: ['prime video', 'amazon prime'] },
+      hotstar: { url: 'https://www.hotstar.com', displayName: 'Disney+ Hotstar', aliases: ['disney hotstar', 'disney+'] },
+      amazon: { url: 'https://www.amazon.com', displayName: 'Amazon' },
+      flipkart: { url: 'https://www.flipkart.com', displayName: 'Flipkart' },
+      maps: { url: 'https://maps.google.com', displayName: 'Google Maps', aliases: ['google maps', 'map'] },
+      drive: { url: 'https://drive.google.com', displayName: 'Google Drive', aliases: ['google drive', 'gdrive'] },
+      docs: { url: 'https://docs.google.com', displayName: 'Google Docs', aliases: ['google docs'] },
+      sheets: { url: 'https://sheets.google.com', displayName: 'Google Sheets', aliases: ['google sheets'] },
+      canva: { url: 'https://www.canva.com', displayName: 'Canva' },
+      figma: { url: 'https://www.figma.com', displayName: 'Figma' },
+      notion: { url: 'https://www.notion.so', displayName: 'Notion' },
+      stackoverflow: { url: 'https://stackoverflow.com', displayName: 'Stack Overflow', aliases: ['stack overflow'] },
+      pinterest: { url: 'https://www.pinterest.com', displayName: 'Pinterest' },
+      twitch: { url: 'https://www.twitch.tv', displayName: 'Twitch' },
+      wikipedia: { url: 'https://www.wikipedia.org', displayName: 'Wikipedia', aliases: ['wiki'] },
     };
 
-    for (const [site, siteUrl] of Object.entries(POPULAR_DOMAINS)) {
-      const siteRegex = new RegExp(
-        `(?:open|browse|visit|go to|kholo|chalao|launch)\\s+(?:the\s+)?${site}\\b|\\b${site}\\s+(?:kholo|open|chalao|launch|chalu\\s*karo)`,
-        'i'
-      );
-      if (siteRegex.test(lower)) {
-        const titleName = site.charAt(0).toUpperCase() + site.slice(1);
+    for (const [key, svc] of Object.entries(KNOWN_WEB_SERVICES)) {
+      const candidates = [key, ...(svc.aliases || [])];
+      for (const cand of candidates) {
+        const escaped = cand.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const pattern = new RegExp(
+          `^(?:open|launch|start|visit|browse|go\\s+to|kholo|chalao|dikhao)\\s+(?:the\\s+|my\\s+)?${escaped}$|` +
+          `\\b(?:open|launch|start|visit|browse|go\\s+to|kholo|chalao|dikhao)\\s+(?:the\\s+|my\\s+)?${escaped}\\b|` +
+          `\\b${escaped}\\s+(?:kholo|open|chalao|launch|chalu\\s*karo|khol\\s*do|open\\s*karo)\\b|` +
+          `^${escaped}$`,
+          'i'
+        );
+        if (pattern.test(lower)) {
+          return {
+            action: 'open_page',
+            parameters: { url: svc.url },
+            risk: 'LOW',
+            displayName: `Open ${svc.displayName}`,
+            actionDescription: `Open ${svc.url} in browser`,
+            requiredPermission: 'browserOpenPage',
+            toolName: 'browser_open_page',
+          };
+        }
+      }
+    }
+
+    // 1c. Generic single-word "open <name>" dynamic platform resolver (e.g. "open zomato", "open swiggy")
+    const genericMatch =
+      lower.match(/^(?:open|launch|kholo|chalao|browse|visit)\s+([a-z0-9-]+)(?:\s+(?:site|website|app))?$/i) ||
+      lower.match(/^([a-z0-9-]+)\s+(?:kholo|open|chalao|launch)$/i);
+
+    if (genericMatch) {
+      const candidate = genericMatch[1].toLowerCase();
+      const IGNORE_WORDS = new Set([
+        'browser', 'file', 'folder', 'window', 'terminal', 'cmd', 'powershell',
+        'settings', 'config', 'control', 'panel', 'memory', 'logs', 'trace',
+        'code', 'something', 'anything', 'page', 'tab', 'site', 'app', 'link'
+      ]);
+
+      if (!IGNORE_WORDS.has(candidate) && candidate.length >= 3) {
+        const titleName = candidate.charAt(0).toUpperCase() + candidate.slice(1);
+        const resolvedUrl = `https://www.${candidate}.com`;
         return {
           action: 'open_page',
-          parameters: { url: siteUrl },
+          parameters: { url: resolvedUrl },
           risk: 'LOW',
           displayName: `Open ${titleName}`,
-          actionDescription: `Open ${siteUrl} in browser`,
+          actionDescription: `Open ${resolvedUrl} in browser`,
           requiredPermission: 'browserOpenPage',
           toolName: 'browser_open_page',
         };

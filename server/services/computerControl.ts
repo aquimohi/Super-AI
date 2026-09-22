@@ -156,36 +156,67 @@ class ComputerControlService {
       };
     }
 
-    // 6b. Popular Web Platforms (YouTube, Google, GitHub, etc.)
-    const POPULAR_COMPUTER_SITES: Record<string, string> = {
-      google: 'https://www.google.com',
-      youtube: 'https://www.youtube.com',
-      github: 'https://www.github.com',
-      twitter: 'https://twitter.com',
-      x: 'https://x.com',
-      chatgpt: 'https://chatgpt.com',
-      reddit: 'https://www.reddit.com',
-      linkedin: 'https://www.linkedin.com',
-      instagram: 'https://www.instagram.com',
-      facebook: 'https://www.facebook.com',
-      wikipedia: 'https://www.wikipedia.org',
+    // 6b. Popular Web Platforms (WhatsApp, YouTube, Google, GitHub, etc.)
+    const KNOWN_COMPUTER_SITES: Record<
+      string,
+      { url: string; displayName: string; aliases?: string[] }
+    > = {
+      whatsapp: { url: 'https://web.whatsapp.com', displayName: 'WhatsApp', aliases: ['wa', 'whatsapp web', 'watsapp', 'whatsap'] },
+      youtube: { url: 'https://www.youtube.com', displayName: 'YouTube', aliases: ['yt', 'you tube'] },
+      google: { url: 'https://www.google.com', displayName: 'Google', aliases: ['google search'] },
+      gmail: { url: 'https://mail.google.com', displayName: 'Gmail', aliases: ['email', 'mail', 'google mail'] },
+      spotify: { url: 'https://open.spotify.com', displayName: 'Spotify', aliases: ['music'] },
+      telegram: { url: 'https://web.telegram.org', displayName: 'Telegram', aliases: ['tg', 'telegram web'] },
+      discord: { url: 'https://discord.com/app', displayName: 'Discord' },
+      github: { url: 'https://www.github.com', displayName: 'GitHub', aliases: ['git'] },
+      chatgpt: { url: 'https://chatgpt.com', displayName: 'ChatGPT', aliases: ['openai', 'gpt'] },
+      claude: { url: 'https://claude.ai', displayName: 'Claude', aliases: ['claude ai', 'anthropic'] },
+      gemini: { url: 'https://gemini.google.com', displayName: 'Gemini', aliases: ['google gemini', 'bard'] },
+      perplexity: { url: 'https://www.perplexity.ai', displayName: 'Perplexity', aliases: ['perplexity ai'] },
+      twitter: { url: 'https://x.com', displayName: 'Twitter / X', aliases: ['x', 'x.com', 'tweets'] },
+      instagram: { url: 'https://www.instagram.com', displayName: 'Instagram', aliases: ['insta', 'ig'] },
+      facebook: { url: 'https://www.facebook.com', displayName: 'Facebook', aliases: ['fb'] },
+      linkedin: { url: 'https://www.linkedin.com', displayName: 'LinkedIn' },
+      reddit: { url: 'https://www.reddit.com', displayName: 'Reddit' },
+      netflix: { url: 'https://www.netflix.com', displayName: 'Netflix' },
+      prime: { url: 'https://www.primevideo.com', displayName: 'Prime Video', aliases: ['prime video', 'amazon prime'] },
+      hotstar: { url: 'https://www.hotstar.com', displayName: 'Disney+ Hotstar', aliases: ['disney hotstar', 'disney+'] },
+      amazon: { url: 'https://www.amazon.com', displayName: 'Amazon' },
+      flipkart: { url: 'https://www.flipkart.com', displayName: 'Flipkart' },
+      maps: { url: 'https://maps.google.com', displayName: 'Google Maps', aliases: ['google maps', 'map'] },
+      drive: { url: 'https://drive.google.com', displayName: 'Google Drive', aliases: ['google drive', 'gdrive'] },
+      docs: { url: 'https://docs.google.com', displayName: 'Google Docs', aliases: ['google docs'] },
+      sheets: { url: 'https://sheets.google.com', displayName: 'Google Sheets', aliases: ['google sheets'] },
+      canva: { url: 'https://www.canva.com', displayName: 'Canva' },
+      figma: { url: 'https://www.figma.com', displayName: 'Figma' },
+      notion: { url: 'https://www.notion.so', displayName: 'Notion' },
+      stackoverflow: { url: 'https://stackoverflow.com', displayName: 'Stack Overflow', aliases: ['stack overflow'] },
+      pinterest: { url: 'https://www.pinterest.com', displayName: 'Pinterest' },
+      twitch: { url: 'https://www.twitch.tv', displayName: 'Twitch' },
+      wikipedia: { url: 'https://www.wikipedia.org', displayName: 'Wikipedia', aliases: ['wiki'] },
     };
 
-    for (const [site, siteUrl] of Object.entries(POPULAR_COMPUTER_SITES)) {
-      const siteRegex = new RegExp(
-        `(?:open|browse|visit|go to|kholo|chalao|launch)\\s+(?:the\\s+)?${site}\\b|\\b${site}\\s+(?:kholo|open|chalao|launch|chalu\\s*karo)`,
-        'i'
-      );
-      if (siteRegex.test(lower)) {
-        const titleName = site.charAt(0).toUpperCase() + site.slice(1);
-        return {
-          action: 'open_url',
-          parameters: { url: siteUrl },
-          risk: 'LOW',
-          displayName: `Open ${titleName}`,
-          actionDescription: `Open ${siteUrl} in system default browser`,
-          requiredPermission: 'OPEN_URL',
-        };
+    for (const [key, site] of Object.entries(KNOWN_COMPUTER_SITES)) {
+      const candidates = [key, ...(site.aliases || [])];
+      for (const cand of candidates) {
+        const escaped = cand.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const pattern = new RegExp(
+          `^(?:open|launch|start|visit|browse|go\\s+to|kholo|chalao|dikhao)\\s+(?:the\\s+|my\\s+)?${escaped}$|` +
+          `\\b(?:open|launch|start|visit|browse|go\\s+to|kholo|chalao|dikhao)\\s+(?:the\\s+|my\\s+)?${escaped}\\b|` +
+          `\\b${escaped}\\s+(?:kholo|open|chalao|launch|chalu\\s*karo|khol\\s*do|open\\s*karo)\\b|` +
+          `^${escaped}$`,
+          'i'
+        );
+        if (pattern.test(lower)) {
+          return {
+            action: 'open_url',
+            parameters: { url: site.url },
+            risk: 'LOW',
+            displayName: `Open ${site.displayName}`,
+            actionDescription: `Open ${site.url} in system default browser`,
+            requiredPermission: 'OPEN_URL',
+          };
+        }
       }
     }
 
