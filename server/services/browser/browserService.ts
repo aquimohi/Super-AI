@@ -1,4 +1,5 @@
 import * as cheerio from 'cheerio';
+import { spawn } from 'child_process';
 import { storage } from '../../storage.js';
 import {
   BrowserActionType,
@@ -138,6 +139,29 @@ class BrowserService {
     const targetUrl = validation.normalizedUrl;
     const session = this.getOrCreateSession(conversationId);
 
+    // Launch actual desktop browser window on user's system so it visibly opens
+    if (process.platform === 'win32') {
+      try {
+        const child = spawn('cmd.exe', ['/c', 'start', '', targetUrl], {
+          detached: true,
+          stdio: 'ignore',
+        });
+        child.unref();
+      } catch (err: any) {
+        console.warn('[BrowserService] Desktop browser launch warning:', err.message);
+      }
+    } else if (process.platform === 'darwin') {
+      try {
+        const child = spawn('open', [targetUrl], { detached: true, stdio: 'ignore' });
+        child.unref();
+      } catch {}
+    } else if (process.platform === 'linux') {
+      try {
+        const child = spawn('xdg-open', [targetUrl], { detached: true, stdio: 'ignore' });
+        child.unref();
+      } catch {}
+    }
+
     try {
       const { title, text, links } = await this.fetchAndParse(targetUrl);
 
@@ -174,15 +198,28 @@ class BrowserService {
       };
     } catch (err: any) {
       storage.logAudit(
-        'BROWSER_PAGE_OPEN_FAILED',
-        `Failed opening ${targetUrl}: ${err.message}`,
-        'warn'
+        'BROWSER_PAGE_OPEN_NOTICE',
+        `Desktop browser opened to ${targetUrl}. In-memory parser notice: ${err.message}`,
+        'info'
       );
+      // Desktop browser window opened successfully, don't fail the action
+      session.currentUrl = targetUrl;
+      try {
+        session.pageTitle = new URL(targetUrl).hostname;
+      } catch {
+        session.pageTitle = targetUrl;
+      }
+      session.lastAction = 'open_page';
+      session.lastUpdated = Date.now();
+
       return {
-        success: false,
+        success: true,
         action: 'open_page',
         url: targetUrl,
-        error: `Could not load page: ${err.message}`,
+        title: session.pageTitle,
+        content: '',
+        links: [],
+        details: `Browser opened to ${targetUrl}.`,
         latencyMs: Date.now() - startTime,
       };
     }

@@ -879,8 +879,17 @@ export async function orchestrateChatRequest(
       switch (plannedBrowserAction.action) {
         case 'open_page': {
           const u = plannedBrowserAction.parameters.url || '';
-          if (u.includes('google.com')) naturalResponse = 'Google khol diya.';
-          else naturalResponse = `"${browserResult.title}" page khol diya hai (${browserResult.url}).`;
+          if (plannedBrowserAction.displayName === 'Open Browser') {
+            naturalResponse = 'Browser open kar diya hai.';
+          } else if (u.includes('google.com')) {
+            naturalResponse = 'Google open kar diya hai.';
+          } else if (u.includes('youtube.com')) {
+            naturalResponse = 'YouTube open kar diya hai.';
+          } else if (u.includes('github.com')) {
+            naturalResponse = 'GitHub open kar diya hai.';
+          } else {
+            naturalResponse = `${plannedBrowserAction.displayName || browserResult.title || 'Page'} open kar diya hai (${browserResult.url || u}).`;
+          }
           break;
         }
         case 'read_page': {

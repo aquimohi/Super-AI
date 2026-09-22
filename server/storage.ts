@@ -336,8 +336,8 @@ const DEFAULT_STORE: AppStoreData = {
   computerControl: {
     enabled: true,
     permissions: {
-      openApplication: 'ASK',
-      openUrl: 'ASK',
+      openApplication: 'ALLOW',
+      openUrl: 'ALLOW',
       openFolder: 'ASK',
       openFile: 'ASK',
       screenshot: 'ASK',

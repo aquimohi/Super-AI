@@ -269,21 +269,63 @@ export class BrowserActionPlanner {
       };
     }
 
-    // Action 1: OPEN_PAGE ("Google kholo", "open google", "open https://...", "kholo youtube")
-    if (
-      /(google\s+kholo|open\s+google|google\s+open\s+karo|google\.com\s+kholo)/i.test(lower)
-    ) {
+    // Action 1: OPEN_PAGE ("Open browser", "browser kholo", "Google kholo", "open google", "open youtube", "open https://...")
+    
+    // 1a. Generic browser open requests
+    const isGenericBrowserRequest =
+      /\b(open|launch|start|run|kholo|chalao|chalu\s+karo|on\s+karo)\s+(?:the\s+|a\s+|my\s+|web\s+)?browser\b/i.test(lower) ||
+      /\bbrowser\s+(?:kholo|open|launch|start|chalao|run|on\s*karo|khol\s*do|open\s*karo)\b/i.test(lower) ||
+      /\b(kholo|chalao|chalu\s+karo)\s+(?:the\s+|a\s+|web\s+)?browser\b/i.test(lower);
+
+    if (isGenericBrowserRequest) {
       return {
         action: 'open_page',
         parameters: { url: 'https://www.google.com' },
         risk: 'LOW',
-        displayName: 'Open Browser Page',
-        actionDescription: 'Open https://www.google.com in Super AI browser',
+        displayName: 'Open Browser',
+        actionDescription: 'Open system browser to default homepage',
         requiredPermission: 'browserOpenPage',
         toolName: 'browser_open_page',
       };
     }
 
+    // 1b. Popular web platforms (YouTube, Google, GitHub, etc.)
+    const POPULAR_DOMAINS: Record<string, string> = {
+      google: 'https://www.google.com',
+      youtube: 'https://www.youtube.com',
+      github: 'https://www.github.com',
+      twitter: 'https://twitter.com',
+      x: 'https://x.com',
+      chatgpt: 'https://chatgpt.com',
+      reddit: 'https://www.reddit.com',
+      linkedin: 'https://www.linkedin.com',
+      instagram: 'https://www.instagram.com',
+      facebook: 'https://www.facebook.com',
+      wikipedia: 'https://www.wikipedia.org',
+      netflix: 'https://www.netflix.com',
+      amazon: 'https://www.amazon.com',
+    };
+
+    for (const [site, siteUrl] of Object.entries(POPULAR_DOMAINS)) {
+      const siteRegex = new RegExp(
+        `(?:open|browse|visit|go to|kholo|chalao|launch)\\s+(?:the\s+)?${site}\\b|\\b${site}\\s+(?:kholo|open|chalao|launch|chalu\\s*karo)`,
+        'i'
+      );
+      if (siteRegex.test(lower)) {
+        const titleName = site.charAt(0).toUpperCase() + site.slice(1);
+        return {
+          action: 'open_page',
+          parameters: { url: siteUrl },
+          risk: 'LOW',
+          displayName: `Open ${titleName}`,
+          actionDescription: `Open ${siteUrl} in browser`,
+          requiredPermission: 'browserOpenPage',
+          toolName: 'browser_open_page',
+        };
+      }
+    }
+
+    // 1c. Explicit http/https URL
     const explicitUrlMatch = lower.match(
       /(?:open|browse|visit|go to|kholo)\s+(https?:\/\/[^\s]+)/i
     );
@@ -299,6 +341,7 @@ export class BrowserActionPlanner {
       };
     }
 
+    // 1d. Domain name without protocol (e.g. "open github.com", "kholo nytimes.com")
     const domainMatch = lower.match(
       /(?:open|browse|visit|kholo)\s+([a-zA-Z0-9-]+\.(?:com|org|net|edu|gov|io|ai|co|in|dev)[^\s]*)/i
     );

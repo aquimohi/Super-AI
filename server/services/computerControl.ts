@@ -139,7 +139,57 @@ class ComputerControlService {
       };
     }
 
-    // 6. Open URL requests (e.g. "Google kholo", "open https://...", "open youtube.com", "google open karo")
+    // 6a. Dedicated Browser Launch requests
+    const isBrowserRequest =
+      /\b(open|launch|start|run|kholo|chalao|chalu\s+karo|on\s+karo)\s+(?:the\s+|a\s+|my\s+|web\s+)?browser\b/i.test(lower) ||
+      /\bbrowser\s+(?:kholo|open|launch|start|chalao|run|on\s*karo|khol\s*do|open\s*karo)\b/i.test(lower) ||
+      /\b(kholo|chalao|chalu\s+karo)\s+(?:the\s+|a\s+|web\s+)?browser\b/i.test(lower);
+
+    if (isBrowserRequest) {
+      return {
+        action: 'open_application',
+        parameters: { application: 'chrome' },
+        risk: 'LOW',
+        displayName: 'Open Browser',
+        actionDescription: 'Open default web browser',
+        requiredPermission: 'OPEN_APPLICATION',
+      };
+    }
+
+    // 6b. Popular Web Platforms (YouTube, Google, GitHub, etc.)
+    const POPULAR_COMPUTER_SITES: Record<string, string> = {
+      google: 'https://www.google.com',
+      youtube: 'https://www.youtube.com',
+      github: 'https://www.github.com',
+      twitter: 'https://twitter.com',
+      x: 'https://x.com',
+      chatgpt: 'https://chatgpt.com',
+      reddit: 'https://www.reddit.com',
+      linkedin: 'https://www.linkedin.com',
+      instagram: 'https://www.instagram.com',
+      facebook: 'https://www.facebook.com',
+      wikipedia: 'https://www.wikipedia.org',
+    };
+
+    for (const [site, siteUrl] of Object.entries(POPULAR_COMPUTER_SITES)) {
+      const siteRegex = new RegExp(
+        `(?:open|browse|visit|go to|kholo|chalao|launch)\\s+(?:the\\s+)?${site}\\b|\\b${site}\\s+(?:kholo|open|chalao|launch|chalu\\s*karo)`,
+        'i'
+      );
+      if (siteRegex.test(lower)) {
+        const titleName = site.charAt(0).toUpperCase() + site.slice(1);
+        return {
+          action: 'open_url',
+          parameters: { url: siteUrl },
+          risk: 'LOW',
+          displayName: `Open ${titleName}`,
+          actionDescription: `Open ${siteUrl} in system default browser`,
+          requiredPermission: 'OPEN_URL',
+        };
+      }
+    }
+
+    // 6c. Open URL requests (e.g. "Google kholo", "open https://...", "open youtube.com", "google open karo")
     if (
       /(google\s+kholo|open\s+google|google\s+open\s+karo|google\.com\s+kholo)/i.test(lower)
     ) {
@@ -466,10 +516,30 @@ class ComputerControlService {
 
           const targetApp = val.app;
           if (process.platform === 'win32') {
-            const child = spawn('cmd.exe', ['/c', 'start', '', targetApp.executable], {
-              detached: true,
-              stdio: 'ignore',
-            });
+            if (targetApp.id === 'chrome' || targetApp.id === 'browser') {
+              const child = spawn('cmd.exe', ['/c', 'start', '', targetApp.executable || 'chrome.exe'], {
+                detached: true,
+                stdio: 'ignore',
+              });
+              child.on('error', () => {
+                spawn('cmd.exe', ['/c', 'start', '', 'https://www.google.com'], {
+                  detached: true,
+                  stdio: 'ignore',
+                }).unref();
+              });
+              child.unref();
+            } else {
+              const child = spawn('cmd.exe', ['/c', 'start', '', targetApp.executable], {
+                detached: true,
+                stdio: 'ignore',
+              });
+              child.unref();
+            }
+          } else if (process.platform === 'darwin') {
+            const child = spawn('open', ['-a', targetApp.name], { detached: true, stdio: 'ignore' });
+            child.unref();
+          } else if (process.platform === 'linux') {
+            const child = spawn(targetApp.executable, [], { detached: true, stdio: 'ignore' });
             child.unref();
           }
 
