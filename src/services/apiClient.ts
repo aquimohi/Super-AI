@@ -86,6 +86,12 @@ export interface ChatApiResponse {
   isSetupPrompt?: boolean;
   cognitiveTrace?: CognitiveTraceEvent[];
   judgeEvaluation?: JudgeEvaluationSummary;
+  clientAction?: {
+    type: 'OPEN_URL';
+    url: string;
+    target?: string;
+    title?: string;
+  };
 }
 
 

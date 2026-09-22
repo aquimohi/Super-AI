@@ -240,6 +240,22 @@ export default function App() {
       setConversationId(response.conversationId);
     }
 
+    // Handle Client Action (e.g. Open URL in client browser tab)
+    if (response.clientAction?.type === 'OPEN_URL' && response.clientAction.url) {
+      try {
+        const targetWindow = window.open(
+          response.clientAction.url,
+          response.clientAction.target || '_blank',
+          'noopener,noreferrer'
+        );
+        if (!targetWindow || targetWindow.closed || typeof targetWindow.closed === 'undefined') {
+          console.warn('[Super AI] Popup was blocked by browser. Tactical 1-click launcher card rendered in feed.');
+        }
+      } catch (openErr) {
+        console.warn('[Super AI] Client tab open error:', openErr);
+      }
+    }
+
     setMessages((prev) => [
       ...prev,
       {
@@ -258,6 +274,7 @@ export default function App() {
         conversationId: response.conversationId,
         cognitiveTrace: response.cognitiveTrace,
         judgeEvaluation: response.judgeEvaluation,
+        clientAction: response.clientAction,
       },
     ]);
 

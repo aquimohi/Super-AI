@@ -142,13 +142,22 @@ class BrowserService {
     // Launch actual desktop browser window on user's system so it visibly opens
     if (process.platform === 'win32') {
       try {
-        const child = spawn('cmd.exe', ['/c', 'start', '', targetUrl], {
-          detached: true,
-          stdio: 'ignore',
-        });
-        child.unref();
+        const psChild = spawn(
+          'powershell.exe',
+          ['-NoProfile', '-NonInteractive', '-Command', `Start-Process '${targetUrl.replace(/'/g, "''")}'`],
+          { detached: true, stdio: 'ignore', windowsHide: true }
+        );
+        psChild.unref();
       } catch (err: any) {
-        console.warn('[BrowserService] Desktop browser launch warning:', err.message);
+        try {
+          const child = spawn('cmd.exe', ['/c', 'start', '', targetUrl], {
+            detached: true,
+            stdio: 'ignore',
+          });
+          child.unref();
+        } catch (innerErr: any) {
+          console.warn('[BrowserService] Desktop browser launch warning:', innerErr.message);
+        }
       }
     } else if (process.platform === 'darwin') {
       try {

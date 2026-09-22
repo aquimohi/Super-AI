@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChatMessage, AIState } from '../types';
-import { Terminal, Shield, Sparkles, ChevronRight, ChevronLeft, Bot, User, Wrench, Database, Brain, Code2 } from 'lucide-react';
+import { Terminal, Shield, Sparkles, ChevronRight, ChevronLeft, Bot, User, Wrench, Database, Brain, Code2, Globe, ExternalLink } from 'lucide-react';
 
 interface ActivityFeedProps {
   messages: ChatMessage[];
@@ -103,6 +103,38 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
                 <p className="font-mono leading-relaxed text-[11px] text-[#FFFFFF]/85 whitespace-pre-wrap">
                   {msg.text}
                 </p>
+
+                {/* Tactical Web Launch Card for Browser Actions */}
+                {msg.clientAction && msg.clientAction.type === 'OPEN_URL' && msg.clientAction.url && (
+                  <div className="mt-2.5 p-2 rounded-lg bg-cyan-950/50 border border-cyan-500/50 text-[10px] font-mono space-y-1.5 shadow-lg shadow-cyan-950/50">
+                    <div className="flex items-center justify-between gap-1">
+                      <div className="flex items-center gap-1.5 text-cyan-300 font-bold">
+                        <Globe className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+                        <span className="tracking-wide uppercase">
+                          {msg.clientAction.title || 'Browser Tab Target'}
+                        </span>
+                      </div>
+                      <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-cyan-900/60 text-cyan-300 border border-cyan-600/60 uppercase">
+                        READY
+                      </span>
+                    </div>
+
+                    <div className="text-stone-300 text-[9px] truncate" title={msg.clientAction.url}>
+                      {msg.clientAction.url}
+                    </div>
+
+                    <a
+                      href={msg.clientAction.url}
+                      target={msg.clientAction.target || '_blank'}
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 w-full py-1.5 px-2.5 rounded bg-cyan-500 hover:bg-cyan-400 active:bg-cyan-300 text-black font-mono font-bold text-[10px] tracking-wide transition-all shadow-md shadow-cyan-500/20 cursor-pointer text-center no-underline"
+                      id="action-open-browser-btn"
+                    >
+                      <span>OPEN IN NEW TAB</span>
+                      <ExternalLink className="w-3 h-3 text-black" />
+                    </a>
+                  </div>
+                )}
 
                 {/* Memory Events Indicator Badges */}
                 {msg.memoryEvents && msg.memoryEvents.length > 0 && (
@@ -271,28 +303,47 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
                         </div>
                       ) : (
                         // === GENERIC TOOL ACTIVITY BLOCK ===
-                        <div
-                          key={i}
-                          className="p-1.5 rounded bg-black/50 border border-stone-800 text-[9px] font-mono space-y-0.5"
-                        >
-                          <div className="flex items-center justify-between text-[#FFFFFF]">
-                            <span className="font-bold">{act.tool}</span>
-                            <span
-                              className={`px-1 py-0.2 rounded text-[8px] uppercase ${
-                                act.permission === 'ALLOWED'
-                                  ? 'text-emerald-400 bg-emerald-950/40'
-                                  : act.permission === 'ASKED'
-                                  ? 'text-amber-400 bg-amber-950/40'
-                                  : 'text-red-400 bg-red-950/40'
-                              }`}
+                        (() => {
+                          const urlMatch = act.execution?.match(/(https?:\/\/[^\s"',]+)/) || act.result?.match(/(https?:\/\/[^\s"',]+)/);
+                          return (
+                            <div
+                              key={i}
+                              className="p-1.5 rounded bg-black/50 border border-stone-800 text-[9px] font-mono space-y-0.5"
                             >
-                              {act.permission}
-                            </span>
-                          </div>
-                          <div className="text-stone-400 truncate max-w-full font-sans" title={act.execution}>
-                            {act.execution}
-                          </div>
-                        </div>
+                              <div className="flex items-center justify-between text-[#FFFFFF]">
+                                <span className="font-bold">{act.tool}</span>
+                                <div className="flex items-center gap-1.5">
+                                  {urlMatch && act.permission === 'ALLOWED' && (
+                                    <a
+                                      href={urlMatch[1]}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-cyan-400 hover:text-cyan-300 flex items-center gap-0.5 text-[8px] font-mono px-1 py-0.2 rounded bg-cyan-950/60 border border-cyan-700/50 cursor-pointer"
+                                      title={`Open ${urlMatch[1]}`}
+                                    >
+                                      <span>Open</span>
+                                      <ExternalLink className="w-2.5 h-2.5" />
+                                    </a>
+                                  )}
+                                  <span
+                                    className={`px-1 py-0.2 rounded text-[8px] uppercase ${
+                                      act.permission === 'ALLOWED'
+                                        ? 'text-emerald-400 bg-emerald-950/40'
+                                        : act.permission === 'ASKED'
+                                        ? 'text-amber-400 bg-amber-950/40'
+                                        : 'text-red-400 bg-red-950/40'
+                                    }`}
+                                  >
+                                    {act.permission}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="text-stone-400 truncate max-w-full font-sans" title={act.execution}>
+                                {act.execution}
+                              </div>
+                            </div>
+                          );
+                        })()
                       );
                     })}
                   </div>

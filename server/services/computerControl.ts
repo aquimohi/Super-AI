@@ -559,11 +559,20 @@ class ComputerControlService {
 
           const targetUrl = val.normalizedUrl;
           if (process.platform === 'win32') {
-            const child = spawn('cmd.exe', ['/c', 'start', '', targetUrl], {
-              detached: true,
-              stdio: 'ignore',
-            });
-            child.unref();
+            try {
+              const psChild = spawn(
+                'powershell.exe',
+                ['-NoProfile', '-NonInteractive', '-Command', `Start-Process '${targetUrl.replace(/'/g, "''")}'`],
+                { detached: true, stdio: 'ignore', windowsHide: true }
+              );
+              psChild.unref();
+            } catch {
+              const child = spawn('cmd.exe', ['/c', 'start', '', targetUrl], {
+                detached: true,
+                stdio: 'ignore',
+              });
+              child.unref();
+            }
           }
 
           result = {

@@ -443,5 +443,11 @@ export interface ChatMessage {
   isAutonomousTask?: boolean;
   taskId?: string;
   taskState?: AutonomousTaskState;
+  clientAction?: {
+    type: 'OPEN_URL';
+    url: string;
+    target?: string;
+    title?: string;
+  };
 }
 

@@ -104,6 +104,13 @@ export interface OrchestrationResponse {
   taskSteps?: any[];
   // Phase 6: Custom Cinematic TTS
   audioBase64?: string;
+  // Interactive UI Client Action (e.g. Open URL in client tab)
+  clientAction?: {
+    type: 'OPEN_URL';
+    url: string;
+    target?: string;
+    title?: string;
+  };
 }
 
 export interface JudgeEvaluationRequest {
@@ -971,6 +978,15 @@ export async function orchestrateChatRequest(
           risk: plannedBrowserAction.risk,
         },
       ],
+      clientAction:
+        plannedBrowserAction.action === 'open_page'
+          ? {
+              type: 'OPEN_URL',
+              url: browserResult.url || plannedBrowserAction.parameters.url,
+              target: '_blank',
+              title: plannedBrowserAction.displayName || browserResult.title || 'Web Page',
+            }
+          : undefined,
     };
   }
 
@@ -1321,6 +1337,25 @@ export async function orchestrateChatRequest(
       taskType: 'GENERAL',
       latencyMs: Date.now() - startTime,
       toolActivities: [actLog],
+      clientAction:
+        plannedComputerAction.action === 'open_url'
+          ? {
+              type: 'OPEN_URL',
+              url: execResult.target || plannedComputerAction.parameters.url,
+              target: '_blank',
+              title: plannedComputerAction.displayName || 'Web Page',
+            }
+          : plannedComputerAction.action === 'open_application' &&
+            (plannedComputerAction.parameters.application === 'chrome' ||
+              plannedComputerAction.parameters.application === 'edge' ||
+              plannedComputerAction.parameters.application === 'browser')
+          ? {
+              type: 'OPEN_URL',
+              url: 'https://www.google.com',
+              target: '_blank',
+              title: 'Web Browser',
+            }
+          : undefined,
     };
   }
 
