@@ -12,7 +12,8 @@ import {
   Sliders,
   Key,
   Database,
-  AudioLines
+  AudioLines,
+  Code2
 } from 'lucide-react';
 
 interface TopNavigationProps {
@@ -23,6 +24,8 @@ interface TopNavigationProps {
   onStopWakeWord?: () => void;
   audioEnabled?: boolean;
   onToggleAudio?: () => void;
+  isCanvasOpen?: boolean;
+  onToggleCanvas?: () => void;
 }
 
 export const TopNavigation: React.FC<TopNavigationProps> = ({ 
@@ -32,7 +35,9 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   onStartWakeWord,
   onStopWakeWord,
   audioEnabled = true,
-  onToggleAudio
+  onToggleAudio,
+  isCanvasOpen = false,
+  onToggleCanvas
 }) => {
   const [timeString, setTimeString] = useState<string>('');
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -155,6 +160,25 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
               <AudioLines className={`w-3.5 h-3.5 ${isWakeWordMode ? 'animate-pulse' : ''}`} />
               <span className="hidden sm:inline text-[11px] font-mono tracking-wider font-semibold uppercase">
                 Wake Word
+              </span>
+            </button>
+          )}
+
+          {/* Canvas Studio Button */}
+          {onToggleCanvas && (
+            <button
+              id="btn-toggle-canvas"
+              onClick={onToggleCanvas}
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded border transition-all cursor-pointer ${
+                isCanvasOpen
+                  ? 'border-cyan-400 bg-cyan-500/25 text-cyan-200 shadow-[0_0_15px_rgba(34,211,238,0.4)]'
+                  : 'border-cyan-500/40 bg-cyan-950/40 text-cyan-300 hover:bg-cyan-900/60 hover:border-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.15)]'
+              }`}
+              title="Open Live Canvas Studio (Code Editor & Real-Time Preview)"
+            >
+              <Code2 className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="text-[11px] font-mono tracking-wider font-semibold uppercase">
+                CANVAS
               </span>
             </button>
           )}

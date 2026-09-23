@@ -1,12 +1,13 @@
 import React from 'react';
 import { ChatMessage, AIState } from '../types';
-import { Terminal, Shield, Sparkles, ChevronRight, ChevronLeft, Bot, User, Wrench, Database, Brain, Code2, Globe, ExternalLink } from 'lucide-react';
+import { Terminal, Shield, Sparkles, ChevronRight, ChevronLeft, Bot, User, Wrench, Database, Brain, Code2, Globe, ExternalLink, Paperclip, FileCode } from 'lucide-react';
 
 interface ActivityFeedProps {
   messages: ChatMessage[];
   currentState: AIState;
   collapsed: boolean;
   onToggleCollapse: () => void;
+  onOpenInCanvas?: (file: { name: string; content: string; language?: string }) => void;
 }
 
 export const ActivityFeed: React.FC<ActivityFeedProps> = ({
@@ -14,6 +15,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   currentState,
   collapsed,
   onToggleCollapse,
+  onOpenInCanvas,
 }) => {
   // Find latest memory event if any
   const latestMemoryEvent = [...messages]
@@ -103,6 +105,83 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
                 <p className="font-mono leading-relaxed text-[11px] text-[#FFFFFF]/85 whitespace-pre-wrap">
                   {msg.text}
                 </p>
+
+                {/* Attached Files Badges (on User messages) */}
+                {msg.attachedFiles && msg.attachedFiles.length > 0 && (
+                  <div className="mt-2 pt-1.5 border-t border-[#FFFFFF]/20 space-y-1.5">
+                    <div className="text-[9px] font-mono text-cyan-400 uppercase tracking-wider flex items-center gap-1">
+                      <Paperclip className="w-2.5 h-2.5 text-cyan-400" />
+                      <span>Attached Files ({msg.attachedFiles.length})</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {msg.attachedFiles.map((file) => (
+                        <div
+                          key={file.id}
+                          className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-500/40 text-[10px] font-mono text-cyan-200"
+                        >
+                          <FileCode className="w-3 h-3 text-cyan-400" />
+                          <span className="max-w-[120px] truncate">{file.name}</span>
+                          {onOpenInCanvas && (
+                            <button
+                              type="button"
+                              onClick={() => onOpenInCanvas(file)}
+                              className="px-1 py-0.2 rounded bg-cyan-500/20 hover:bg-cyan-500/40 text-[8px] text-cyan-300 font-bold ml-1 transition-colors"
+                              title="Open in Canvas Studio"
+                            >
+                              CANVAS ↗
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Code Artifact Detection (on Super AI messages) */}
+                {isAI && msg.text.includes('```') && onOpenInCanvas && (() => {
+                  const match = msg.text.match(/```([a-zA-Z0-9_-]+)?\s*([\s\S]+?)```/);
+                  if (!match) return null;
+                  const rawLang = (match[1] || 'text').toLowerCase();
+                  const codeSnippet = match[2].trim();
+                  const extMap: Record<string, string> = {
+                    html: 'html',
+                    htm: 'html',
+                    css: 'css',
+                    javascript: 'js',
+                    js: 'js',
+                    typescript: 'ts',
+                    ts: 'ts',
+                    python: 'py',
+                    py: 'py',
+                    json: 'json',
+                    markdown: 'md',
+                    md: 'md',
+                  };
+                  const ext = extMap[rawLang] || 'txt';
+                  const fileName = `generated-artifact.${ext}`;
+
+                  return (
+                    <div className="mt-2.5 p-2 rounded-lg bg-cyan-950/40 border border-cyan-500/40 text-[10px] font-mono space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5 text-cyan-300 font-bold">
+                          <Code2 className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+                          <span className="uppercase">CODE ARTIFACT ({rawLang.toUpperCase()})</span>
+                        </div>
+                        <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-cyan-900/60 text-cyan-300 border border-cyan-600/60">
+                          LIVE READY
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => onOpenInCanvas({ name: fileName, content: codeSnippet, language: rawLang })}
+                        className="inline-flex items-center justify-center gap-1.5 w-full py-1.5 px-2.5 rounded bg-cyan-500 hover:bg-cyan-400 text-black font-mono font-bold text-[10px] tracking-wide transition-all shadow-md shadow-cyan-500/20 cursor-pointer"
+                      >
+                        <Sparkles className="w-3 h-3 text-black" />
+                        <span>OPEN IN LIVE CANVAS ↗</span>
+                      </button>
+                    </div>
+                  );
+                })()}
 
                 {/* Tactical Web Launch Card for Browser Actions */}
                 {msg.clientAction && msg.clientAction.type === 'OPEN_URL' && msg.clientAction.url && (

@@ -422,6 +422,34 @@ export interface SystemMetrics {
   fps: number;
 }
 
+export type CanvasLanguage =
+  | 'html'
+  | 'css'
+  | 'javascript'
+  | 'typescript'
+  | 'python'
+  | 'json'
+  | 'markdown'
+  | 'text';
+
+export interface CanvasFile {
+  id: string;
+  name: string;
+  language: CanvasLanguage;
+  content: string;
+  originalContent?: string;
+  updatedAt: number;
+  isModified?: boolean;
+}
+
+export interface AttachedFile {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  content: string;
+}
+
 export interface ChatMessage {
   id: string;
   sender: 'USER' | 'SUPER_AI' | 'SYSTEM';
@@ -449,5 +477,13 @@ export interface ChatMessage {
     target?: string;
     title?: string;
   };
+  attachedFiles?: AttachedFile[];
+  canvasArtifact?: {
+    title: string;
+    language: CanvasLanguage;
+    content: string;
+    fileId?: string;
+  };
 }
+
 

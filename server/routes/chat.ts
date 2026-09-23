@@ -21,6 +21,7 @@ chatRouter.post('/', async (req, res) => {
       taskScopedAuthorization,
       authorizationDecision,
       stepId,
+      attachedFiles,
     } = req.body;
 
     if (!message || typeof message !== 'string' || !message.trim()) {
@@ -35,6 +36,7 @@ chatRouter.post('/', async (req, res) => {
       forceModel: model,
       hasImages: Boolean(hasImages),
       sessionAuthorizations,
+      attachedFiles,
       approvedToolCall,
       rejectedToolCall,
       isAutonomousTask,

@@ -47,6 +47,7 @@ export interface OrchestrationRequest {
   forceRole?: TaskCategory;
   forceModel?: string;
   sessionAuthorizations?: string[];
+  attachedFiles?: Array<{ name: string; size?: number; type?: string; content: string }>;
   approvedToolCall?: { tool: string; arguments: any; toolCallId?: string };
   rejectedToolCall?: { tool: string; arguments?: any; toolCallId?: string; reason?: string };
   isAutonomousTask?: boolean;
@@ -296,7 +297,16 @@ export async function orchestrateChatRequest(
   request: OrchestrationRequest
 ): Promise<OrchestrationResponse> {
   const startTime = Date.now();
-  const rawMessage = request.message.trim();
+  let rawMessage = request.message.trim();
+  if (request.attachedFiles && request.attachedFiles.length > 0) {
+    const fileBlocks = request.attachedFiles
+      .map(
+        (f) =>
+          `[ATTACHED FILE: ${f.name} (${f.type || 'text'})]\n\`\`\`${f.name.split('.').pop() || ''}\n${f.content}\n\`\`\``
+      )
+      .join('\n\n');
+    rawMessage = `${rawMessage}\n\n--- ATTACHED FILES PROVIDED BY USER ---\n${fileBlocks}`;
+  }
   const toolActivities: ToolActivityLog[] = [];
   const sessionAuthorizations = request.sessionAuthorizations || [];
 

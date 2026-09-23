@@ -245,6 +245,7 @@ export const apiClient = {
     stepId?: number;
     taskScopedAuthorization?: boolean;
     authorizationDecision?: 'AUTHORIZE_ONCE' | 'ALLOW_FOR_TASK' | 'DENY';
+    attachedFiles?: import('../types').AttachedFile[];
     approvedToolCall?: {
       tool: string;
       arguments: any;

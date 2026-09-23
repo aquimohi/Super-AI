@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { AIState } from '../types';
-import { Send, Mic, MicOff, Square, Volume2, AudioLines, Radio } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { AIState, AttachedFile } from '../types';
+import { Send, Mic, MicOff, Square, Volume2, AudioLines, Radio, Paperclip, FileCode, X, Sparkles } from 'lucide-react';
 
 interface ChatInputAreaProps {
   currentState: AIState;
   onStateChange: (state: AIState) => void;
-  onSendMessage: (message: string) => void;
+  onSendMessage: (message: string, attachedFiles?: AttachedFile[]) => void;
+  onOpenInCanvas?: (file: AttachedFile) => void;
   isStreaming?: boolean;
   onStartVoiceInput?: () => void;
   onStopVoiceInput?: () => void;
@@ -27,6 +28,7 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
   currentState,
   onStateChange,
   onSendMessage,
+  onOpenInCanvas,
   isStreaming = false,
   onStartVoiceInput,
   onStopVoiceInput,
@@ -37,19 +39,84 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
   onToggleLiveVoice,
 }) => {
   const [inputValue, setInputValue] = useState('');
+  const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const activeListening = isListening || currentState === 'LISTENING';
   const isSpeakingState = currentState === 'SPEAKING';
 
-  // We no longer sync the voice transcript to the input value.
-  // It will be displayed in the floating overlay instead.
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  const processFiles = async (fileList: FileList | File[]) => {
+    const newFiles: AttachedFile[] = [];
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      try {
+        const text = await file.text();
+        newFiles.push({
+          id: `file-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 6)}`,
+          name: file.name,
+          size: file.size,
+          type: file.type || 'text/plain',
+          content: text,
+        });
+      } catch (err) {
+        console.warn('Failed to read file text:', file.name, err);
+      }
+    }
+
+    if (newFiles.length > 0) {
+      setAttachedFiles((prev) => [...prev, ...newFiles]);
+    }
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      processFiles(e.target.files);
+      e.target.value = '';
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      processFiles(e.dataTransfer.files);
+    }
+  };
+
+  const removeAttachedFile = (id: string) => {
+    setAttachedFiles((prev) => prev.filter((f) => f.id !== id));
+  };
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (!inputValue.trim() || inputValue === 'Listening...' || isStreaming) return;
+    const hasText = Boolean(inputValue.trim() && inputValue !== 'Listening...');
+    const hasFiles = attachedFiles.length > 0;
+    if ((!hasText && !hasFiles) || isStreaming) return;
 
-    onSendMessage(inputValue.trim());
+    const messageText = hasText
+      ? inputValue.trim()
+      : 'Attached files ko analyze karke un par kaam karo aur modifications batao.';
+
+    onSendMessage(messageText, hasFiles ? attachedFiles : undefined);
     setInputValue('');
+    setAttachedFiles([]);
   };
 
   const handlePresetClick = (cmd: string) => {
@@ -104,11 +171,56 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
         ))}
       </div>
 
+      {/* Attached Files Preview Bar */}
+      {attachedFiles.length > 0 && (
+        <div className="flex items-center gap-2 mb-2 overflow-x-auto py-1 scrollbar-none">
+          <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest flex items-center gap-1 shrink-0">
+            <Paperclip className="w-3 h-3" />
+            ATTACHED ({attachedFiles.length}):
+          </span>
+          {attachedFiles.map((file) => (
+            <div
+              key={file.id}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-cyan-500/40 bg-cyan-950/60 text-cyan-200 text-xs font-mono shadow-md backdrop-blur-md shrink-0"
+            >
+              <FileCode className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <span className="max-w-[140px] truncate font-medium">{file.name}</span>
+              <span className="text-[10px] opacity-60">({formatFileSize(file.size)})</span>
+
+              {onOpenInCanvas && (
+                <button
+                  type="button"
+                  onClick={() => onOpenInCanvas(file)}
+                  className="px-1.5 py-0.5 rounded bg-cyan-500/20 border border-cyan-400/40 text-[9px] text-cyan-300 hover:bg-cyan-500/40 transition-colors ml-1"
+                  title="Open file in Live Canvas Studio"
+                >
+                  CANVAS ↗
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => removeAttachedFile(file.id)}
+                className="text-gray-400 hover:text-rose-400 transition-colors p-0.5 ml-0.5"
+                title="Remove file"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Futuristic Command Input Bar */}
       <form
         onSubmit={handleSubmit}
-        className={`flex items-center gap-3 sm:gap-4 bg-white/5 border border-[#FFFFFF]/20 p-2.5 sm:p-3.5 backdrop-blur-xl rounded-xl transition-all duration-300 ${
-          currentState === 'ERROR'
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        className={`relative flex items-center gap-3 sm:gap-4 bg-white/5 border border-[#FFFFFF]/20 p-2.5 sm:p-3.5 backdrop-blur-xl rounded-xl transition-all duration-300 ${
+          isDragging
+            ? 'border-cyan-400 border-dashed bg-cyan-950/40 shadow-[0_0_30px_rgba(34,211,238,0.4)]'
+            : currentState === 'ERROR'
             ? 'border-red-500/60 shadow-[0_0_20px_rgba(239,68,68,0.25)]'
             : activeListening
             ? 'border-[#FFFFFF] shadow-[0_0_25px_rgba(255,255,255,0.35)] bg-[#FFFFFF]/10'
@@ -117,6 +229,14 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
             : 'hover:border-[#FFFFFF]/40 focus-within:border-[#FFFFFF]/60 focus-within:shadow-[0_0_25px_rgba(255,255,255,0.2)]'
         }`}
       >
+        {/* Drag & Drop Visual Overlay */}
+        {isDragging && (
+          <div className="absolute inset-0 rounded-xl bg-cyan-950/90 border-2 border-cyan-400 border-dashed flex items-center justify-center gap-2 z-30 pointer-events-none text-cyan-300 font-mono text-sm animate-pulse">
+            <Paperclip className="w-4 h-4" />
+            <span>Drop files here to attach and work on them with Super AI</span>
+          </div>
+        )}
+
         {/* Sleek Pulse / Status Indicator Box */}
         <div
           className={`w-8 h-8 sm:w-10 sm:h-10 border rounded flex items-center justify-center shrink-0 transition-all ${
@@ -140,6 +260,23 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
           )}
         </div>
 
+        {/* Paperclip File Upload Button */}
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="p-1.5 sm:p-2 rounded border border-white/15 bg-black/40 text-gray-400 hover:text-cyan-300 hover:border-cyan-500/50 hover:bg-cyan-950/30 transition-all cursor-pointer shrink-0"
+          title="Attach files (Code, Text, HTML, CSS, JS, Python, Markdown)"
+        >
+          <Paperclip className="w-4 h-4" />
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          className="hidden"
+          onChange={handleFileInputChange}
+        />
+
         {/* Input Field */}
         <input
           id="chat-command-input"
@@ -151,7 +288,9 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
               ? 'Listening for command...'
               : isSpeakingState
               ? 'Super AI vocal synthesis active...'
-              : 'Ready for command... Click mic or type message'
+              : attachedFiles.length > 0
+              ? 'Tell Super AI what to do with attached files (or press Transmit)...'
+              : 'Ready for command... Attach files, click mic, or type message'
           }
           className={`flex-1 bg-transparent text-sm sm:text-base font-rajdhani tracking-wide focus:outline-none ${
             activeListening
@@ -243,9 +382,9 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
           <button
             type="submit"
             id="send-command-btn"
-            disabled={!inputValue.trim() || inputValue === 'Listening...' || isStreaming}
+            disabled={(!inputValue.trim() && attachedFiles.length === 0) || inputValue === 'Listening...' || isStreaming}
             className={`flex items-center gap-1.5 px-3.5 py-2 sm:py-2.5 rounded border font-mono font-bold text-xs tracking-widest uppercase transition-all duration-200 cursor-pointer ${
-              inputValue.trim() && inputValue !== 'Listening...' && !isStreaming
+              (inputValue.trim() || attachedFiles.length > 0) && inputValue !== 'Listening...' && !isStreaming
                 ? 'bg-[#FFFFFF] text-black border-[#FFFFFF] shadow-[0_0_15px_rgba(255,255,255,0.4)] hover:bg-[#FFFFFF]/90'
                 : 'bg-black/30 border-[#FFFFFF]/20 text-[#FFFFFF]/40 cursor-not-allowed'
             }`}
