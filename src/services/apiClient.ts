@@ -87,10 +87,15 @@ export interface ChatApiResponse {
   cognitiveTrace?: CognitiveTraceEvent[];
   judgeEvaluation?: JudgeEvaluationSummary;
   clientAction?: {
-    type: 'OPEN_URL';
-    url: string;
+    type: 'OPEN_URL' | 'OPEN_SCRAPER';
+    url?: string;
     target?: string;
     title?: string;
+    jobId?: string;
+    keyword?: string;
+    location?: string;
+    count?: number;
+    initialTab?: 'overview' | 'search' | 'jobs' | 'leads' | 'export';
   };
 }
 

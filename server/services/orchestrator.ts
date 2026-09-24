@@ -24,6 +24,7 @@ import { AutonomousTaskState } from './task/types.js';
 import { recoveryObservabilityEngine } from './task/recoveryObservabilityEngine.js';
 import { humanize, getVoiceGuide } from '../design_genius/humanizer.js';
 import { evaluateCapability } from './capabilityGuard.js';
+import { leadScraperPlanner } from './scraper/scraperPlanner.js';
 
 export interface PendingToolAuthorization {
   tool: string;
@@ -106,12 +107,17 @@ export interface OrchestrationResponse {
   taskSteps?: any[];
   // Phase 6: Custom Cinematic TTS
   audioBase64?: string;
-  // Interactive UI Client Action (e.g. Open URL in client tab)
+  // Interactive UI Client Action (e.g. Open URL in client tab, Open Lead Scraper)
   clientAction?: {
-    type: 'OPEN_URL';
-    url: string;
+    type: 'OPEN_URL' | 'OPEN_SCRAPER';
+    url?: string;
     target?: string;
     title?: string;
+    jobId?: string;
+    keyword?: string;
+    location?: string;
+    count?: number;
+    initialTab?: 'overview' | 'search' | 'jobs' | 'leads' | 'export';
   };
 }
 
@@ -629,7 +635,13 @@ export async function orchestrateChatRequest(
     };
   }
 
-  // 0b. Controlled Browser Automation Planner: Analyze intent for safe browser actions or high-risk prohibited actions
+  // 0b. Automated Google Maps Lead Scraper: Direct execution when user commands scraping leads
+  const plannedScraper = await leadScraperPlanner.planAndExecute(rawMessage, conversationId);
+  if (plannedScraper) {
+    return plannedScraper;
+  }
+
+  // 0c. Controlled Browser Automation Planner: Analyze intent for safe browser actions or high-risk prohibited actions
   const plannedBrowserAction = browserPlanner.planAction(rawMessage, conversationId);
 
   if (plannedBrowserAction?.action === 'blocked_browser_action') {

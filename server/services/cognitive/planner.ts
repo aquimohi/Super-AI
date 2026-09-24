@@ -95,6 +95,17 @@ export async function planCognitiveTask(options: PlanOptions): Promise<Cognitive
         actionDescription: `Read file: ${fileMatch[2].trim()}`,
       };
     }
+  } else if (
+    /\b(scrape\s*leads?|leads?\s*scrape|extract\s*leads?|collect\s*leads?|leads?\s*nikal|data\s*scrape)\b/i.test(lower) ||
+    /\b(google\s*maps\s*scraper|b2b\s*leads?)\b/i.test(lower)
+  ) {
+    requiresTool = true;
+    toolPlan = {
+      toolName: 'scrape_google_maps_leads',
+      parameters: { keyword: raw, location: 'Delhi', requestedResults: 10 },
+      reason: 'User requested business leads scraping from Google Maps',
+      actionDescription: 'Google Maps Lead Scraper',
+    };
   }
 
   // 4. Judge requirement evaluation

@@ -17,6 +17,7 @@ import { ControlPanelModal } from './components/control-panel/ControlPanelModal'
 import { PermissionPromptModal } from './components/PermissionPromptModal';
 import { ToolAuthorizationModal } from './components/ToolAuthorizationModal';
 import { LiveCanvasStudio } from './components/canvas/LiveCanvasStudio';
+import { ScraperDashboardModal } from './components/scraper/ScraperDashboardModal';
 import { apiClient, ChatApiResponse } from './services/apiClient';
 import { useVoiceInput } from './hooks/useVoiceInput';
 import {
@@ -273,6 +274,18 @@ export default function App() {
   const [canvasFiles, setCanvasFiles] = useState<CanvasFile[]>(INITIAL_CANVAS_FILES);
   const [activeCanvasFileId, setActiveCanvasFileId] = useState<string>('file-html-index');
   const [isCanvasOpen, setIsCanvasOpen] = useState(false);
+  const [isScraperOpen, setIsScraperOpen] = useState(false);
+  const [scraperInitialTab, setScraperInitialTab] = useState<'overview' | 'search' | 'jobs' | 'leads' | 'export'>('overview');
+  const [scraperSelectedJobId, setScraperSelectedJobId] = useState<string | null>(null);
+
+  const handleOpenScraper = useCallback(
+    (tab: 'overview' | 'search' | 'jobs' | 'leads' | 'export' = 'overview', jobId?: string) => {
+      setScraperInitialTab(tab);
+      if (jobId) setScraperSelectedJobId(jobId);
+      setIsScraperOpen(true);
+    },
+    []
+  );
   const [canvasViewMode, setCanvasViewMode] = useState<'split' | 'editor' | 'preview'>('split');
   const [isCanvasFullscreen, setIsCanvasFullscreen] = useState(false);
   const [isCanvasAiGenerating, setIsCanvasAiGenerating] = useState(false);
@@ -640,6 +653,13 @@ Please update this code according to the user request. Output the complete updat
         }
       } catch (openErr) {
         console.warn('[Super AI] Client tab open error:', openErr);
+      }
+    } else if (response.clientAction?.type === 'OPEN_SCRAPER') {
+      if (response.clientAction.initialTab) {
+        setScraperInitialTab(response.clientAction.initialTab);
+      }
+      if (response.clientAction.jobId) {
+        setScraperSelectedJobId(response.clientAction.jobId);
       }
     }
 
@@ -1070,6 +1090,7 @@ Please update this code according to the user request. Output the complete updat
         onToggleAudio={handleToggleAudio}
         isCanvasOpen={isCanvasOpen}
         onToggleCanvas={() => setIsCanvasOpen(!isCanvasOpen)}
+        onOpenScraper={() => setIsScraperOpen(true)}
       />
 
       {/* 3. Center Stage: Real-Time 3D Holographic AI Core */}
@@ -1101,6 +1122,7 @@ Please update this code according to the user request. Output the complete updat
         collapsed={rightPanelCollapsed}
         onToggleCollapse={() => setRightPanelCollapsed(!rightPanelCollapsed)}
         onOpenInCanvas={handleOpenInCanvas}
+        onOpenScraper={handleOpenScraper}
       />
 
       {/* 6. Bottom Dock: State Switcher Controller & Futuristic Chat Input */}
@@ -1181,6 +1203,14 @@ Please update this code according to the user request. Output the complete updat
         onViewModeChange={setCanvasViewMode}
         isFullscreen={isCanvasFullscreen}
         onToggleFullscreen={() => setIsCanvasFullscreen(!isCanvasFullscreen)}
+      />
+
+      {/* 11. Google Maps Lead Scraper & Research Engine Modal */}
+      <ScraperDashboardModal
+        isOpen={isScraperOpen}
+        onClose={() => setIsScraperOpen(false)}
+        initialTab={scraperInitialTab}
+        selectedJobId={scraperSelectedJobId}
       />
     </main>
   );

@@ -8,3 +8,5 @@ coverage/
 !.env.example
 .data/
 sandbox_workspace/
+exports/
+scratch/

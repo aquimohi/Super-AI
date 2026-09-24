@@ -472,10 +472,15 @@ export interface ChatMessage {
   taskId?: string;
   taskState?: AutonomousTaskState;
   clientAction?: {
-    type: 'OPEN_URL';
-    url: string;
+    type: 'OPEN_URL' | 'OPEN_SCRAPER';
+    url?: string;
     target?: string;
     title?: string;
+    jobId?: string;
+    keyword?: string;
+    location?: string;
+    count?: number;
+    initialTab?: 'overview' | 'search' | 'jobs' | 'leads' | 'export';
   };
   attachedFiles?: AttachedFile[];
   canvasArtifact?: {

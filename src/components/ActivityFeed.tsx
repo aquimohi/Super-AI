@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChatMessage, AIState } from '../types';
-import { Terminal, Shield, Sparkles, ChevronRight, ChevronLeft, Bot, User, Wrench, Database, Brain, Code2, Globe, ExternalLink, Paperclip, FileCode } from 'lucide-react';
+import { Terminal, Shield, Sparkles, ChevronRight, ChevronLeft, Bot, User, Wrench, Database, Brain, Code2, Globe, ExternalLink, Paperclip, FileCode, MapPin, Download } from 'lucide-react';
 
 interface ActivityFeedProps {
   messages: ChatMessage[];
@@ -8,6 +8,7 @@ interface ActivityFeedProps {
   collapsed: boolean;
   onToggleCollapse: () => void;
   onOpenInCanvas?: (file: { name: string; content: string; language?: string }) => void;
+  onOpenScraper?: (tab?: 'overview' | 'search' | 'jobs' | 'leads' | 'export', jobId?: string) => void;
 }
 
 export const ActivityFeed: React.FC<ActivityFeedProps> = ({
@@ -16,6 +17,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   collapsed,
   onToggleCollapse,
   onOpenInCanvas,
+  onOpenScraper,
 }) => {
   // Find latest memory event if any
   const latestMemoryEvent = [...messages]
@@ -212,6 +214,57 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
                       <span>OPEN IN NEW TAB</span>
                       <ExternalLink className="w-3 h-3 text-black" />
                     </a>
+                  </div>
+                )}
+
+                {/* Tactical Google Maps Lead Scraper Card */}
+                {msg.clientAction && msg.clientAction.type === 'OPEN_SCRAPER' && (
+                  <div className="mt-2.5 p-2 rounded-lg bg-emerald-950/50 border border-emerald-500/50 text-[10px] font-mono space-y-1.5 shadow-lg shadow-emerald-950/50">
+                    <div className="flex items-center justify-between gap-1">
+                      <div className="flex items-center gap-1.5 text-emerald-300 font-bold">
+                        <MapPin className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                        <span className="tracking-wide uppercase">
+                          GOOGLE MAPS LEAD SCRAPER
+                        </span>
+                      </div>
+                      <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-emerald-900/70 text-emerald-300 border border-emerald-600/60 uppercase flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        {msg.clientAction.count || 0} LEADS
+                      </span>
+                    </div>
+
+                    <div className="text-stone-300 text-[9px] flex flex-col gap-0.5">
+                      <div className="truncate">
+                        <span className="text-stone-400">Target:</span> <span className="text-emerald-200 font-bold">{msg.clientAction.keyword}</span>
+                      </div>
+                      <div className="truncate">
+                        <span className="text-stone-400">Location:</span> <span className="text-emerald-200">{msg.clientAction.location}</span>
+                      </div>
+                    </div>
+
+                    {onOpenScraper && (
+                      <div className="grid grid-cols-2 gap-1.5 pt-0.5">
+                        <button
+                          type="button"
+                          onClick={() => onOpenScraper('leads', msg.clientAction?.jobId)}
+                          className="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-300 text-black font-mono font-bold text-[9px] tracking-wide transition-all shadow-md shadow-emerald-500/20 cursor-pointer"
+                          title="Open Scraped Leads Table"
+                        >
+                          <span>VIEW LEADS</span>
+                          <ExternalLink className="w-2.5 h-2.5" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => onOpenScraper('export', msg.clientAction?.jobId)}
+                          className="inline-flex items-center justify-center gap-1 w-full py-1.5 px-2 rounded bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/60 font-mono font-bold text-[9px] tracking-wide transition-all cursor-pointer"
+                          title="Export to Excel, CSV, or PDF"
+                        >
+                          <span>EXPORT</span>
+                          <Download className="w-2.5 h-2.5" />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
 

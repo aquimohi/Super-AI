@@ -13,7 +13,8 @@ import {
   Key,
   Database,
   AudioLines,
-  Code2
+  Code2,
+  MapPin
 } from 'lucide-react';
 
 interface TopNavigationProps {
@@ -26,6 +27,7 @@ interface TopNavigationProps {
   onToggleAudio?: () => void;
   isCanvasOpen?: boolean;
   onToggleCanvas?: () => void;
+  onOpenScraper?: () => void;
 }
 
 export const TopNavigation: React.FC<TopNavigationProps> = ({ 
@@ -37,7 +39,8 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   audioEnabled = true,
   onToggleAudio,
   isCanvasOpen = false,
-  onToggleCanvas
+  onToggleCanvas,
+  onOpenScraper
 }) => {
   const [timeString, setTimeString] = useState<string>('');
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -179,6 +182,21 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
               <Code2 className="w-3.5 h-3.5 text-cyan-400" />
               <span className="text-[11px] font-mono tracking-wider font-semibold uppercase">
                 CANVAS
+              </span>
+            </button>
+          )}
+
+          {/* Google Maps Lead Scraper Button */}
+          {onOpenScraper && (
+            <button
+              id="btn-open-lead-scraper"
+              onClick={onOpenScraper}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded border border-emerald-500/40 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 transition-all cursor-pointer shadow-[0_0_10px_rgba(16,185,129,0.2)]"
+              title="Open Google Maps Lead Scraper & Research Engine"
+            >
+              <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="text-[11px] font-mono tracking-wider font-semibold uppercase">
+                LEAD SCRAPER
               </span>
             </button>
           )}

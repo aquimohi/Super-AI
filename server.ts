@@ -10,6 +10,7 @@ import { memoryRouter } from './server/routes/memory.js';
 import { taskRouter } from './server/routes/tasks.js';
 import { sandboxRouter } from './server/routes/sandbox.js';
 import { iotRouter } from './server/routes/iot.js';
+import { scraperRouter } from './server/routes/scraper.js';
 import { RadarEventBus, RadarEventPayload, getLatestRadarState } from './server/services/iot/radarSensor.js';
 import { initTelegramBot, stopTelegramBot } from './server/services/telegramBot.js';
 import { initVoiceStreamingServer } from './server/services/voice/streamingSocket.js';
@@ -34,6 +35,8 @@ async function startServer() {
   app.use('/api/sandbox', sandboxRouter);
   // Phase 3 — IoT Hardware Integration
   app.use('/api/iot', iotRouter);
+  // Google Maps Lead Scraper Module
+  app.use('/api/scraper', scraperRouter);
 
   // Serve static assets from public folder (including GLB models)
   app.use(express.static(path.join(process.cwd(), 'public')));

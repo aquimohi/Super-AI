@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { CanvasFile, CanvasLanguage } from '../../types';
 import {
   Code2,
   Eye,
   Columns,
-  Play,
   Copy,
   Download,
   ExternalLink,
   Plus,
-  Upload,
   Trash2,
   Sparkles,
   Maximize2,
@@ -18,12 +16,18 @@ import {
   Check,
   RotateCcw,
   FileCode,
-  FileText,
-  AlertCircle,
   Terminal,
   ChevronDown,
   Wand2,
   FileUp,
+  Undo2,
+  Redo2,
+  WrapText,
+  Search,
+  Replace,
+  AlignLeft,
+  Type,
+  Edit3,
 } from 'lucide-react';
 
 interface LiveCanvasStudioProps {
@@ -44,20 +48,6 @@ interface LiveCanvasStudioProps {
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
 }
-
-const LANGUAGE_EXTENSIONS: Record<string, CanvasLanguage> = {
-  html: 'html',
-  htm: 'html',
-  css: 'css',
-  js: 'javascript',
-  jsx: 'javascript',
-  ts: 'typescript',
-  tsx: 'typescript',
-  py: 'python',
-  json: 'json',
-  md: 'markdown',
-  txt: 'text',
-};
 
 export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
   isOpen,
@@ -84,69 +74,264 @@ export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
 
   const [aiPrompt, setAiPrompt] = useState('');
   const [copied, setCopied] = useState(false);
+  const [saveBanner, setSaveBanner] = useState(false);
   const [consoleLogs, setConsoleLogs] = useState<Array<{ type: 'log' | 'error' | 'warn'; msg: string; time: string }>>([]);
   const [showConsole, setShowConsole] = useState(false);
   const [newFileMenuOpen, setNewFileMenuOpen] = useState(false);
   const [editingFileName, setEditingFileName] = useState<string | null>(null);
   const [renameInput, setRenameInput] = useState('');
 
+  // Editor configuration
+  const [wrapCode, setWrapCode] = useState(false);
+  const [fontSize, setFontSize] = useState(13);
+  const [showFindReplace, setShowFindReplace] = useState(false);
+  const [findText, setFindText] = useState('');
+  const [replaceText, setReplaceText] = useState('');
+  const [cursorPos, setCursorPos] = useState({ line: 1, col: 1 });
+
+  // Undo / Redo history
+  const [history, setHistory] = useState<Record<string, string[]>>({});
+  const [historyIdx, setHistoryIdx] = useState<Record<string, number>>({});
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const gutterRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-scroll textarea sync
-  const [cursorLine, setCursorLine] = useState(1);
-
-  // Line count array for gutter
-  const lineCount = useMemo(() => {
-    if (!activeFile?.content) return 1;
-    return activeFile.content.split('\n').length;
+  // Split lines for line count
+  const lines = useMemo(() => {
+    return (activeFile?.content || '').split('\n');
   }, [activeFile?.content]);
 
-  // Bundle HTML + CSS + JS for live iframe preview
+  const lineCount = lines.length;
+
+  // Initialize history for active file if not present
+  useEffect(() => {
+    if (activeFile && !history[activeFile.id]) {
+      setHistory((prev) => ({ ...prev, [activeFile.id]: [activeFile.content] }));
+      setHistoryIdx((prev) => ({ ...prev, [activeFile.id]: 0 }));
+    }
+  }, [activeFile, history]);
+
+  // Synchronize gutter scroll with textarea scroll
+  const handleEditorScroll = (e: React.UIEvent<HTMLTextAreaElement>) => {
+    if (gutterRef.current) {
+      gutterRef.current.scrollTop = e.currentTarget.scrollTop;
+    }
+  };
+
+  // Track cursor line and column
+  const updateCursorPosition = () => {
+    if (!textareaRef.current) return;
+    const start = textareaRef.current.selectionStart;
+    const textBefore = textareaRef.current.value.substring(0, start);
+    const splitLines = textBefore.split('\n');
+    const curLine = splitLines.length;
+    const curCol = splitLines[splitLines.length - 1].length + 1;
+    setCursorPos({ line: curLine, col: curCol });
+  };
+
+  // Textarea Change with History Tracking
+  const handleContentChange = (newVal: string) => {
+    if (!activeFile) return;
+    onUpdateFileContent(activeFile.id, newVal);
+
+    // Save to history (limited to 40 steps)
+    setHistory((prev) => {
+      const currentList = prev[activeFile.id] || [activeFile.content];
+      const curIndex = historyIdx[activeFile.id] ?? (currentList.length - 1);
+      const nextList = [...currentList.slice(0, curIndex + 1), newVal].slice(-40);
+      return { ...prev, [activeFile.id]: nextList };
+    });
+
+    setHistoryIdx((prev) => {
+      const currentList = history[activeFile.id] || [activeFile.content];
+      const curIndex = prev[activeFile.id] ?? (currentList.length - 1);
+      return { ...prev, [activeFile.id]: Math.min(curIndex + 1, 39) };
+    });
+  };
+
+  const handleUndo = useCallback(() => {
+    if (!activeFile) return;
+    const list = history[activeFile.id] || [];
+    const curIndex = historyIdx[activeFile.id] ?? (list.length - 1);
+    if (curIndex > 0) {
+      const target = list[curIndex - 1];
+      setHistoryIdx((prev) => ({ ...prev, [activeFile.id]: curIndex - 1 }));
+      onUpdateFileContent(activeFile.id, target);
+    }
+  }, [activeFile, history, historyIdx, onUpdateFileContent]);
+
+  const handleRedo = useCallback(() => {
+    if (!activeFile) return;
+    const list = history[activeFile.id] || [];
+    const curIndex = historyIdx[activeFile.id] ?? (list.length - 1);
+    if (curIndex < list.length - 1) {
+      const target = list[curIndex + 1];
+      setHistoryIdx((prev) => ({ ...prev, [activeFile.id]: curIndex + 1 }));
+      onUpdateFileContent(activeFile.id, target);
+    }
+  }, [activeFile, history, historyIdx, onUpdateFileContent]);
+
+  // Handle Tab, Undo/Redo, and Save shortcuts
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Save shortcut: Ctrl+S / Cmd+S
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      setSaveBanner(true);
+      setTimeout(() => setSaveBanner(false), 2000);
+      return;
+    }
+
+    // Undo: Ctrl+Z
+    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z') {
+      e.preventDefault();
+      handleUndo();
+      return;
+    }
+
+    // Redo: Ctrl+Y or Ctrl+Shift+Z
+    if (
+      ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') ||
+      ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'z')
+    ) {
+      e.preventDefault();
+      handleRedo();
+      return;
+    }
+
+    // Find: Ctrl+F
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+      e.preventDefault();
+      setShowFindReplace((prev) => !prev);
+      return;
+    }
+
+    // Tab key indentation
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      if (!textareaRef.current || !activeFile) return;
+
+      const textarea = textareaRef.current;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const value = textarea.value;
+
+      if (e.shiftKey) {
+        // Shift+Tab: Unindent
+        const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+        if (value.startsWith('  ', lineStart)) {
+          const updated = value.substring(0, lineStart) + value.substring(lineStart + 2);
+          handleContentChange(updated);
+          setTimeout(() => {
+            textarea.selectionStart = textarea.selectionEnd = Math.max(lineStart, start - 2);
+          }, 0);
+        }
+      } else {
+        // Tab: 2-space Indent
+        const updated = value.substring(0, start) + '  ' + value.substring(end);
+        handleContentChange(updated);
+        setTimeout(() => {
+          textarea.selectionStart = textarea.selectionEnd = start + 2;
+        }, 0);
+      }
+    }
+  };
+
+  // Simple auto-format/prettify code
+  const handleFormatCode = () => {
+    if (!activeFile?.content) return;
+    const rawLines = activeFile.content.split('\n');
+    let indent = 0;
+    const formatted = rawLines
+      .map((l) => {
+        const trimmed = l.trim();
+        if (!trimmed) return '';
+        if (
+          trimmed.startsWith('</') ||
+          trimmed.startsWith('}') ||
+          trimmed.startsWith(']') ||
+          trimmed.startsWith(');')
+        ) {
+          indent = Math.max(0, indent - 1);
+        }
+        const indented = '  '.repeat(indent) + trimmed;
+        if (
+          (trimmed.endsWith('>') &&
+            !trimmed.startsWith('</') &&
+            !trimmed.endsWith('/>') &&
+            !trimmed.includes('</')) ||
+          trimmed.endsWith('{') ||
+          trimmed.endsWith('[') ||
+          trimmed.endsWith('(')
+        ) {
+          indent++;
+        }
+        return indented;
+      })
+      .join('\n');
+    handleContentChange(formatted);
+  };
+
+  // Find & Replace
+  const handleReplaceCurrent = () => {
+    if (!activeFile?.content || !findText) return;
+    const index = activeFile.content.indexOf(findText);
+    if (index === -1) return;
+    const nextVal =
+      activeFile.content.substring(0, index) +
+      replaceText +
+      activeFile.content.substring(index + findText.length);
+    handleContentChange(nextVal);
+  };
+
+  const handleReplaceAll = () => {
+    if (!activeFile?.content || !findText) return;
+    const nextVal = activeFile.content.split(findText).join(replaceText);
+    handleContentChange(nextVal);
+  };
+
+  // Compile HTML + CSS + JS for live iframe preview
   const compiledHtml = useMemo(() => {
     if (!files.length) return '';
 
-    // Find HTML source
     let htmlContent = '';
-    const htmlFile = files.find((f) => f.name.toLowerCase().endsWith('.html')) || (activeFile?.language === 'html' ? activeFile : null);
+    const htmlFile =
+      files.find((f) => f.name.toLowerCase().endsWith('.html')) ||
+      (activeFile?.language === 'html' ? activeFile : null);
 
     if (htmlFile) {
       htmlContent = htmlFile.content;
     } else if (activeFile?.language === 'markdown') {
-      // Basic markdown parser for preview
       const escaped = activeFile.content
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
       htmlContent = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 2rem; background: #0c0d12; color: #e2e8f0; line-height: 1.6; }
+        body { font-family: system-ui, sans-serif; padding: 2rem; background: #0c0d12; color: #e2e8f0; line-height: 1.6; }
         h1,h2,h3 { color: #38bdf8; border-bottom: 1px solid #1e293b; padding-bottom: 0.3rem; }
         code { background: #1e293b; color: #a5f3fc; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace; }
         pre { background: #111827; border: 1px solid #1f2937; padding: 1rem; border-radius: 8px; overflow-x: auto; }
-        pre code { background: none; padding: 0; }
-        blockquote { border-left: 3px solid #38bdf8; padding-left: 1rem; color: #94a3b8; font-style: italic; }
-      </style></head><body><pre style="white-space: pre-wrap; font-family: inherit;">${escaped}</pre></body></html>`;
+      </style></head><body><pre style="white-space: pre-wrap;">${escaped}</pre></body></html>`;
       return htmlContent;
     } else {
-      // Create minimal HTML canvas container for JS/CSS or text
       htmlContent = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Super AI Canvas</title><style>
         body { margin: 0; padding: 2rem; font-family: system-ui, sans-serif; background: #09090b; color: #f4f4f5; }
       </style></head><body><div id="app"></div></body></html>`;
     }
 
-    // Collect all CSS files
     const cssBlocks = files
       .filter((f) => f.language === 'css' || f.name.toLowerCase().endsWith('.css'))
       .map((f) => `<style data-filename="${f.name}">\n${f.content}\n</style>`)
       .join('\n');
 
-    // Collect all JS/TS files
     const jsBlocks = files
       .filter((f) => f.language === 'javascript' || f.name.toLowerCase().endsWith('.js'))
-      .map((f) => `<script data-filename="${f.name}">\ntry {\n${f.content}\n} catch(err) {\n  window.parent.postMessage({ type: 'CANVAS_CONSOLE', level: 'error', message: err.toString() }, '*');\n}\n</script>`)
+      .map(
+        (f) =>
+          `<script data-filename="${f.name}">\ntry {\n${f.content}\n} catch(err) {\n  window.parent.postMessage({ type: 'CANVAS_CONSOLE', level: 'error', message: err.toString() }, '*');\n}\n</script>`
+      )
       .join('\n');
 
-    // Inject console capturing bridge
     const bridgeScript = `
       <script>
         (function() {
@@ -172,7 +357,6 @@ export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
       </script>
     `;
 
-    // Inject styles in <head> and scripts in <body>
     let combined = htmlContent;
     if (combined.includes('</head>')) {
       combined = combined.replace('</head>', `${bridgeScript}\n${cssBlocks}\n</head>`);
@@ -189,7 +373,7 @@ export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
     return combined;
   }, [files, activeFile]);
 
-  // Listen to iframe console events
+  // Console listener
   useEffect(() => {
     const handleMessage = (e: MessageEvent) => {
       if (e.data && e.data.type === 'CANVAS_CONSOLE') {
@@ -203,37 +387,9 @@ export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
         ]);
       }
     };
-
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
   }, []);
-
-  // Handle Tab key indentation in editor
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      if (!textareaRef.current || !activeFile) return;
-
-      const textarea = textareaRef.current;
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-
-      const value = textarea.value;
-      const newValue = value.substring(0, start) + '  ' + value.substring(end);
-      onUpdateFileContent(activeFile.id, newValue);
-
-      setTimeout(() => {
-        textarea.selectionStart = textarea.selectionEnd = start + 2;
-      }, 0);
-    }
-  };
-
-  const handleCursorMove = () => {
-    if (!textareaRef.current) return;
-    const text = textareaRef.current.value.substring(0, textareaRef.current.selectionStart);
-    const line = text.split('\n').length;
-    setCursorLine(line);
-  };
 
   const handleCopyCode = () => {
     if (!activeFile?.content) return;
@@ -250,24 +406,24 @@ export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
     a.href = url;
     a.download = activeFile.name;
     a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
   };
 
   const handleOpenInNewTab = () => {
     const blob = new Blob([compiledHtml], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     window.open(url, '_blank');
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
   };
 
   const handleRevert = () => {
     if (!activeFile || !activeFile.originalContent) return;
-    onUpdateFileContent(activeFile.id, activeFile.originalContent);
+    handleContentChange(activeFile.originalContent);
   };
 
   const handleAiSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!aiPrompt.trim() || !activeFile || isAiGenerating) return;
-
     const promptText = aiPrompt.trim();
     setAiPrompt('');
     await onAskAi(promptText, activeFile);
@@ -297,6 +453,12 @@ export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
     setEditingFileName(null);
   };
 
+  const focusEditor = () => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -320,7 +482,7 @@ export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
           </div>
 
           <span className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-cyan-500/30 bg-cyan-950/40 text-cyan-300 hidden sm:inline">
-            REAL-TIME WORKSPACE
+            INTERACTIVE CODE &amp; PREVIEW
           </span>
         </div>
 
@@ -335,7 +497,7 @@ export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
                   ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold'
                   : 'text-gray-400 hover:text-white'
               }`}
-              title="Code Editor Only"
+              title="Code Editor Fullscreen"
             >
               <Code2 className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">CODE</span>
@@ -347,7 +509,7 @@ export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
                   ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold'
                   : 'text-gray-400 hover:text-white'
               }`}
-              title="Split View (Editor + Live Preview)"
+              title="Split View (Editor on Left, Live Preview on Right)"
             >
               <Columns className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">SPLIT</span>
@@ -359,7 +521,7 @@ export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
                   ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold'
                   : 'text-gray-400 hover:text-white'
               }`}
-              title="Live Preview Only"
+              title="Live Preview Fullscreen"
             >
               <Eye className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">PREVIEW</span>
@@ -569,19 +731,186 @@ export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
         {/* Code Editor Pane */}
         {(viewMode === 'editor' || viewMode === 'split') && (
           <div
-            className={`flex flex-col h-full bg-[#070a10] relative ${
+            className={`flex flex-col h-full bg-[#070a10] relative select-text ${
               viewMode === 'split' ? 'w-1/2 border-r border-cyan-500/20' : 'w-full'
             }`}
+            onClick={focusEditor}
           >
-            {/* Editor Area with Line Number Gutter */}
-            <div className="flex-1 flex overflow-hidden relative font-mono text-xs sm:text-sm">
-              {/* Line Numbers Gutter */}
+            {/* Editor Mini-Toolbar */}
+            <div className="flex items-center justify-between px-3 py-1.5 border-b border-white/5 bg-[#080c14] text-[11px] font-mono text-slate-400 shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="flex items-center gap-1 text-cyan-300 font-semibold">
+                  <Edit3 className="w-3 h-3 text-cyan-400" />
+                  {activeFile?.name || 'editor'}
+                </span>
+                {saveBanner ? (
+                  <span className="text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-500/40 px-1.5 py-0.2 rounded font-bold animate-fadeIn">
+                    ✓ Saved
+                  </span>
+                ) : activeFile?.isModified ? (
+                  <span className="text-[10px] text-amber-400 bg-amber-950/40 border border-amber-500/30 px-1.5 py-0.2 rounded">
+                    ● Modified
+                  </span>
+                ) : (
+                  <span className="text-[10px] text-slate-500">
+                    Synced
+                  </span>
+                )}
+              </div>
+
+              {/* Editing Controls */}
+              <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                {/* Undo / Redo */}
+                <button
+                  type="button"
+                  onClick={handleUndo}
+                  className="p-1 rounded hover:bg-white/10 text-slate-300 transition-colors"
+                  title="Undo (Ctrl+Z)"
+                >
+                  <Undo2 className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRedo}
+                  className="p-1 rounded hover:bg-white/10 text-slate-300 transition-colors"
+                  title="Redo (Ctrl+Y)"
+                >
+                  <Redo2 className="w-3.5 h-3.5" />
+                </button>
+
+                <div className="w-px h-3 bg-white/10 mx-0.5" />
+
+                {/* Line Wrap Toggle */}
+                <button
+                  type="button"
+                  onClick={() => setWrapCode((prev) => !prev)}
+                  className={`px-1.5 py-0.5 rounded text-[10px] flex items-center gap-1 transition-colors border ${
+                    wrapCode
+                      ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40'
+                      : 'bg-white/5 text-slate-400 border-white/5 hover:text-white'
+                  }`}
+                  title="Toggle Word Wrap"
+                >
+                  <WrapText className="w-3 h-3" />
+                  <span>{wrapCode ? 'WRAP ON' : 'WRAP OFF'}</span>
+                </button>
+
+                {/* Auto Format */}
+                <button
+                  type="button"
+                  onClick={handleFormatCode}
+                  className="p-1 rounded hover:bg-white/10 text-slate-300 transition-colors"
+                  title="Format Code / Auto-Indent"
+                >
+                  <AlignLeft className="w-3.5 h-3.5" />
+                </button>
+
+                {/* Find & Replace Toggle */}
+                <button
+                  type="button"
+                  onClick={() => setShowFindReplace((prev) => !prev)}
+                  className={`p-1 rounded transition-colors ${
+                    showFindReplace ? 'bg-cyan-500/20 text-cyan-300' : 'hover:bg-white/10 text-slate-300'
+                  }`}
+                  title="Find & Replace (Ctrl+F)"
+                >
+                  <Search className="w-3.5 h-3.5" />
+                </button>
+
+                {/* Font Size */}
+                <div className="flex items-center gap-0.5 pl-1 text-[10px] text-slate-400">
+                  <button
+                    type="button"
+                    onClick={() => setFontSize((s) => Math.max(11, s - 1))}
+                    className="px-1 hover:text-white"
+                    title="Decrease Font Size"
+                  >
+                    A-
+                  </button>
+                  <span>{fontSize}px</span>
+                  <button
+                    type="button"
+                    onClick={() => setFontSize((s) => Math.min(18, s + 1))}
+                    className="px-1 hover:text-white"
+                    title="Increase Font Size"
+                  >
+                    A+
+                  </button>
+                </div>
+
+                <div className="w-px h-3 bg-white/10 mx-0.5" />
+
+                {/* Cursor Indicator */}
+                <span className="text-[10px] text-cyan-400 font-mono">
+                  Ln {cursorPos.line}, Col {cursorPos.col}
+                </span>
+              </div>
+            </div>
+
+            {/* Find & Replace Bar */}
+            {showFindReplace && (
               <div
-                className="w-11 sm:w-12 py-3 bg-[#05070c] border-r border-white/10 select-none text-right pr-2.5 text-gray-600 font-mono text-xs leading-relaxed shrink-0 overflow-hidden"
+                className="flex flex-wrap items-center gap-2 p-2 border-b border-cyan-500/20 bg-[#090e18] text-xs font-mono"
+                onClick={(e) => e.stopPropagation()}
               >
-                {Array.from({ length: lineCount }).map((_, i) => {
+                <div className="flex items-center gap-1 bg-black/60 border border-white/10 rounded px-2 py-1">
+                  <Search className="w-3 h-3 text-slate-400" />
+                  <input
+                    type="text"
+                    value={findText}
+                    onChange={(e) => setFindText(e.target.value)}
+                    placeholder="Find text..."
+                    className="bg-transparent text-white outline-none w-28 text-xs"
+                    autoFocus
+                  />
+                </div>
+
+                <div className="flex items-center gap-1 bg-black/60 border border-white/10 rounded px-2 py-1">
+                  <Replace className="w-3 h-3 text-slate-400" />
+                  <input
+                    type="text"
+                    value={replaceText}
+                    onChange={(e) => setReplaceText(e.target.value)}
+                    placeholder="Replace with..."
+                    className="bg-transparent text-white outline-none w-28 text-xs"
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleReplaceCurrent}
+                  className="px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-xs text-white"
+                >
+                  Replace
+                </button>
+                <button
+                  type="button"
+                  onClick={handleReplaceAll}
+                  className="px-2 py-1 rounded bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 text-xs"
+                >
+                  Replace All
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowFindReplace(false)}
+                  className="p-1 rounded text-slate-400 hover:text-white ml-auto"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+
+            {/* Editor Area with Synchronized Line Number Gutter */}
+            <div className="flex-1 flex overflow-hidden relative font-mono">
+              {/* Synchronized Line Numbers Gutter */}
+              <div
+                ref={gutterRef}
+                className="w-12 py-3 bg-[#05070c] border-r border-white/10 select-none text-right pr-2.5 text-gray-600 font-mono leading-relaxed shrink-0 overflow-hidden"
+                style={{ fontSize: `${fontSize}px` }}
+              >
+                {lines.map((_, i) => {
                   const lineNum = i + 1;
-                  const isCur = lineNum === cursorLine;
+                  const isCur = lineNum === cursorPos.line;
                   return (
                     <div
                       key={i}
@@ -597,17 +926,23 @@ export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
               <textarea
                 ref={textareaRef}
                 value={activeFile?.content || ''}
-                onChange={(e) => {
-                  if (activeFile) {
-                    onUpdateFileContent(activeFile.id, e.target.value);
-                  }
-                }}
+                onChange={(e) => handleContentChange(e.target.value)}
+                onScroll={handleEditorScroll}
                 onKeyDown={handleKeyDown}
-                onKeyUp={handleCursorMove}
-                onClick={handleCursorMove}
+                onKeyUp={updateCursorPosition}
+                onClick={updateCursorPosition}
                 spellCheck={false}
-                placeholder="Paste code or type here..."
-                className="flex-1 h-full p-3 bg-transparent text-gray-100 font-mono text-xs sm:text-sm leading-relaxed resize-none outline-none overflow-auto scrollbar-thin scrollbar-thumb-cyan-950 scrollbar-track-transparent selection:bg-cyan-900 selection:text-white"
+                autoCapitalize="none"
+                autoComplete="off"
+                autoCorrect="off"
+                placeholder="Click here and type your code..."
+                style={{
+                  fontSize: `${fontSize}px`,
+                  whiteSpace: wrapCode ? 'pre-wrap' : 'pre',
+                  overflowX: wrapCode ? 'hidden' : 'auto',
+                  tabSize: 2,
+                }}
+                className="flex-1 h-full p-3 bg-transparent text-gray-100 font-mono leading-relaxed resize-none outline-none overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-950 scrollbar-track-transparent selection:bg-cyan-900 selection:text-white"
               />
             </div>
           </div>
@@ -635,6 +970,21 @@ export const LiveCanvasStudio: React.FC<LiveCanvasStudioProps> = ({
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
                 <span>LIVE SANDBOX</span>
               </div>
+
+              {/* Floating Banner when in PREVIEW Only Mode */}
+              {viewMode === 'preview' && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 px-4 py-2 rounded-xl bg-black/90 border border-cyan-500/50 shadow-2xl backdrop-blur-xl text-xs font-mono text-cyan-200">
+                  <span>Currently in Full Preview Mode</span>
+                  <button
+                    type="button"
+                    onClick={() => onViewModeChange('split')}
+                    className="px-3 py-1 rounded-lg bg-cyan-500 text-black font-bold uppercase hover:bg-cyan-400 transition-colors flex items-center gap-1.5"
+                  >
+                    <Columns className="w-3.5 h-3.5" />
+                    <span>Open Editor (Split View)</span>
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Bottom Console Drawer */}
