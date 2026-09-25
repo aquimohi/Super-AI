@@ -25,6 +25,7 @@ import { recoveryObservabilityEngine } from './task/recoveryObservabilityEngine.
 import { humanize, getVoiceGuide } from '../design_genius/humanizer.js';
 import { evaluateCapability } from './capabilityGuard.js';
 import { leadScraperPlanner } from './scraper/scraperPlanner.js';
+import { emailPlanner } from './email/emailPlanner.js';
 
 export interface PendingToolAuthorization {
   tool: string;
@@ -639,6 +640,12 @@ export async function orchestrateChatRequest(
   const plannedScraper = await leadScraperPlanner.planAndExecute(rawMessage, conversationId);
   if (plannedScraper) {
     return plannedScraper;
+  }
+
+  // 0b2. Automated Outgoing SMTP Email: Direct dispatch when user commands sending email
+  const plannedEmail = await emailPlanner.planAndExecute(rawMessage, conversationId);
+  if (plannedEmail) {
+    return plannedEmail;
   }
 
   // 0c. Controlled Browser Automation Planner: Analyze intent for safe browser actions or high-risk prohibited actions

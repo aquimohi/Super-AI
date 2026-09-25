@@ -395,7 +395,32 @@ export type ControlPanelSection =
   | 'voice'
   | 'memory'
   | 'tools'
+  | 'smtp-email'
   | 'security';
+
+export interface SmtpEmailClientConfig {
+  enabled: boolean;
+  host: string;
+  port: number;
+  secure: boolean;
+  user: string;
+  hasPass: boolean;
+  fromEmail: string;
+  fromName: string;
+}
+
+export interface SentEmailRecord {
+  id: string;
+  to: string | string[];
+  subject: string;
+  from: string;
+  fromName: string;
+  timestamp: string;
+  status: 'SENT' | 'FAILED';
+  messageId?: string;
+  error?: string;
+  preview?: string;
+}
 
 export interface AIStateConfig {
   name: AIState;

@@ -11,6 +11,7 @@ import { taskRouter } from './server/routes/tasks.js';
 import { sandboxRouter } from './server/routes/sandbox.js';
 import { iotRouter } from './server/routes/iot.js';
 import { scraperRouter } from './server/routes/scraper.js';
+import { emailRouter } from './server/routes/email.js';
 import { RadarEventBus, RadarEventPayload, getLatestRadarState } from './server/services/iot/radarSensor.js';
 import { initTelegramBot, stopTelegramBot } from './server/services/telegramBot.js';
 import { initVoiceStreamingServer } from './server/services/voice/streamingSocket.js';
@@ -37,6 +38,8 @@ async function startServer() {
   app.use('/api/iot', iotRouter);
   // Google Maps Lead Scraper Module
   app.use('/api/scraper', scraperRouter);
+  // SMTP Outgoing Email Module
+  app.use('/api/email', emailRouter);
 
   // Serve static assets from public folder (including GLB models)
   app.use(express.static(path.join(process.cwd(), 'public')));

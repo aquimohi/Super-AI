@@ -5,6 +5,8 @@
  * financial transactions, physical world interactions, and unsupported apps).
  */
 
+import { storage } from '../storage.js';
+
 export interface CapabilityCheckResult {
   isUnsupported: boolean;
   category:
@@ -65,19 +67,24 @@ export function evaluateCapability(rawMessage: string): CapabilityCheckResult | 
     };
   }
 
-  // Direct Outgoing Email Dispatch (No SMTP server configured)
+  // Direct Outgoing Email Dispatch (Dynamic based on SMTP configuration)
   if (
     (/\b([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\b/i.test(lower) &&
       /\b(mail\s+karo|email\s+karo|send\s+mail|send\s+email|bhejo|mail|email)\b/i.test(lower)) ||
     /\b(mail\s+karo|send\s+email\s+to|send\s+mail\s+to|email\s+bhej\s*do)\b/i.test(lower)
   ) {
+    const emailConfig = storage.getEmailConfig();
+    if (emailConfig && emailConfig.enabled) {
+      // SMTP service is enabled! Let emailPlanner or sendEmailTool execute it.
+      return null;
+    }
     const emailMatch = lower.match(/\b([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\b/);
     const targetEmail = emailMatch ? emailMatch[1] : '';
     return {
       isUnsupported: true,
       category: 'COMMUNICATION',
-      explanation: `Main automatically background me email send nahi kar sakti kyunki mere paas outgoing SMTP email service connected nahi hai. Lekin main aapke liye ${targetEmail ? `"${targetEmail}" ke liye ` : ''}ek clean, professional email draft likh sakti hoon jise aap Gmail me copy karke bhej sakte ho.`,
-      suggestedAlternative: 'Try: "open gmail" ya "email draft likho"',
+      explanation: `Outgoing email bhejne ke liye SMTP service currently disabled ya unconfigured hai. **Control Panel -> SMTP Email** me jakar Gmail, Outlook ya custom SMTP credentials enable karein. Tab tak main ${targetEmail ? `"${targetEmail}" ke liye ` : ''}aapko email draft bana kar de sakti hoon.`,
+      suggestedAlternative: 'Try: "Control Panel me SMTP Email setup karein" ya "email draft likho"',
     };
   }
 

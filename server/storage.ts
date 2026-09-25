@@ -242,6 +242,18 @@ export interface TaskHistoryItem {
   errorCategory?: string;
 }
 
+export interface SmtpEmailConfig {
+  enabled: boolean;
+  host: string;
+  port: number;
+  secure: boolean;
+  user: string;
+  pass: string;
+  fromName: string;
+  fromEmail: string;
+  preset: 'gmail' | 'outlook' | 'sendgrid' | 'mailgun' | 'custom';
+}
+
 export interface AppStoreData {
   keys: StoredKeyRecord[];
   models: ModelRoleConfig;
@@ -258,6 +270,7 @@ export interface AppStoreData {
   autonomousTask: AutonomousTaskConfig;
   recoveryObservability: RecoveryObservabilityConfig;
   taskHistory: TaskHistoryItem[];
+  email: SmtpEmailConfig;
   auditLogs: AuditLogEntry[];
 }
 
@@ -494,6 +507,17 @@ const DEFAULT_STORE: AppStoreData = {
     showDetailedTelemetry: false,
   },
   taskHistory: [],
+  email: {
+    enabled: false,
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    user: '',
+    pass: '',
+    fromName: 'Super AI',
+    fromEmail: '',
+    preset: 'gmail',
+  },
   auditLogs: [
     {
       id: 'init-log-01',
@@ -548,6 +572,7 @@ class StorageManager {
           security: { ...DEFAULT_STORE.security, ...(parsed.security || {}) },
           cognitiveEngine: { ...DEFAULT_STORE.cognitiveEngine, ...(parsed.cognitiveEngine || {}) },
           skills: { ...INITIAL_SKILLS, ...(parsed.skills || {}) },
+          email: { ...DEFAULT_STORE.email, ...(parsed.email || {}) },
           keys: parsed.keys || [],
           auditLogs: parsed.auditLogs || DEFAULT_STORE.auditLogs,
         };
@@ -1147,6 +1172,41 @@ class StorageManager {
   public clearTaskHistory(): void {
     this.data.taskHistory = [];
     this.saveToDisk(this.data);
+  }
+
+  // ── SMTP Email Configuration ────────────────────────────────────────────────
+  public getEmailConfig(): SmtpEmailConfig {
+    return this.data.email || DEFAULT_STORE.email;
+  }
+
+  public getSanitizedEmailConfig(): Omit<SmtpEmailConfig, 'pass'> & { hasPass: boolean } {
+    const config = this.getEmailConfig();
+    return {
+      enabled: config.enabled,
+      host: config.host,
+      port: config.port,
+      secure: config.secure,
+      user: config.user,
+      fromName: config.fromName,
+      fromEmail: config.fromEmail,
+      preset: config.preset,
+      hasPass: Boolean(config.pass && config.pass.trim()),
+    };
+  }
+
+  public updateEmailConfig(updates: Partial<SmtpEmailConfig>): SmtpEmailConfig {
+    const current = this.getEmailConfig();
+    this.data.email = {
+      ...current,
+      ...updates,
+      pass: updates.pass !== undefined && updates.pass !== '' ? updates.pass : (updates.pass === '' ? '' : current.pass),
+    };
+    this.logAudit(
+      'EMAIL_CONFIG_UPDATED',
+      `SMTP email configuration updated: host=${this.data.email.host}, port=${this.data.email.port}, enabled=${this.data.email.enabled}`
+    );
+    this.saveToDisk(this.data);
+    return this.data.email;
   }
 }
 

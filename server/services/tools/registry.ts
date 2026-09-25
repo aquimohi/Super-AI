@@ -28,6 +28,7 @@ import { repoModifierTool } from './repoModifierTool.js';
 import { scanWifiDevicesTool } from './scanWifiDevicesTool.js';
 import { createFileTool } from './createFileTool.js';
 import { scrapeLeadsTool } from './scrapeLeadsTool.js';
+import { sendEmailTool } from './sendEmailTool.js';
 
 class ToolRegistry {
   private tools: Map<string, ToolDefinition> = new Map();
@@ -101,6 +102,10 @@ class ToolRegistry {
     // Google Maps Lead Research & Scraper
     this.register(scrapeLeadsTool);
     this.tools.set('scrape_leads', scrapeLeadsTool);
+    // Outgoing SMTP Email
+    this.register(sendEmailTool);
+    this.tools.set('send_email', sendEmailTool);
+    this.tools.set('send_mail', sendEmailTool);
   }
 
   public register(tool: ToolDefinition): void {

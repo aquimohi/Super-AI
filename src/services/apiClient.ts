@@ -17,6 +17,8 @@ import {
   TaskPlanSummary,
   TaskStep,
   AutonomousTaskState,
+  SmtpEmailClientConfig,
+  SentEmailRecord,
 } from '../types';
 
 export interface KeyTestResponse {
@@ -627,5 +629,80 @@ export const apiClient = {
       throw new Error(data.error || `Sandbox request failed: ${res.statusText}`);
     }
     return data as SandboxResult;
+  },
+
+  // --- SMTP Email Service ---
+  async getEmailConfig(): Promise<SmtpEmailClientConfig> {
+    const res = await fetch('/api/email/config');
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || 'Failed to fetch SMTP email config');
+    }
+    return data.config;
+  },
+
+  async updateEmailConfig(
+    config: Partial<SmtpEmailClientConfig & { pass?: string }>
+  ): Promise<SmtpEmailClientConfig> {
+    const res = await fetch('/api/email/config', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(config),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || 'Failed to update SMTP config');
+    }
+    return data.config;
+  },
+
+  async testEmailConnection(
+    config?: Partial<SmtpEmailClientConfig & { pass?: string }>
+  ): Promise<{ success: boolean; message: string; banner?: string }> {
+    const res = await fetch('/api/email/test', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(config || {}),
+    });
+    const data = await res.json();
+    return {
+      success: Boolean(data.success),
+      message: data.message || (data.success ? 'SMTP connection successful' : 'SMTP test failed'),
+      banner: data.banner,
+    };
+  },
+
+  async sendEmail(options: {
+    to: string | string[];
+    subject: string;
+    html?: string;
+    text?: string;
+    fromName?: string;
+  }): Promise<{ success: boolean; messageId?: string; message?: string; error?: string }> {
+    const res = await fetch('/api/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(options),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || 'Failed to send email');
+    }
+    return data;
+  },
+
+  async getEmailHistory(): Promise<SentEmailRecord[]> {
+    const res = await fetch('/api/email/history');
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || 'Failed to fetch email history');
+    }
+    return data.history || [];
+  },
+
+  async clearEmailHistory(): Promise<boolean> {
+    const res = await fetch('/api/email/history', { method: 'DELETE' });
+    const data = await res.json();
+    return Boolean(data.success);
   },
 };

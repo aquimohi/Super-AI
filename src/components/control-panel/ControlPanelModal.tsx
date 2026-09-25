@@ -20,6 +20,7 @@ import { SkillsSection } from './SkillsSection';
 import { AutonomousTaskSection } from './AutonomousTaskSection';
 import { RecoveryObservabilitySection } from './RecoveryObservabilitySection';
 import { SecuritySection } from './SecuritySection';
+import { EmailSection } from './EmailSection';
 import {
   LayoutDashboard,
   Key,
@@ -36,6 +37,7 @@ import {
   Monitor,
   Globe,
   Lock,
+  Mail,
   X,
   RefreshCw,
   SlidersHorizontal,
@@ -68,6 +70,7 @@ const NAV_ITEMS: Array<{
   { id: 'voice', label: 'Voice Settings', icon: <Mic className="w-4 h-4" /> },
   { id: 'memory', label: 'Memory', icon: <Database className="w-4 h-4" /> },
   { id: 'tools', label: 'Tools', icon: <Wrench className="w-4 h-4" /> },
+  { id: 'smtp-email', label: 'SMTP Email', icon: <Mail className="w-4 h-4" />, badge: 'RELAY' },
   { id: 'security', label: 'Security & Logs', icon: <Lock className="w-4 h-4" /> },
 ];
 
@@ -304,6 +307,10 @@ export const ControlPanelModal: React.FC<ControlPanelModalProps> = ({
 
                   {activeSection === 'browser-control' && (
                     <BrowserControlSection onRefresh={loadData} />
+                  )}
+
+                  {activeSection === 'smtp-email' && (
+                    <EmailSection />
                   )}
 
                   {activeSection === 'security' && (
